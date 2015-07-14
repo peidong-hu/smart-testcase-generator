@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.async.chat;
+package com.bigtester.ate.ctg.chat;
 
 import java.util.List;
 

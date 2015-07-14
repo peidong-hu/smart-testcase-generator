@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.async.chat;
+package com.bigtester.ate.tcg.chat;//NOPMD
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -31,20 +31,38 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.bigtester.ate.ctg.chat.ChatController;
+import com.bigtester.ate.ctg.chat.ChatRepository;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ChatControllerTests.
+ */
 public class ChatControllerTests {
 
-	private MockMvc mockMvc;
+	/** The mock mvc. */
+	private transient MockMvc mockMvc;
 
-	private ChatRepository chatRepository;
+	/** The chat repository. */
+	private transient ChatRepository chatRepository;
 
+	/**
+	 * Setup.
+	 */
 	@Before
 	public void setup() {
 		this.chatRepository = EasyMock.createMock(ChatRepository.class);
 		this.mockMvc = standaloneSetup(new ChatController(this.chatRepository)).build();
 	}
 
+	/**
+	 * Gets the messages.
+	 *
+	 * @return the messages
+	 * @throws Exception the exception
+	 */
 	@Test
-	public void getMessages() throws Exception {
+	public void getMessages() throws Exception {//NOPMD
 		List<String> messages = Arrays.asList("a", "b", "c");
 		expect(this.chatRepository.getMessages(9)).andReturn(messages);
 		replay(this.chatRepository);
@@ -57,8 +75,14 @@ public class ChatControllerTests {
 		verify(this.chatRepository);
 	}
 
+	/**
+	 * Gets the messages start async.
+	 *
+	 * @return the messages start async
+	 * @throws Exception the exception
+	 */
 	@Test
-	public void getMessagesStartAsync() throws Exception {
+	public void getMessagesStartAsync() throws Exception { //NOPMD
 		expect(this.chatRepository.getMessages(9)).andReturn(Arrays.<String>asList());
 		replay(this.chatRepository);
 

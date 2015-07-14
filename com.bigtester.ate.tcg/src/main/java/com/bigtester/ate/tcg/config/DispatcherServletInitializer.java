@@ -14,29 +14,45 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.async.config;
+package com.bigtester.ate.tcg.config;
 
 import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DispatcherServletInitializer.
+ */
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
+	/**
+	 * {@inheritDoc}
+	*/
 	@Override
-	protected Class<?>[] getRootConfigClasses() {
+	protected Class<?>[] getRootConfigClasses() {//NOPMD
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	*/
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		return new Class<?>[] { WebMvcConfig.class };
 	}
 
+	/**
+	 * {@inheritDoc}
+	*/
 	@Override
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
 	}
 
+	/**
+	 * {@inheritDoc}
+	*/
 	@Override
 	protected void customizeRegistration(Dynamic registration) {
 		registration.setAsyncSupported(true);

@@ -1,4 +1,4 @@
-package org.springframework.samples.async.config;
+package com.bigtester.ate.tcg.config;
 
 import java.util.List;
 
@@ -17,29 +17,50 @@ import org.thymeleaf.spring3.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WebMvcConfig.
+ */
 @Configuration
-@ComponentScan(basePackages = { "org.springframework.samples.async" })
+@ComponentScan(basePackages = { "com.bigtester.ate.ctg" })
 public class WebMvcConfig extends WebMvcConfigurationSupport {
 
+	/**
+	 * {@inheritDoc}
+	*/
 	@Override
 	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
 		configurer.setDefaultTimeout(30*1000L);
 	}
 
+	/**
+	 * {@inheritDoc}
+	*/
 	@Override
 	protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		converters.add(new MappingJackson2HttpMessageConverter());
 	}
 
+	/**
+	 * {@inheritDoc}
+	*/
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("chat");
 	}
 
+	/**
+	 * {@inheritDoc}
+	*/
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**").addResourceLocations("resources/");
 	}
 
+	/**
+	 * View resolver.
+	 *
+	 * @return the view resolver
+	 */
 	@Bean
 	public ViewResolver viewResolver() {
 		ThymeleafViewResolver resolver = new ThymeleafViewResolver();
@@ -47,6 +68,11 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 		return resolver;
 	}
 
+	/**
+	 * Template engine.
+	 *
+	 * @return the spring template engine
+	 */
 	@Bean
 	public SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine engine = new SpringTemplateEngine();
@@ -54,6 +80,11 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 		return engine;
 	}
 
+	/**
+	 * Template resolver.
+	 *
+	 * @return the template resolver
+	 */
 	@Bean
 	public TemplateResolver templateResolver() {
 		ServletContextTemplateResolver resolver = new ServletContextTemplateResolver();

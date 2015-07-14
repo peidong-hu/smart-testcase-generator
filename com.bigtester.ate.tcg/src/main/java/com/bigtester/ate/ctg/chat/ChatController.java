@@ -1,4 +1,4 @@
-package org.springframework.samples.async.chat;
+package com.bigtester.ate.ctg.chat;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,21 +14,37 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.DeferredResult;
 
+/**
+ * The Class ChatController.
+ */
 @Controller
 @RequestMapping("/mvc/chat")
 public class ChatController {
 
-	private final ChatRepository chatRepository;
+	/** The chat repository. */
+	private final transient ChatRepository chatRepository;
 
-	private final Map<DeferredResult<List<String>>, Integer> chatRequests =
+	/** The chat requests. */
+	private final transient Map<DeferredResult<List<String>>, Integer> chatRequests =
 			new ConcurrentHashMap<DeferredResult<List<String>>, Integer>();
 
 
+	/**
+	 * Instantiates a new chat controller.
+	 *
+	 * @param chatRepository the chat repository
+	 */
 	@Autowired
 	public ChatController(ChatRepository chatRepository) {
 		this.chatRepository = chatRepository;
 	}
 
+	/**
+	 * Gets the messages.
+	 *
+	 * @param messageIndex the message index
+	 * @return the messages
+	 */
 	@RequestMapping(method=RequestMethod.GET)
 	@ResponseBody
 	public DeferredResult<List<String>> getMessages(@RequestParam int messageIndex) {
@@ -37,6 +53,10 @@ public class ChatController {
 		this.chatRequests.put(deferredResult, messageIndex);
 
 		deferredResult.onCompletion(new Runnable() {
+			
+			/**
+			 * {@inheritDoc}
+			*/
 			@Override
 			public void run() {
 				chatRequests.remove(deferredResult);
@@ -51,6 +71,11 @@ public class ChatController {
 		return deferredResult;
 	}
 
+	/**
+	 * Post message.
+	 *
+	 * @param message the message
+	 */
 	@RequestMapping(method=RequestMethod.POST)
 	@ResponseBody
 	public void postMessage(@RequestParam String message) {
