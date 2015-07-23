@@ -1,7 +1,13 @@
 package com.bigtester.ate.ctg.ws;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import static org.joox.JOOX.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
+
+import com.bigtester.ate.ctg.utils.GlobalUtils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -29,14 +37,22 @@ public class GreetingController {
      *
      * @param name the name
      * @return the greeting
+     * @throws ParserConfigurationException 
+     * @throws IOException 
+     * @throws TransformerException 
      */
     @CrossOrigin
     @RequestMapping(value="/greeting3", method = RequestMethod.POST)
-    public Greeting greeting(@RequestBody HTMLSource dom) {
+    public Greeting greeting(@RequestBody HTMLSource dom) throws IOException, ParserConfigurationException, TransformerException {
+    	Document doc = GlobalUtils.html2Dom(dom.getContent());
+    	ByteArrayOutputStream stringOutput = new ByteArrayOutputStream();
+		GlobalUtils.printDocument($(doc).find("input").get(0), stringOutput);
+		stringOutput.toString();
+		String temp = stringOutput.toString();
         return new Greeting(counter.incrementAndGet(),
-                            String.format(TEMPLATE, dom.getContent().substring(0, 5)));
+                            temp);
     }
-    @CrossOrigin
+    //@CrossOrigin
     @RequestMapping("/greeting4")
     public Greeting greeting() {
         return new Greeting(counter.incrementAndGet(),
