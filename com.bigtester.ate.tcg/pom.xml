@@ -2,13 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.samples</groupId>
-	<artifactId>spring-mvc-chat</artifactId>
+	<artifactId>com.bigtester.ate.tcg</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Chat sample using the Spring MVC Servlet-based async support</name>
 
 	<properties>
-		<org.springframework-version>4.0.1.RELEASE</org.springframework-version>
+		<org.springframework-version>4.2.0.RC2</org.springframework-version>
 	</properties>
 
 	<dependencies>

@@ -1,9 +1,15 @@
 package com.bigtester.ate.ctg.ws;
 
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -24,9 +30,16 @@ public class GreetingController {
      * @param name the name
      * @return the greeting
      */
-    @RequestMapping("/greeting3")
-    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
+    @CrossOrigin
+    @RequestMapping(value="/greeting3", method = RequestMethod.POST)
+    public Greeting greeting(@RequestBody HTMLSource dom) {
         return new Greeting(counter.incrementAndGet(),
-                            String.format(TEMPLATE, name));
+                            String.format(TEMPLATE, dom.getContent().substring(0, 5)));
+    }
+    @CrossOrigin
+    @RequestMapping("/greeting4")
+    public Greeting greeting() {
+        return new Greeting(counter.incrementAndGet(),
+                            String.format(TEMPLATE, "world"));
     }
 }
