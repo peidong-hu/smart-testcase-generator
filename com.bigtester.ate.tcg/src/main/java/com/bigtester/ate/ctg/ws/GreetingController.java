@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 
+import com.bigtester.ate.ctg.model.Greeting;
 import com.bigtester.ate.ctg.utils.GlobalUtils;
 
 // TODO: Auto-generated Javadoc
@@ -47,7 +48,6 @@ public class GreetingController {
     	Document doc = GlobalUtils.html2Dom(dom.getContent());
     	ByteArrayOutputStream stringOutput = new ByteArrayOutputStream();
 		GlobalUtils.printDocument($(doc).find("input").get(0), stringOutput);
-		stringOutput.toString();
 		String temp = stringOutput.toString();
         return new Greeting(counter.incrementAndGet(),
                             temp);
