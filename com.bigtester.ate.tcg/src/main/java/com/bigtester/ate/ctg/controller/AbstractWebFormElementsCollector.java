@@ -35,26 +35,29 @@ import org.w3c.dom.NodeList;
  * @author Peidong Hu
  *
  */
-abstract public class WebFormElementsCollector {
-	
+abstract public class AbstractWebFormElementsCollector {
+
 	/** The dom doc. */
 	final private Document domDoc;
-	
+
 	/** The cleaned doc. */
 	final private Document cleanedDoc;
-	
+
 	/** The parent frame. */
 	private String xpathOfParentFrame;
 
 	/**
 	 * Instantiates a new web form elements collector.
 	 *
-	 * @param domDoc the dom doc
-	 * @param parentFrame the parent frame, Nullable
-	 * @throws ParserConfigurationException the parser configuration exception
+	 * @param domDoc
+	 *            the dom doc
+	 * @param parentFrame
+	 *            the parent frame, Nullable
+	 * @throws ParserConfigurationException
+	 *             the parser configuration exception
 	 */
-	public WebFormElementsCollector(Document domDoc, String xpathOfParentFrame)
-			throws ParserConfigurationException {
+	public AbstractWebFormElementsCollector(Document domDoc,
+			String xpathOfParentFrame) throws ParserConfigurationException {
 		this.domDoc = domDoc;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -64,41 +67,43 @@ abstract public class WebFormElementsCollector {
 		Node root = cleanedDoc.importNode(domDoc.getDocumentElement(), true);
 		cleanedDoc.appendChild(root);
 		fnCleanNode(cleanedDoc.getDocumentElement());
-		this.xpathOfParentFrame = xpathOfParentFrame;
+		this.setXpathOfParentFrame(xpathOfParentFrame);
 	}
 
 	/**
 	 * Fn clean node.
 	 *
-	 * @param node the node
+	 * @param node
+	 *            the node
 	 */
 	private void fnCleanNode(Node node) {
-		int i = 0;
+		int index = 0;
 		NodeList cNodes = node.getChildNodes();
-		Node t;
-		while ((t = cNodes.item(i++)) != null)
-			switch (t.getNodeType()) {
+		Node tmpNode;
+		while ((tmpNode = cNodes.item(index++)) != null)
+			switch (tmpNode.getNodeType()) {
 			case Node.ELEMENT_NODE: // Element Node
-				if (!t.getNodeName().equalsIgnoreCase("br")) {
-					fnCleanNode(t);
+				if (tmpNode.getNodeName().equalsIgnoreCase("br")) {
+					node.removeChild(tmpNode);
+					index--;
 					break;
-				} else  {
-					node.removeChild(t);
-					i--;
+				} else {
+					fnCleanNode(tmpNode);
 					break;
 				}
 			case Node.TEXT_NODE: // Text Node
-				if (!t.getNodeValue().trim().equals(""))
+				if (!tmpNode.getNodeValue().trim().equals(""))
 					break;
 				else {
-					node.removeChild(t);
-					i--;
+					node.removeChild(tmpNode);
+					index--;
 					break;
 				}
-			case Node.COMMENT_NODE: // Comment Node (and Text Node without non-whitespace
-					// content)
-				node.removeChild(t);
-				i--;
+			case Node.COMMENT_NODE: // Comment Node (and Text Node without
+									// non-whitespace
+				// content)
+				node.removeChild(tmpNode);
+				index--;
 			}
 	}
 
@@ -118,5 +123,20 @@ abstract public class WebFormElementsCollector {
 	 */
 	public final Document getCleanedDoc() {
 		return cleanedDoc;
+	}
+
+	/**
+	 * @return the xpathOfParentFrame
+	 */
+	public String getXpathOfParentFrame() {
+		return xpathOfParentFrame;
+	}
+
+	/**
+	 * @param xpathOfParentFrame
+	 *            the xpathOfParentFrame to set
+	 */
+	public void setXpathOfParentFrame(String xpathOfParentFrame) {
+		this.xpathOfParentFrame = xpathOfParentFrame;
 	}
 }

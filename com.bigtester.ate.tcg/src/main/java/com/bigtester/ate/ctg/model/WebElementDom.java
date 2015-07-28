@@ -29,7 +29,11 @@ import org.w3c.dom.Node;
  *
  */
 public class WebElementDom {
-	private Node domNodePointer; //Selenium Dom node;
+	
+	/** The dom node pointer. */
+	private Node domNodePointer; //Dom node;
+	
+	/** The x path. */
 	private String xPath;
 	
 
@@ -51,13 +55,15 @@ public class WebElementDom {
 	/**
 	 * @return the xPath
 	 */
-	public String getxPath() {
+	
+	public String getXPath() {
 		return xPath;
 	}
 	/**
 	 * @param xPath the xPath to set
 	 */
-	public void setxPath(String xPath) {
+	public void setXPath(String xPath) {
 		this.xPath = xPath;
 	}
+	
 }

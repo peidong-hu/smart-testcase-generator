@@ -40,7 +40,6 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.QuoteMode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.ServletContextAware;
 
@@ -52,11 +51,22 @@ import com.bigtester.ate.ctg.model.UserInputTrainingRecord;
  */
 @Controller
 public class TrainingFileDB implements ServletContextAware {
+	
+	/** The servlet context. */
 	@Autowired
 	public static ServletContext servletContext;
+	
+	/** The Constant NEW_LINE_SEPARATOR. */
 	// Delimiter used in CSV file
 	private static final String NEW_LINE_SEPARATOR = "\n";
 
+	/**
+	 * Parses the line.
+	 *
+	 * @param line the line
+	 * @return the user input training record
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static UserInputTrainingRecord parseLine(String line)
 			throws IOException {
 		CSVParser lineParser = CSVParser.parse(line,
@@ -69,6 +79,11 @@ public class TrainingFileDB implements ServletContextAware {
 		return retVal;
 	}
 
+	/**
+	 * Gets the CSV format.
+	 *
+	 * @return the CSV format
+	 */
 	public static CSVFormat getCSVFormat() {
 		// Create the CSVFormat object with "\n" as a record delimiter
 		CSVFormat csvFileFormat = CSVFormat.TDF
@@ -78,6 +93,11 @@ public class TrainingFileDB implements ServletContextAware {
 		return csvFileFormat;
 	}
 
+	/**
+	 * Clean test csv file.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void cleanTestCsvFile() throws IOException {
 		// initialize FileWriter object
 			
@@ -89,9 +109,15 @@ public class TrainingFileDB implements ServletContextAware {
 		
 	}
 	
+	/**
+	 * Write test csv file.
+	 *
+	 * @param mlInputs the ml inputs
+	 * @param append the append
+	 */
 	public static void writeTestCsvFile(List<String> mlInputs, boolean append) {
 
-		if (mlInputs.size() == 0)
+		if (mlInputs.isEmpty())
 			return;
 
 		// Create new students objects
@@ -143,6 +169,15 @@ public class TrainingFileDB implements ServletContextAware {
 		}
 	}
 
+	/**
+	 * Write cache csv file.
+	 *
+	 * @param absoluteCacheFilePath the absolute cache file path
+	 * @param beginningComments the beginning comments
+	 * @param endingComments the ending comments
+	 * @param trainedRecords the trained records
+	 * @param append the append
+	 */
 	public static void writeCacheCsvFile(String absoluteCacheFilePath,
 			String beginningComments, String endingComments,
 			List<UserInputTrainingRecord> trainedRecords, boolean append) {
@@ -155,7 +190,7 @@ public class TrainingFileDB implements ServletContextAware {
 		// Create the CSVFormat object with "\n" as a record delimiter
 		CSVFormat csvFileFormat = getCSVFormat();
 		try {
-			if (trainedRecords.size() == 0) {
+			if (trainedRecords.isEmpty()) {
 				fileWriter = new FileWriter(absoluteCacheFilePath, append);
 
 				// initialize CSVPrinter object

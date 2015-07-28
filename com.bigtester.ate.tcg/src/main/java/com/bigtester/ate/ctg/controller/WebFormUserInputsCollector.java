@@ -21,38 +21,18 @@
 package com.bigtester.ate.ctg.controller;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-//import org.openqa.selenium.By;
-//import org.openqa.selenium.WebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-//import org.w3c.css.sac.InputSource;
-import org.w3c.dom.css.CSSRule;
-import org.w3c.dom.css.CSSRuleList;
-import org.w3c.dom.css.CSSStyleDeclaration;
-import org.w3c.dom.css.CSSStyleRule;
-import org.w3c.dom.css.CSSStyleSheet;
-
 import com.google.common.collect.Iterables;
-//import com.steadystate.css.parser.CSSOMParser;
-//import com.steadystate.css.parser.CssCharStream;
-
-
-
 import com.bigtester.ate.ctg.model.UserInputDom;
-
 import static org.joox.JOOX.*;
 
 // TODO: Auto-generated Javadoc
@@ -62,17 +42,26 @@ import static org.joox.JOOX.*;
  * @author Peidong Hu
  *
  */
-public class WebFormUserInputsCollector extends WebFormElementsCollector {
+public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector {
+	
+	/** The Constant USER_NOT_CHANGABLE_INPUT_TYPES. */
 	final static public String[] USER_NOT_CHANGABLE_INPUT_TYPES = { "hidden" };
+	
+	/** The Constant LEFT_LABELED_INPUT_TYPES. */
 	final static public String[] LEFT_LABELED_INPUT_TYPES = { "text", "date",
 			"button", "datetime", "datetime-local", "email", "file", "image",
 			"month", "number", "password", "range", "reset", "search",
 			"submit", "tel", "time", "url", "week" };
+	
+	/** The Constant RIGHT_LABELED_INPUT_TYPES. */
 	final static public String[] RIGHT_LABELED_INPUT_TYPES = { "radio",
 			"checkbox" };
+	
+	/** The Constant USER_CHANGABLE_INPUT_TAGS. */
 	final static public String[] USER_CHANGABLE_INPUT_TAGS = { "select",
 			"input", "textarea" };
 
+	/** The user inputs. */
 	final private List<UserInputDom> userInputs = new ArrayList<UserInputDom>();
 
 	/**
@@ -95,7 +84,7 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 	private boolean isUserChangableInputType(Node node) {
 		boolean retVal = true;
 		String nodeTag = node.getNodeName();
-		if (nodeTag.equalsIgnoreCase("input")) {
+		if ("input".equalsIgnoreCase(nodeTag)) {
 			for (int i = 0; i < USER_NOT_CHANGABLE_INPUT_TYPES.length; i++) {
 				if ($(node).attr("type").equalsIgnoreCase(
 						USER_NOT_CHANGABLE_INPUT_TYPES[i])) {
@@ -110,6 +99,13 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 	}
 
 	
+	/**
+	 * Collect user inputs.
+	 *
+	 * @param cleanedDoc the cleaned doc
+	 * @param originalDoc the original doc
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void collectUserInputs(Document cleanedDoc, Document originalDoc) throws IOException {
 		for (int j = 0; j < USER_CHANGABLE_INPUT_TAGS.length; j++) {
 			NodeList htmlInputs = cleanedDoc
@@ -147,14 +143,15 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 		if (leftLabeled) {
 
 			while (tempParent2.getPreviousSibling() == null
-					&& tempParent2 != searchUpEndingNode) {
+					&& !tempParent2.equals(searchUpEndingNode)) {
+					//&& tempParent2 != searchUpEndingNode) {
 				tempParent2 = tempParent2.getParentNode();
 			}
 			// if tempParent2 is form node, we will use the form's
 			// previous sibling as the label node;
 			// Or we will use the nearest input sibling node as the
 			// label node;
-			if (tempParent2 == searchUpEndingNode && !endingNodeInclusive)
+			if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
 				return;
 			valueHolder.setLabelDomPointer(tempParent2.getPreviousSibling());
 		} else {
@@ -166,7 +163,7 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 			// previous sibling as the label node;
 			// Or we will use the nearest input sibling node as the
 			// label node;
-			if (tempParent2 == searchUpEndingNode && !endingNodeInclusive)
+			if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
 				return;
 
 			valueHolder.setLabelDomPointer(tempParent2.getNextSibling());
@@ -180,20 +177,21 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 		// fill out addtional info nodes
 		Node tempParent2 = searchStartingNode;
 		Node tempNode = tempParent2;
-		List<Node> additionalInfoNodes = new ArrayList<Node>();
+		
 		while (tempParent2.getNextSibling() == null
 				&& tempParent2 != searchUpEndingNode) {
 			tempParent2 = tempParent2.getParentNode();
 			tempNode = tempParent2;
 		}
-		if (tempNode == searchUpEndingNode && !endingNodeInclusive)
+		if (tempNode.equals(searchUpEndingNode) && !endingNodeInclusive)
 			return;
+		List<Node> additionalInfoNodes = new ArrayList<Node>();
 		if (nextSiblingOnly)
 			additionalInfoNodes.add(tempNode.getNextSibling());
 		else
 			while (tempNode.getNextSibling() != null) {
 				additionalInfoNodes.add(tempNode.getNextSibling());
-				if (tempNode.getNodeName().equalsIgnoreCase("form"))
+				if ("form".equalsIgnoreCase(tempNode.getNodeName()))
 					break;
 				tempNode = tempNode.getNextSibling();
 			}
@@ -213,7 +211,7 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 		// previous sibling as the label node;
 		// Or we will use the nearest input sibling node as the
 		// label node;
-		if (tempParent2 == searchUpEndingNode && !endingNodeInclusive)
+		if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
 			return;
 		valueHolder.setPreviousUserViewableHtmlSibling(tempParent2
 				.getPreviousSibling());
@@ -226,10 +224,11 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 
 		Node tempParent2 = maxInputParentNoOtherChild;
 		while (tempParent2.getNextSibling() == null
-				&& tempParent2 != searchUpEndingNode) {
+				&& !tempParent2.equals(searchUpEndingNode)) {
+				//&& tempParent2 != searchUpEndingNode) {
 			tempParent2 = tempParent2.getParentNode();
 		}
-		if (tempParent2 == searchUpEndingNode && !endingNodeInclusive)
+		if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
 			return;
 		valueHolder
 				.setNextUserViewableHtmlSibling(tempParent2.getNextSibling());
@@ -386,7 +385,7 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 
 		boolean leftLabeled = isLeftLabeled(inputNode);
 
-		retVal.setxPath($(inputNode).xpath());
+		retVal.setXPath($(inputNode).xpath());
 		retVal.setParentFormPointer(form);
 
 		Node maxInputParentNoOtherInput = getMaxInputParentNoOtherInput(
@@ -458,7 +457,7 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 
 			List<Element> labels = $(leastInputsCommonParent).find("label")
 					.get();
-			if (labels.size() > 0) {
+			if (!labels.isEmpty()) {
 				retVal.setLabelDomPointer(labels.get(0));
 			} else {
 
@@ -528,7 +527,7 @@ public class WebFormUserInputsCollector extends WebFormElementsCollector {
 
 			List<Element> labels = $(maxInputParentNoOtherInput).find("label")
 					.get();
-			if (labels.size() > 0) {
+			if (!labels.isEmpty()) {
 
 				List<Node> tempList = new ArrayList<Node>();
 				tempList.add(maxInputParentNoOtherInput);

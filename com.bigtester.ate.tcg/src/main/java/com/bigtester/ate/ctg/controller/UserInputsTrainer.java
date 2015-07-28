@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.bigtester.ate.ctg.model.UserInputTrainingRecord;
 //import com.google.common.collect.Iterables;
@@ -26,27 +25,31 @@ import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.ling.Datum;
 import edu.stanford.nlp.objectbank.ObjectBank;
 import edu.stanford.nlp.util.ErasureUtils;
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class UserInputsTrainer.
+ */
 @Controller
 public class UserInputsTrainer {
-	public static String PROPERTYFILE = System.getProperty("user.dir") + "/trainer/userinput/fieldtest.prop";
-	public static String TRAININGFILE = System.getProperty("user.dir") + "/trainer/userinput/train.txt";
-	public static String TESTFILE = System.getProperty("user.dir") + "/trainer/userinput/test.txt";
-	public static String CACHEPATH = System.getProperty("user.dir") + "/trainer/userinput/cache/";
-	//public static String SOURCEFILESPATH = System.getProperty("user.dir")+ "/src/test/resources/utils/form/";
-//	public static String[] getAllFilesNeedToTrain() {
-//		String directory = UserInputsTrainer.SOURCEFILESPATH;
-//		File[] files = new File(directory).listFiles();
-//		List<String> filenames = new ArrayList<String>();
-//		
-//		for (File file : files) {
-//			if (file.isFile()) {
-//				if(!getAllFileBasenamesInCache().contains(FilenameUtils.getBaseName(file.getAbsolutePath())))
-//					filenames.add(file.getAbsolutePath());
-//			}
-//		}
-//		return (String[]) filenames.toArray(new String[filenames.size()]);
-//	}
 	
+	/** The propertyfile. */
+	public final static String PROPERTYFILE = System.getProperty("user.dir") + "/trainer/userinput/fieldtest.prop";
+	
+	/** The trainingfile. */
+	public final static String TRAININGFILE = System.getProperty("user.dir") + "/trainer/userinput/train.txt";
+	
+	/** The testfile. */
+	public final static String TESTFILE = System.getProperty("user.dir") + "/trainer/userinput/test.txt";
+	
+	/** The cachepath. */
+	public final static String CACHEPATH = System.getProperty("user.dir") + "/trainer/userinput/cache/";
+	
+	/**
+	 * Gets the all file basenames in cache.
+	 *
+	 * @return the all file basenames in cache
+	 */
 	public static List<String> getAllFileBasenamesInCache() {
 		String directory = UserInputsTrainer.CACHEPATH;
 		File[] files = new File(directory).listFiles();
@@ -61,6 +64,13 @@ public class UserInputsTrainer {
 	}
 	
 	
+	/**
+	 * Train.
+	 *
+	 * @return the list
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public List<UserInputTrainingRecord> train() throws ClassNotFoundException, IOException {
 		ColumnDataClassifier cdc = new ColumnDataClassifier(
 				 PROPERTYFILE);
@@ -77,13 +87,20 @@ public class UserInputsTrainer {
 		return demonstrateSerialization();
 	}
 
+	/**
+	 * Demonstrate serialization.
+	 *
+	 * @return the list
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public List<UserInputTrainingRecord> demonstrateSerialization() throws IOException,
 			ClassNotFoundException {
 		System.out
 				.println("Demonstrating working with a serialized classifier");
 		ColumnDataClassifier cdc = new ColumnDataClassifier(
 				 PROPERTYFILE);
-		Classifier<String, String> cl = cdc.makeClassifier(cdc
+		Classifier<String, String> classifier = cdc.makeClassifier(cdc
 				.readTrainingExamples( TRAININGFILE));
 		
 		Classifier<String, String> cl2 = cdc.makeClassifier(cdc
@@ -96,12 +113,12 @@ public class UserInputsTrainer {
 		System.out.println();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(cl);
+		oos.writeObject(classifier);
 		oos.close();
 		byte[] object = baos.toByteArray();
 		ByteArrayInputStream bais = new ByteArrayInputStream(object);
 		ObjectInputStream ois = new ObjectInputStream(bais);
-		LinearClassifier<String, String> lc = ErasureUtils.uncheckedCast(ois
+		LinearClassifier<String, String> linerCls = ErasureUtils.uncheckedCast(ois
 				.readObject());
 		ois.close();
 		ColumnDataClassifier cdc2 = new ColumnDataClassifier(
@@ -114,19 +131,19 @@ public class UserInputsTrainer {
 		List<UserInputTrainingRecord> retVal = new ArrayList<UserInputTrainingRecord>();
 		for (String line : ObjectBank.getLineIterator(
 				 TESTFILE, "utf-8")) {
-			Datum<String, String> d = cdc.makeDatumFromLine(line);
-			Datum<String, String> d2 = cdc2.makeDatumFromLine(line);
+			Datum<String, String> datum1 = cdc.makeDatumFromLine(line);
+			Datum<String, String> datum2 = cdc2.makeDatumFromLine(line);
 			if (TrainingFileDB.parseLine(line) != null)
-				retVal.add(new UserInputTrainingRecord(cl.classOf(d),TrainingFileDB.parseLine(line).getInputMLHtmlCode()));
+				retVal.add(new UserInputTrainingRecord(classifier.classOf(datum1),TrainingFileDB.parseLine(line).getInputMLHtmlCode()));
 			
-			System.out.println(cl.classOf(d) + "  =origi=>  " + line );
-			System.out.println(cl2.classOf(d)+ "  =test origi=> " + line);
-			System.out.println("score against email: " + lc.scoreOf(d2, "email") + "  =deser=>  " +  line );
-			System.out.println("score against firstname: " + lc.scoreOf(d2, "firstname") + "  =deser=>  " +  line );
-			System.out.println("score against reenterpassword: " + lc.scoreOf(d2, "reenterpassword") + "  =deser=>  " +  line );
-			System.out.println("score against password: " + lc.scoreOf(d2, "password") + "  =deser=>  " +  line );
-			System.out.println("score against lastname: " + lc.scoreOf(d2, "lastname") + "  =deser=>  " +  line );
-			System.out.println("score against "+ cl.classOf(d) + ": " + lc.scoreOf(d2, cl.classOf(d)) + "  =deser=>  " +  line );
+			System.out.println(classifier.classOf(datum1) + "  =origi=>  " + line );
+			System.out.println(cl2.classOf(datum1)+ "  =test origi=> " + line);
+			System.out.println("score against email: " + linerCls.scoreOf(datum2, "email") + "  =deser=>  " +  line );
+			System.out.println("score against firstname: " + linerCls.scoreOf(datum2, "firstname") + "  =deser=>  " +  line );
+			System.out.println("score against reenterpassword: " + linerCls.scoreOf(datum2, "reenterpassword") + "  =deser=>  " +  line );
+			System.out.println("score against password: " + linerCls.scoreOf(datum2, "password") + "  =deser=>  " +  line );
+			System.out.println("score against lastname: " + linerCls.scoreOf(datum2, "lastname") + "  =deser=>  " +  line );
+			System.out.println("score against "+ classifier.classOf(datum1) + ": " + linerCls.scoreOf(datum2, classifier.classOf(datum1)) + "  =deser=>  " +  line );
 			System.out.println("==========================");
 		}
 		return retVal;

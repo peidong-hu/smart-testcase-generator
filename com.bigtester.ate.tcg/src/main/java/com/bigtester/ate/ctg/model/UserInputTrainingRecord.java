@@ -34,8 +34,18 @@ package com.bigtester.ate.ctg.model;
  */
 public class UserInputTrainingRecord  {
 	
+	/** The input label name. */
 	private String inputLabelName;
+	
+	/** The input ml html code. */
 	private String inputMLHtmlCode;
+	
+	/**
+	 * Instantiates a new user input training record.
+	 *
+	 * @param labelName the label name
+	 * @param mlHtmlCode the ml html code
+	 */
 	public UserInputTrainingRecord(String labelName, String mlHtmlCode) {
 		this.inputLabelName = labelName;
 		this.inputMLHtmlCode = mlHtmlCode;

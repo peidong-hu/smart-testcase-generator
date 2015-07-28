@@ -31,14 +31,36 @@ import org.w3c.dom.Node;
  *
  */
 public class UserInputDom extends WebElementDom {
+	
+	/** The label dom pointer. */
 	private Node labelDomPointer;
-	private List<Node> machineLearningDomHtmlPointers;
+	
+	/** The machine learning dom html pointers. */
+	private transient List<Node> machineLearningDomHtmlPointers;
+	
+	/** The additional info nodes. */
 	private List<Node> additionalInfoNodes;
+	
+	/** The previous sibling. */
 	private UserInputDom previousSibling;
+	
+	/** The next sibling. */
 	private UserInputDom nextSibling;
+	
+	/** The previous user viewable html sibling. */
 	private Node previousUserViewableHtmlSibling;
+	
+	/** The next user viewable html sibling. */
 	private Node nextUserViewableHtmlSibling;
+	
+	/** The parent form pointer. */
 	private Node parentFormPointer;
+	
+	/**
+	 * Instantiates a new user input dom.
+	 *
+	 * @param inputDomNodePointer the input dom node pointer
+	 */
 	public UserInputDom(Node inputDomNodePointer) {
 		super(inputDomNodePointer);
 	}

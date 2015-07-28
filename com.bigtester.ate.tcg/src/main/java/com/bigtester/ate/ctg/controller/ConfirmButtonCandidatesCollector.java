@@ -30,7 +30,7 @@ import org.w3c.dom.Document;
  * @author Peidong Hu
  *
  */
-public class ConfirmButtonCandidatesCollector extends WebFormElementsCollector{
+public class ConfirmButtonCandidatesCollector extends AbstractWebFormElementsCollector{
 
 	/**
 	 * @param webD

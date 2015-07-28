@@ -27,21 +27,34 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-//import utils.form.WebFormUserInputsCollector;
-
-public class GlobalUtils {
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GlobalUtils.
+ */
+public final class GlobalUtils {
 	
+	private GlobalUtils() {
+		
+	}
+	/**
+	 * Html2 dom.
+	 *
+	 * @param source the source
+	 * @return the document
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ParserConfigurationException the parser configuration exception
+	 */
 	public static Document html2Dom(String source) throws IOException, ParserConfigurationException {
 		
-		DocumentBuilder db = DocumentBuilderFactory.newInstance()
+		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder();
-		InputSource is = new InputSource();
-		is.setCharacterStream(new StringReader(source));
+		InputSource inputS = new InputSource();
+		inputS.setCharacterStream(new StringReader(source));
 		Document doc = null;
 		//WebFormUserInputsCollector col;
 		try {
 			
-				doc = db.parse(is);
+				doc = docBuilder.parse(inputS);
 			
 			//printDocument(doc.getDocumentElement(), System.out);
 			//col = new WebFormUserInputsCollector(webD, doc, xpathOfFrame);
@@ -72,10 +85,18 @@ public class GlobalUtils {
 		return doc;
 	}
 	
-	public static void printDocument(Node doc, OutputStream out)
+	/**
+	 * Prints the document.
+	 *
+	 * @param doc the doc
+	 * @param out the out
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws TransformerException the transformer exception
+	 */
+	public static void printDocument(Node doc, OutputStream out)//NOPMD
 			throws IOException, TransformerException {
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer transformer = tf.newTransformer();
+		TransformerFactory transF = TransformerFactory.newInstance();
+		Transformer transformer = transF.newTransformer();
 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		// transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 		// transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -87,32 +108,38 @@ public class GlobalUtils {
 				new OutputStreamWriter(out, "UTF-8")));
 	}
 
-	public static String getStringFromInputStream(InputStream is) {
+	/**
+	 * Gets the string from input stream.
+	 *
+	 * @param inputS the is
+	 * @return the string from input stream
+	 */
+	public static String getStringFromInputStream(InputStream inputS) {
 
-		BufferedReader br = null;
-		StringBuilder sb = new StringBuilder();
+		BufferedReader reader = null;
+		StringBuilder stringBuilder = new StringBuilder();
 
 		String line;
 		try {
 
-			br = new BufferedReader(new InputStreamReader(is));
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
+			reader = new BufferedReader(new InputStreamReader(inputS));
+			while ((line = reader.readLine()) != null) {
+				stringBuilder.append(line);
 			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (br != null) {
+			if (reader != null) {
 				try {
-					br.close();
+					reader.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 
-		return sb.toString();
+		return stringBuilder.toString();
 
 	}
 
