@@ -42,21 +42,22 @@ import static org.joox.JOOX.*;
  * @author Peidong Hu
  *
  */
-public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector {
-	
+public class WebFormUserInputsCollector extends
+		AbstractWebFormElementsCollector {
+
 	/** The Constant USER_NOT_CHANGABLE_INPUT_TYPES. */
 	final static public String[] USER_NOT_CHANGABLE_INPUT_TYPES = { "hidden" };
-	
+
 	/** The Constant LEFT_LABELED_INPUT_TYPES. */
 	final static public String[] LEFT_LABELED_INPUT_TYPES = { "text", "date",
 			"button", "datetime", "datetime-local", "email", "file", "image",
 			"month", "number", "password", "range", "reset", "search",
 			"submit", "tel", "time", "url", "week" };
-	
+
 	/** The Constant RIGHT_LABELED_INPUT_TYPES. */
 	final static public String[] RIGHT_LABELED_INPUT_TYPES = { "radio",
 			"checkbox" };
-	
+
 	/** The Constant USER_CHANGABLE_INPUT_TAGS. */
 	final static public String[] USER_CHANGABLE_INPUT_TAGS = { "select",
 			"input", "textarea" };
@@ -73,10 +74,10 @@ public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector
 	 *            the parent frame nullable
 	 * @throws ParserConfigurationException
 	 *             the parser configuration exception
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public WebFormUserInputsCollector(Document domDoc,
-			String xpathOfParentFrame) throws ParserConfigurationException, IOException {
+	public WebFormUserInputsCollector(Document domDoc, String xpathOfParentFrame)
+			throws ParserConfigurationException, IOException {
 		super(domDoc, xpathOfParentFrame);
 		collectUserInputs(super.getCleanedDoc(), super.getDomDoc());
 	}
@@ -84,12 +85,17 @@ public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector
 	private boolean isUserChangableInputType(Node node) {
 		boolean retVal = true;
 		String nodeTag = node.getNodeName();
+
 		if ("input".equalsIgnoreCase(nodeTag)) {
-			for (int i = 0; i < USER_NOT_CHANGABLE_INPUT_TYPES.length; i++) {
-				if ($(node).attr("type").equalsIgnoreCase(
-						USER_NOT_CHANGABLE_INPUT_TYPES[i])) {
-					retVal = false;
-					break;
+			if (null == $(node).attr("type")) {
+				retVal = false;
+			} else {
+				for (int i = 0; i < USER_NOT_CHANGABLE_INPUT_TYPES.length; i++) {
+					if ($(node).attr("type").equalsIgnoreCase(
+							USER_NOT_CHANGABLE_INPUT_TYPES[i])) {
+						retVal = false;
+						break;
+					}
 				}
 			}
 		} else {
@@ -98,15 +104,18 @@ public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector
 		return retVal;
 	}
 
-	
 	/**
 	 * Collect user inputs.
 	 *
-	 * @param cleanedDoc the cleaned doc
-	 * @param originalDoc the original doc
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param cleanedDoc
+	 *            the cleaned doc
+	 * @param originalDoc
+	 *            the original doc
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void collectUserInputs(Document cleanedDoc, Document originalDoc) throws IOException {
+	private void collectUserInputs(Document cleanedDoc, Document originalDoc)
+			throws IOException {
 		for (int j = 0; j < USER_CHANGABLE_INPUT_TAGS.length; j++) {
 			NodeList htmlInputs = cleanedDoc
 					.getElementsByTagName(USER_CHANGABLE_INPUT_TAGS[j]);
@@ -117,7 +126,9 @@ public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector
 				if ((parentsUntilForm.isEmpty() || !Iterables
 						.get(parentsUntilForm, parentsUntilForm.size() - 1)
 						.getNodeName().equalsIgnoreCase("html"))
-						&& isUserChangableInputType(coreNode) && !((Element) coreNode).getAttribute("ate-invisible").equalsIgnoreCase("yes")) {
+						&& isUserChangableInputType(coreNode)
+						&& !((Element) coreNode).getAttribute("ate-invisible")
+								.equalsIgnoreCase("yes")) {
 					if (parentsUntilForm.isEmpty()) {
 						userInputs.add(initUserInputDomInsideOfForm(cleanedDoc,
 								coreNode, coreNode.getParentNode()));
@@ -144,7 +155,7 @@ public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector
 
 			while (tempParent2.getPreviousSibling() == null
 					&& !tempParent2.equals(searchUpEndingNode)) {
-					//&& tempParent2 != searchUpEndingNode) {
+				// && tempParent2 != searchUpEndingNode) {
 				tempParent2 = tempParent2.getParentNode();
 			}
 			// if tempParent2 is form node, we will use the form's
@@ -177,7 +188,7 @@ public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector
 		// fill out addtional info nodes
 		Node tempParent2 = searchStartingNode;
 		Node tempNode = tempParent2;
-		
+
 		while (tempParent2.getNextSibling() == null
 				&& tempParent2 != searchUpEndingNode) {
 			tempParent2 = tempParent2.getParentNode();
@@ -225,7 +236,7 @@ public class WebFormUserInputsCollector extends AbstractWebFormElementsCollector
 		Node tempParent2 = maxInputParentNoOtherChild;
 		while (tempParent2.getNextSibling() == null
 				&& !tempParent2.equals(searchUpEndingNode)) {
-				//&& tempParent2 != searchUpEndingNode) {
+			// && tempParent2 != searchUpEndingNode) {
 			tempParent2 = tempParent2.getParentNode();
 		}
 		if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
