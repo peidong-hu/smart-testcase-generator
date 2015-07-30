@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import com.bigtester.ate.ctg.controller.PredictionIOTrainer;
 import com.bigtester.ate.ctg.model.Greeting;
 import com.bigtester.ate.ctg.model.UserInputTrainingRecord;
 import com.bigtester.ate.ctg.utils.GlobalUtils;
@@ -61,6 +63,29 @@ public class GreetingController {
 		return trainedRecords;
 	}
 
+	@CrossOrigin
+	@RequestMapping(value = "/pioPredict", method = RequestMethod.POST)
+	public List<UserInputTrainingRecord> pioPredict(@RequestBody List<UserInputTrainingRecord> records) throws IOException,
+			ClassNotFoundException, ExecutionException, InterruptedException {
+
+		for (UserInputTrainingRecord record : records) {
+			PredictionIOTrainer.quertEntity(record);
+		}
+		return records;
+	}
+
+	
+	@CrossOrigin
+	@RequestMapping(value = "/trainIntoPIO", method = RequestMethod.POST)
+	public List<UserInputTrainingRecord> trainInputPIO(@RequestBody List<UserInputTrainingRecord> records) throws ExecutionException, InterruptedException, IOException {
+		//List<Greeting> greetings = new ArrayList<Greeting>();
+		for (UserInputTrainingRecord record : records) {
+			String eventId = PredictionIOTrainer.sentTrainingEntity(record);
+			record.setTrainedResult(eventId);
+		}
+		return records;
+	}
+	
 	@CrossOrigin
 	@RequestMapping(value = "/preprocessing", method = RequestMethod.POST)
 	public Greeting preprocessing(@RequestBody List<HTMLSource> dom)

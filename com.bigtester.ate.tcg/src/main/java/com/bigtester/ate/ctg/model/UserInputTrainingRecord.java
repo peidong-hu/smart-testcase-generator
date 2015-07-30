@@ -40,6 +40,15 @@ public class UserInputTrainingRecord  {
 	/** The input ml html code. */
 	private String inputMLHtmlCode;
 	
+	private String trainedResult; //"__ATE__Error___" or succeed with eventid
+	
+	private String pioPredictLabelResult; 
+	
+	private Double pioPredictConfidence;
+	
+		
+	public UserInputTrainingRecord() {
+	}
 	/**
 	 * Instantiates a new user input training record.
 	 *
@@ -73,6 +82,42 @@ public class UserInputTrainingRecord  {
 	 */
 	public final void setInputMLHtmlCode(String inputMLHtmlCode) {
 		this.inputMLHtmlCode = inputMLHtmlCode;
+	}
+	/**
+	 * @return the trainedResult
+	 */
+	public String getTrainedResult() {
+		return trainedResult;
+	}
+	/**
+	 * @param trainedResult the trainedResult to set
+	 */
+	public void setTrainedResult(String trainedResult) {
+		this.trainedResult = trainedResult;
+	}
+	/**
+	 * @return the pioPredictLabelResult
+	 */
+	public String getPioPredictLabelResult() {
+		return pioPredictLabelResult;
+	}
+	/**
+	 * @param pioPredictLabelResult the pioPredictLabelResult to set
+	 */
+	public void setPioPredictLabelResult(String pioPredictLabelResult) {
+		this.pioPredictLabelResult = pioPredictLabelResult;
+	}
+	/**
+	 * @return the pioPredictConfidence
+	 */
+	public Double getPioPredictConfidence() {
+		return pioPredictConfidence;
+	}
+	/**
+	 * @param pioPredictConfidence the pioPredictConfidence to set
+	 */
+	public void setPioPredictConfidence(Double pioPredictConfidence) {
+		this.pioPredictConfidence = pioPredictConfidence;
 	}
 }
 
