@@ -88,7 +88,7 @@ public class WebFormUserInputsCollector extends
 
 		if ("input".equalsIgnoreCase(nodeTag)) {
 			if (null == $(node).attr("type")) {
-				retVal = false;
+				retVal = true;
 			} else {
 				for (int i = 0; i < USER_NOT_CHANGABLE_INPUT_TYPES.length; i++) {
 					if ($(node).attr("type").equalsIgnoreCase(

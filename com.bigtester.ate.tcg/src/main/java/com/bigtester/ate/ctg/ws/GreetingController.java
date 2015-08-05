@@ -88,7 +88,7 @@ public class GreetingController {
 	
 	@CrossOrigin
 	@RequestMapping(value = "/preprocessing", method = RequestMethod.POST)
-	public Greeting preprocessing(@RequestBody List<HTMLSource> dom)
+	public List<UserInputTrainingRecord> preprocessing(@RequestBody List<HTMLSource> dom)
 			throws IOException, ParserConfigurationException,
 			TransformerException {
 		List<String> csvStrings = new ArrayList<String>();
@@ -140,6 +140,12 @@ public class GreetingController {
 		com.bigtester.ate.ctg.controller.TrainingFileDB.writeTestCsvFile(
 				csvStrings, true);
 
+		List<UserInputTrainingRecord> retVal = new ArrayList<UserInputTrainingRecord>();
+		for (int i=0; i<csvStrings.size(); i++) {
+			UserInputTrainingRecord uitr = new UserInputTrainingRecord();
+			uitr.setInputMLHtmlCode(csvStrings.get(i).trim());
+			retVal.add(uitr);
+		}
 		// List<WebElement> iframes = webD.findElements(By.tagName("iframe"));
 		// List<WebElement> frames = webD.findElements(By.tagName("frame"));
 		// iframes.addAll(frames);
@@ -149,7 +155,7 @@ public class GreetingController {
 		// traverseFrameTraining(webD, xpathOfChildFrame);
 		// }
 		// webD.switchTo().parentFrame();
-		return new Greeting(counter.incrementAndGet(), "Done");
+		return retVal;
 
 	}
 

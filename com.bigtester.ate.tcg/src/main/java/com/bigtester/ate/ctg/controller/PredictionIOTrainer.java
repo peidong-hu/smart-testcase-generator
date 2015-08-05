@@ -21,6 +21,8 @@
 package com.bigtester.ate.ctg.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -44,37 +46,50 @@ public class PredictionIOTrainer {
 	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "qdQkFtusKxikK8n3L7fjorqbTeNIeRa7z2NbXwvsd4m95WSC6kVPuKNrw4baiJTl";
 	public static final String EVENTSERVERURL = "http://172.16.173.50:7070";
 	public static final String ENGINESERVERURL = "http://172.16.173.50:8000";
+	public static List<String> categories = new ArrayList<String>();
 
 	public static String sentTrainingEntity(UserInputTrainingRecord record)
 			throws ExecutionException, InterruptedException, IOException {
-		EventClient client = new EventClient(SAMPLETEXTCLASSIFIERACCESSKEY, 
+		EventClient client = new EventClient(SAMPLETEXTCLASSIFIERACCESSKEY,
 				EVENTSERVERURL);
 
 		Event event = new Event()
-				.event("userinputevent")
-				.entityType("userinputentity")
+				.event("userfield")
+				.entityType("userfieldentity")
 				.entityId(UUID.randomUUID().toString())
 				.properties(
-						ImmutableMap.<String, Object> of("text",
-								record.getInputMLHtmlCode(), "label",
-								record.getInputLabelName() ));
+						ImmutableMap.<String, Object> of("label",
+								toDouble(record.getInputLabelName()), "text",
+								record.getInputMLHtmlCode(), "category",
+								record.getInputLabelName()));
 		String retVal = client.createEvent(event);
 		client.close();
 		return retVal;
 	}
-	public static UserInputTrainingRecord quertEntity(UserInputTrainingRecord record)
-			throws ExecutionException, InterruptedException, IOException {
-		EngineClient client = new EngineClient( 
-				ENGINESERVERURL);
 
-		JsonObject jObj = client.sendQuery(
-						ImmutableMap.<String, Object> of("text",
-								record.getInputMLHtmlCode()));
+	private static Double toDouble(String str) {
+		Double retVal;
+		Integer index = categories.indexOf(str);
+		if (index.equals(-1)) {
+			categories.add(str);
+			retVal = ((Integer) categories.indexOf(str)).doubleValue();
+		} else {
+			retVal = index.doubleValue();
+		}
+		return retVal;
+	}
+
+	public static UserInputTrainingRecord quertEntity(
+			UserInputTrainingRecord record) throws ExecutionException,
+			InterruptedException, IOException {
+		EngineClient client = new EngineClient(ENGINESERVERURL);
+
+		JsonObject jObj = client.sendQuery(ImmutableMap.<String, Object> of(
+				"text", record.getInputMLHtmlCode()));
 		client.close();
 		record.setPioPredictLabelResult(jObj.get("category").getAsString());
 		record.setPioPredictConfidence(jObj.get("confidence").getAsDouble());
-		 
-		
+
 		return record;
 	}
 }
