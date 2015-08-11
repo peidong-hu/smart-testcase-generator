@@ -34,7 +34,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author ashraf
  *
  */
-public class UserInputTrainingRecord  {
+public class WebPageTrainingRecord  {
 	
 	/** The input label name. */
 	private String inputLabelName; //htmlLabelContent
@@ -48,10 +48,10 @@ public class UserInputTrainingRecord  {
 	
 	private Double pioPredictConfidence;
 	
-//	@Nullable
-//	private boolean userFinalizedLabelResult; //user has revised the pio predicted result if !=null.
-//		
-	public UserInputTrainingRecord() {
+	@Nullable
+	private boolean userFinalizedLabelResult; //user has revised the pio predicted result if !=null.
+		
+	public WebPageTrainingRecord() {
 	}
 	/**
 	 * Instantiates a new user input training record.
@@ -59,7 +59,7 @@ public class UserInputTrainingRecord  {
 	 * @param labelName the label name
 	 * @param mlHtmlCode the ml html code
 	 */
-	public UserInputTrainingRecord(String labelName, String mlHtmlCode) {
+	public WebPageTrainingRecord(String labelName, String mlHtmlCode) {
 		this.inputLabelName = labelName;
 		this.inputMLHtmlCode = mlHtmlCode;
 	}
@@ -126,14 +126,14 @@ public class UserInputTrainingRecord  {
 	/**
 	 * @return the userFinalizedLabelResult
 	 */
-//	public boolean isUserFinalizedLabelResult() {
-//		return userFinalizedLabelResult;
-//	}
-//	/**
-//	 * @param userFinalizedLabelResult the userFinalizedLabelResult to set
-//	 */
-//	public void setUserFinalizedLabelResult(boolean userFinalizedLabelResult) {
-//		this.userFinalizedLabelResult = userFinalizedLabelResult;
-//	}
+	public boolean isUserFinalizedLabelResult() {
+		return userFinalizedLabelResult;
+	}
+	/**
+	 * @param userFinalizedLabelResult the userFinalizedLabelResult to set
+	 */
+	public void setUserFinalizedLabelResult(boolean userFinalizedLabelResult) {
+		this.userFinalizedLabelResult = userFinalizedLabelResult;
+	}
 }
 

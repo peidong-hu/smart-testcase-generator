@@ -21,6 +21,8 @@ import org.w3c.dom.Node;
 
 import com.bigtester.ate.ctg.controller.PredictionIOTrainer;
 import com.bigtester.ate.ctg.model.Greeting;
+import com.bigtester.ate.ctg.model.HTMLSource;
+import com.bigtester.ate.ctg.model.IntermediateResult;
 import com.bigtester.ate.ctg.model.UserInputTrainingRecord;
 import com.bigtester.ate.ctg.utils.GlobalUtils;
 
@@ -66,6 +68,26 @@ public class GreetingController {
 	@CrossOrigin
 	@RequestMapping(value = "/pioPredict", method = RequestMethod.POST)
 	public List<UserInputTrainingRecord> pioPredict(@RequestBody List<UserInputTrainingRecord> records) throws IOException,
+			ClassNotFoundException, ExecutionException, InterruptedException {
+
+		for (UserInputTrainingRecord record : records) {
+			PredictionIOTrainer.quertEntity(record);
+		}
+		return records;
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/saveIntermediateResult", method = RequestMethod.POST)
+	public boolean saveIntermediateResult(@RequestBody IntermediateResult intermediateResult) throws IOException,
+			ClassNotFoundException, ExecutionException, InterruptedException {
+
+		return true;
+	}
+
+	
+	@CrossOrigin
+	@RequestMapping(value = "/saveResult", method = RequestMethod.POST)
+	public List<UserInputTrainingRecord> saveResult(@RequestBody List<UserInputTrainingRecord> records) throws IOException,
 			ClassNotFoundException, ExecutionException, InterruptedException {
 
 		for (UserInputTrainingRecord record : records) {

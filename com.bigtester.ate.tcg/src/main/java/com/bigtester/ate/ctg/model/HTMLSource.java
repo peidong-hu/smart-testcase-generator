@@ -1,4 +1,4 @@
-package com.bigtester.ate.ctg.ws;
+package com.bigtester.ate.ctg.model;
 
 import java.io.Serializable;
 

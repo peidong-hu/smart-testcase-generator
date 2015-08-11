@@ -297,7 +297,7 @@ public class WebFormUserInputsCollector extends
 		boolean retVal = false;
 		for (int i = 0; i < USER_CHANGABLE_INPUT_TAGS.length; i++) {
 			boolean nextSiblingIsInput = false;
-			if (node.getNextSibling() != null) {
+			if (node.getNextSibling() != null && $(node.getNextSibling()).tag() != null) {
 				nextSiblingIsInput = Arrays.asList(USER_CHANGABLE_INPUT_TAGS)
 						.contains($(node.getNextSibling()).tag().toLowerCase())
 						|| $(node.getNextSibling()).find(
@@ -305,7 +305,7 @@ public class WebFormUserInputsCollector extends
 			}
 			boolean previousSiblingIsInput = false;
 
-			if (node.getPreviousSibling() != null) {
+			if (node.getPreviousSibling() != null && $(node.getPreviousSibling()).tag() != null) {
 				previousSiblingIsInput = Arrays.asList(
 						USER_CHANGABLE_INPUT_TAGS).contains(
 						$(node.getPreviousSibling()).tag().toLowerCase())
