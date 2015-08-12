@@ -28,7 +28,6 @@ import java.util.concurrent.ExecutionException;
 
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import io.prediction.EngineClient;
@@ -42,12 +41,34 @@ import io.prediction.EventClient;
  * @author Peidong Hu
  *
  */
-public class PredictionIOTrainer {
+final public class PredictionIOTrainer {
+	
+	/** The Constant SAMPLETEXTCLASSIFIERACCESSKEY. */
 	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "qdQkFtusKxikK8n3L7fjorqbTeNIeRa7z2NbXwvsd4m95WSC6kVPuKNrw4baiJTl";
+	
+	/** The Constant EVENTSERVERURL. */
 	public static final String EVENTSERVERURL = "http://172.16.173.50:7070";
+	
+	/** The Constant ENGINESERVERURL. */
 	public static final String ENGINESERVERURL = "http://172.16.173.50:8000";
+	
+	/** The categories. */
 	public static List<String> categories = new ArrayList<String>();
 
+	/**
+	 * Instantiates a new prediction io trainer.
+	 */
+	private PredictionIOTrainer(){};
+	
+	/**
+	 * Sent training entity.
+	 *
+	 * @param record the record
+	 * @return the string
+	 * @throws ExecutionException the execution exception
+	 * @throws InterruptedException the interrupted exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static String sentTrainingEntity(UserInputTrainingRecord record)
 			throws ExecutionException, InterruptedException, IOException {
 		EventClient client = new EventClient(SAMPLETEXTCLASSIFIERACCESSKEY,
@@ -64,9 +85,18 @@ public class PredictionIOTrainer {
 								record.getInputLabelName()));
 		String retVal = client.createEvent(event);
 		client.close();
+		if (null == retVal) {
+			retVal = "";
+		} 
 		return retVal;
 	}
 
+	/**
+	 * To double.
+	 *
+	 * @param str the str
+	 * @return the double
+	 */
 	private static Double toDouble(String str) {
 		Double retVal;
 		Integer index = categories.indexOf(str);
@@ -76,10 +106,20 @@ public class PredictionIOTrainer {
 		} else {
 			retVal = index.doubleValue();
 		}
+		if (null == retVal) retVal = 0.0;
 		return retVal;
 	}
 
-	public static UserInputTrainingRecord quertEntity(
+	/**
+	 * Quert entity.
+	 *
+	 * @param record the record
+	 * @return the user input training record
+	 * @throws ExecutionException the execution exception
+	 * @throws InterruptedException the interrupted exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static UserInputTrainingRecord queryEntity(
 			UserInputTrainingRecord record) throws ExecutionException,
 			InterruptedException, IOException {
 		EngineClient client = new EngineClient(ENGINESERVERURL);
@@ -87,8 +127,12 @@ public class PredictionIOTrainer {
 		JsonObject jObj = client.sendQuery(ImmutableMap.<String, Object> of(
 				"text", record.getInputMLHtmlCode()));
 		client.close();
-		record.setPioPredictLabelResult(jObj.get("category").getAsString());
-		record.setPioPredictConfidence(jObj.get("confidence").getAsDouble());
+		String cat = jObj.get("category").getAsString();
+		if (null == cat) cat = "";
+		record.setPioPredictLabelResult(cat);
+		Double con = jObj.get("confidence").getAsDouble();
+		if (null == con) con = 0.0;
+		record.setPioPredictConfidence(con);
 
 		return record;
 	}

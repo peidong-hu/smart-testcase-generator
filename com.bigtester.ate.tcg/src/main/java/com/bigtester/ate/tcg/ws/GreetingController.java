@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicLong;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +22,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.bigtester.ate.tcg.controller.PredictionIOTrainer;
-import com.bigtester.ate.tcg.model.Greeting;
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
@@ -36,10 +35,11 @@ import com.bigtester.ate.tcg.utils.GlobalUtils;
 @RestController
 public class GreetingController {
 
-	/** The counter. */
-	private final transient AtomicLong counter = new AtomicLong();
-	@Autowired 
+	/** The template. */
+	@Autowired
+	@Nullable
 	private Neo4jTemplate template;
+
 	/**
 	 * Predict.
 	 *
@@ -69,95 +69,160 @@ public class GreetingController {
 		return trainedRecords;
 	}
 
+	/**
+	 * Pio predict.
+	 *
+	 * @param records
+	 *            the records
+	 * @return the list
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws ExecutionException
+	 *             the execution exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
 	@CrossOrigin
 	@RequestMapping(value = "/pioPredict", method = RequestMethod.POST)
-	public List<UserInputTrainingRecord> pioPredict(@RequestBody List<UserInputTrainingRecord> records) throws IOException,
-			ClassNotFoundException, ExecutionException, InterruptedException {
+	public List<UserInputTrainingRecord> pioPredict(
+			@RequestBody List<UserInputTrainingRecord> records)
+			throws IOException, ClassNotFoundException, ExecutionException,
+			InterruptedException {
 
 		for (UserInputTrainingRecord record : records) {
-			PredictionIOTrainer.quertEntity(record);
+			if (null != record)
+				PredictionIOTrainer.queryEntity(record);
 		}
 		return records;
 	}
 
+	/**
+	 * Save intermediate result.
+	 *
+	 * @param intermediateResult
+	 *            the intermediate result
+	 * @return true, if successful
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws ExecutionException
+	 *             the execution exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
 	@CrossOrigin
 	@RequestMapping(value = "/saveIntermediateResult", method = RequestMethod.POST)
-	public boolean saveIntermediateResult(@RequestBody IntermediateResult intermediateResult) throws IOException,
-			ClassNotFoundException, ExecutionException, InterruptedException {
-		getTemplate().save(new Neo4jScreenNode("firstNode", "http://helloworld.com", intermediateResult));
+	public boolean saveIntermediateResult(
+			@RequestBody IntermediateResult intermediateResult)
+			throws IOException, ClassNotFoundException, ExecutionException,
+			InterruptedException {
+		getTemplate().save(
+				new Neo4jScreenNode("firstNode", "http://helloworld.com",
+						intermediateResult));
 		return true;
 	}
 
-	
-//	@CrossOrigin
-//	@RequestMapping(value = "/saveResult", method = RequestMethod.POST)
-//	public List<UserInputTrainingRecord> saveResult(@RequestBody List<UserInputTrainingRecord> records) throws IOException,
-//			ClassNotFoundException, ExecutionException, InterruptedException {
-//
-//		for (UserInputTrainingRecord record : records) {
-//			PredictionIOTrainer.quertEntity(record);
-//		}
-//		return records;
-//	}
+	// @CrossOrigin
+	// @RequestMapping(value = "/saveResult", method = RequestMethod.POST)
+	// public List<UserInputTrainingRecord> saveResult(@RequestBody
+	// List<UserInputTrainingRecord> records) throws IOException,
+	// ClassNotFoundException, ExecutionException, InterruptedException {
+	//
+	// for (UserInputTrainingRecord record : records) {
+	// PredictionIOTrainer.quertEntity(record);
+	// }
+	// return records;
+	// }
 
-	
+	/**
+	 * Train input pio.
+	 *
+	 * @param records
+	 *            the records
+	 * @return the list
+	 * @throws ExecutionException
+	 *             the execution exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	@CrossOrigin
 	@RequestMapping(value = "/trainIntoPIO", method = RequestMethod.POST)
-	public List<UserInputTrainingRecord> trainInputPIO(@RequestBody List<UserInputTrainingRecord> records) throws ExecutionException, InterruptedException, IOException {
-		//List<Greeting> greetings = new ArrayList<Greeting>();
+	public List<UserInputTrainingRecord> trainInputPIO(
+			@RequestBody List<UserInputTrainingRecord> records)
+			throws ExecutionException, InterruptedException, IOException {
+		// List<Greeting> greetings = new ArrayList<Greeting>();
 		for (UserInputTrainingRecord record : records) {
-			String eventId = PredictionIOTrainer.sentTrainingEntity(record);
-			record.setTrainedResult(eventId);
+			if (null != record) {
+				String eventId = PredictionIOTrainer.sentTrainingEntity(record);
+				record.setTrainedResult(eventId);
+			}
 		}
 		return records;
 	}
-	
+
+	/**
+	 * Preprocessing.
+	 *
+	 * @param dom the dom
+	 * @return the list
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ParserConfigurationException the parser configuration exception
+	 * @throws TransformerException the transformer exception
+	 */
 	@CrossOrigin
 	@RequestMapping(value = "/preprocessing", method = RequestMethod.POST)
-	public List<UserInputTrainingRecord> preprocessing(@RequestBody List<HTMLSource> dom)
-			throws IOException, ParserConfigurationException,
-			TransformerException {
+	public List<UserInputTrainingRecord> preprocessing(
+			@RequestBody List<HTMLSource> dom) throws IOException,
+			ParserConfigurationException, TransformerException {
 		List<String> csvStrings = new ArrayList<String>();
 		for (int i = 0; i < dom.size(); i++) {
 			Document doc = GlobalUtils.html2Dom(dom.get(i).getDomDoc());
 
 			com.bigtester.ate.tcg.controller.WebFormUserInputsCollector col;
-			GlobalUtils.printDocument(doc.getDocumentElement(), System.out);
+			// GlobalUtils.printDocument(doc.getDocumentElement(), System.out);
 			col = new com.bigtester.ate.tcg.controller.WebFormUserInputsCollector(
 					doc, dom.get(0).getXpathOfFrame());
-			System.out.println("\n*******************\n");
-			System.out.println("\n*******************\n");
+			// System.out.println("\n*******************\n");
+			// System.out.println("\n*******************\n");
 
 			for (com.bigtester.ate.tcg.model.UserInputDom inputDom : col
 					.getUserInputs()) {
-				String temp = "";
+				StringBuffer temp = new StringBuffer("");
 				for (Node node : inputDom.getMachineLearningDomHtmlPointers()) {
-					ByteArrayOutputStream stringOutput = new ByteArrayOutputStream();
-					GlobalUtils.printDocument(node, stringOutput);
-					stringOutput.toString();
-					temp = temp + stringOutput.toString();
+					if (null != node) {
+						ByteArrayOutputStream stringOutput = new ByteArrayOutputStream();
+						GlobalUtils.printDocument(node, stringOutput);
+						stringOutput.toString();
+						temp.append(stringOutput.toString());
+					}
 				}
 				if (StringUtils.isNotEmpty(temp))
-					csvStrings.add(temp);
+					csvStrings.add(temp.toString());
 
-				System.out.println("\n--above Node print----\n");
+				// System.out.println("\n--above Node print----\n");
 
-				List<Node> nodes = inputDom.getMachineLearningDomHtmlPointers();
-				if (nodes != null)
-					for (Node node : nodes)
-						GlobalUtils.printDocument(node, System.out);
-				System.out.println("\n------above node ML code---------\n");
-				GlobalUtils.printDocument(inputDom.getLabelDomPointer(),
-						System.out);
-				System.out
-						.println("\n------above node lable code-----------------------\n");
+				// List<Node> nodes =
+				// inputDom.getMachineLearningDomHtmlPointers();
+				// if (nodes != null)
+				// for (Node node : nodes)
+				// GlobalUtils.printDocument(node, System.out);
+				// System.out.println("\n------above node ML code---------\n");
+				// GlobalUtils.printDocument(inputDom.getLabelDomPointer(),
+				// System.out);
+				// System.out
+				// .println("\n------above node lable code-----------------------\n");
 
-				List<Node> nodes2 = inputDom.getAdditionalInfoNodes();
-				if (nodes2 != null)
-					for (Node node2 : nodes2)
-						GlobalUtils.printDocument(node2, System.out);
-				System.out
-						.println("\n=======above node additional info code=========\n");
+				// List<Node> nodes2 = inputDom.getAdditionalInfoNodes();
+				// if (nodes2 != null)
+				// for (Node node2 : nodes2)
+				// GlobalUtils.printDocument(node2, System.out);
+				// System.out
+				// .println("\n=======above node additional info code=========\n");
 
 			}
 		}
@@ -167,10 +232,16 @@ public class GreetingController {
 				csvStrings, true);
 
 		List<UserInputTrainingRecord> retVal = new ArrayList<UserInputTrainingRecord>();
-		for (int i=0; i<csvStrings.size(); i++) {
+		for (int i = 0; i < csvStrings.size(); i++) {
 			UserInputTrainingRecord uitr = new UserInputTrainingRecord();
-			uitr.setInputMLHtmlCode(csvStrings.get(i).trim());
+			StringBuffer temp = new StringBuffer(csvStrings.get(i));
+			String temp2 = temp.toString();
+			if (null == temp2)
+				uitr.setInputMLHtmlCode("");
+			else
+				uitr.setInputMLHtmlCode(temp2);
 			retVal.add(uitr);
+
 		}
 		// List<WebElement> iframes = webD.findElements(By.tagName("iframe"));
 		// List<WebElement> frames = webD.findElements(By.tagName("frame"));
@@ -188,12 +259,21 @@ public class GreetingController {
 	/**
 	 * @return the template
 	 */
+
 	public Neo4jTemplate getTemplate() {
-		return template;
+		final Neo4jTemplate template2 = template;
+		if (template2 == null) {
+			throw new IllegalStateException("template not initialized");
+		} else {
+			return template2;
+			
+		}
+
 	}
 
 	/**
-	 * @param template the template to set
+	 * @param template
+	 *            the template to set
 	 */
 	public void setTemplate(Neo4jTemplate template) {
 		this.template = template;

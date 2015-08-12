@@ -27,73 +27,73 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.bigtester.ate.tcg.utils.exception.Html2DomException;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class GlobalUtils.
  */
 public final class GlobalUtils {
-	
+
 	private GlobalUtils() {
-		
+
 	}
+
 	/**
 	 * Html2 dom.
 	 *
-	 * @param source the source
+	 * @param source
+	 *            the source
 	 * @return the document
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ParserConfigurationException the parser configuration exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws ParserConfigurationException
+	 *             the parser configuration exception
+	 * @throws Html2DomException
 	 */
-	public static Document html2Dom(String source) throws IOException, ParserConfigurationException {
-		
+	public static Document html2Dom(String source) throws IOException,
+			ParserConfigurationException, Html2DomException {
+
 		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder();
 		InputSource inputS = new InputSource();
 		inputS.setCharacterStream(new StringReader(source));
-		Document doc = null;
-		//WebFormUserInputsCollector col;
+		Document doc;
+		// WebFormUserInputsCollector col;
 		try {
-			
-				doc = docBuilder.parse(inputS);
-			
-			//printDocument(doc.getDocumentElement(), System.out);
-			//col = new WebFormUserInputsCollector(webD, doc, xpathOfFrame);
+
+			doc = docBuilder.parse(inputS);// NOPMD
+
+			// printDocument(doc.getDocumentElement(), System.out);
+			// col = new WebFormUserInputsCollector(webD, doc, xpathOfFrame);
 		} catch (SAXException e) {
 			// create an instance of HtmlCleaner
 			HtmlCleaner cleaner = new HtmlCleaner();
-			 
+
 			// take default cleaner properties
 			CleanerProperties props = cleaner.getProperties();
-			 
-			TagNode node = cleaner.clean(source);
-			 
-			try {
-				doc = new DomSerializer(props, true).createDOM(node);
-			} catch (ParserConfigurationException e1) {
-				// TODO Auto-generated catch block
-				doc = null;
-			}
 
-		//	TolerantSaxDocumentBuilder tolerantSaxDocumentBuilder = new TolerantSaxDocumentBuilder(
-//					XMLUnit.newTestParser());
-//			HTMLDocumentBuilder db1 = new HTMLDocumentBuilder(
-//					tolerantSaxDocumentBuilder);
-//			doc = db1.parse(new StringReader(source));
-			//printDocument(doc.getDocumentElement(), System.out);
-			//col = new WebFormUserInputsCollector(webD, doc, xpathOfFrame);
+			TagNode node = cleaner.clean(source);
+			doc = new DomSerializer(props, true).createDOM(node);
 		}
+		if (null == doc)
+			throw new Html2DomException("html can't be converted to dom");
 		return doc;
 	}
-	
+
 	/**
 	 * Prints the document.
 	 *
-	 * @param doc the doc
-	 * @param out the out
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws TransformerException the transformer exception
+	 * @param doc
+	 *            the doc
+	 * @param out
+	 *            the out
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws TransformerException
+	 *             the transformer exception
 	 */
-	public static void printDocument(Node doc, OutputStream out)//NOPMD
+	public static void printDocument(Node doc, OutputStream out)// NOPMD
 			throws IOException, TransformerException {
 		TransformerFactory transF = TransformerFactory.newInstance();
 		Transformer transformer = transF.newTransformer();
@@ -111,35 +111,29 @@ public final class GlobalUtils {
 	/**
 	 * Gets the string from input stream.
 	 *
-	 * @param inputS the is
+	 * @param inputS
+	 *            the is
 	 * @return the string from input stream
+	 * @throws IOException
 	 */
-	public static String getStringFromInputStream(InputStream inputS) {
+	public static String getStringFromInputStream(InputStream inputS)
+			throws IOException {
 
-		BufferedReader reader = null;
+		BufferedReader reader;
 		StringBuilder stringBuilder = new StringBuilder();
-
 		String line;
-		try {
 
-			reader = new BufferedReader(new InputStreamReader(inputS));
-			while ((line = reader.readLine()) != null) {
-				stringBuilder.append(line);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		reader = new BufferedReader(new InputStreamReader(inputS));
+		while ((line = reader.readLine()) != null) {// NOPMD
+			stringBuilder.append(line);
 		}
-
-		return stringBuilder.toString();
+		if (reader != null) {
+			reader.close();
+		}
+		String retVal = stringBuilder.toString();
+		if (null == retVal)
+			retVal = "";
+		return retVal;
 
 	}
 
