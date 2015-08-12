@@ -27,6 +27,7 @@ import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
+import com.bigtester.ate.tcg.utils.exception.Html2DomException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -173,12 +174,13 @@ public class GreetingController {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws ParserConfigurationException the parser configuration exception
 	 * @throws TransformerException the transformer exception
+	 * @throws Html2DomException 
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/preprocessing", method = RequestMethod.POST)
 	public List<UserInputTrainingRecord> preprocessing(
 			@RequestBody List<HTMLSource> dom) throws IOException,
-			ParserConfigurationException, TransformerException {
+			ParserConfigurationException, TransformerException, Html2DomException {
 		List<String> csvStrings = new ArrayList<String>();
 		for (int i = 0; i < dom.size(); i++) {
 			Document doc = GlobalUtils.html2Dom(dom.get(i).getDomDoc());

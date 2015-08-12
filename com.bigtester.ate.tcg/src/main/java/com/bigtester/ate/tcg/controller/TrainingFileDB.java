@@ -39,6 +39,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.QuoteMode;
+import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.ServletContextAware;
@@ -51,11 +52,12 @@ import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
  */
 @Controller
 public class TrainingFileDB implements ServletContextAware {
-	
+
 	/** The servlet context. */
 	@Autowired
+	@Nullable
 	public static ServletContext servletContext;
-	
+
 	/** The Constant NEW_LINE_SEPARATOR. */
 	// Delimiter used in CSV file
 	private static final String NEW_LINE_SEPARATOR = "\n";
@@ -63,19 +65,32 @@ public class TrainingFileDB implements ServletContextAware {
 	/**
 	 * Parses the line.
 	 *
-	 * @param line the line
+	 * @param line
+	 *            the line
 	 * @return the user input training record
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static UserInputTrainingRecord parseLine(String line)
 			throws IOException {
 		CSVParser lineParser = CSVParser.parse(line,
 				TrainingFileDB.getCSVFormat());
 		List<CSVRecord> csvRecords = lineParser.getRecords();
-		UserInputTrainingRecord retVal = null;
+		UserInputTrainingRecord retVal = null; // NOPMD
 		for (CSVRecord record : csvRecords) {
-			retVal = new UserInputTrainingRecord(record.get(0), record.get(1));
+			if (null != record) {
+				String temp = record.get(0);
+				String temp2 = record.get(1);
+				if (null == temp)
+					temp = "";
+				if (null == temp2)
+					temp2 = "";
+				retVal = new UserInputTrainingRecord(temp, // NOPMD
+						temp2);
+			}
 		}
+		if (null == retVal)
+			throw new IOException();
 		return retVal;
 	}
 
@@ -83,39 +98,48 @@ public class TrainingFileDB implements ServletContextAware {
 	 * Gets the CSV format.
 	 *
 	 * @return the CSV format
+	 * @throws IOException
 	 */
-	public static CSVFormat getCSVFormat() {
+	public static CSVFormat getCSVFormat() throws IOException {
 		// Create the CSVFormat object with "\n" as a record delimiter
-		CSVFormat csvFileFormat = CSVFormat.TDF
+		CSVFormat csvFileFormat = CSVFormat.TDF // NOPMD
 				.withRecordSeparator(NEW_LINE_SEPARATOR);
 		csvFileFormat = csvFileFormat.withEscape('^');
 		csvFileFormat = csvFileFormat.withQuoteMode(QuoteMode.NONE);
+		if (null == csvFileFormat)
+			throw new IOException();
 		return csvFileFormat;
 	}
 
 	/**
 	 * Clean test csv file.
 	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void cleanTestCsvFile() throws IOException {
 		// initialize FileWriter object
-			
-		//FileSystemResource testFile = new FileSystemResource(UserInputsTrainer.TESTFILE);
-		
+
+		// FileSystemResource testFile = new
+		// FileSystemResource(UserInputsTrainer.TESTFILE);
+
 		FileWriter fileWriter = new FileWriter(UserInputsTrainer.TESTFILE);
 		fileWriter.write("");
 		fileWriter.close();
-		
+
 	}
-	
+
 	/**
 	 * Write test csv file.
 	 *
-	 * @param mlInputs the ml inputs
-	 * @param append the append
+	 * @param mlInputs
+	 *            the ml inputs
+	 * @param append
+	 *            the append
+	 * @throws IOException
 	 */
-	public static void writeTestCsvFile(List<String> mlInputs, boolean append) {
+	public static void writeTestCsvFile(List<String> mlInputs, boolean append)
+			throws IOException {
 
 		if (mlInputs.isEmpty())
 			return;
@@ -123,25 +147,28 @@ public class TrainingFileDB implements ServletContextAware {
 		// Create new students objects
 		List<UserInputTrainingRecord> trainings = new ArrayList<UserInputTrainingRecord>();
 		for (int index = 0; index < mlInputs.size(); index++) {
-			trainings
-					.add(new UserInputTrainingRecord(" ", mlInputs.get(index)));
+			String temp = mlInputs.get(index);
+			if (null != temp) {
+				trainings.add(new UserInputTrainingRecord(" ", temp));
+			}
 		}
 
-		FileWriter fileWriter = null;
+		FileWriter fileWriter = null; // NOPMD
 
-		CSVPrinter csvFilePrinter = null;
+		CSVPrinter csvFilePrinter = null; // NOPMD
 
 		// Create the CSVFormat object with "\n" as a record delimiter
 		CSVFormat csvFileFormat = getCSVFormat();
 		try {
 
 			// initialize FileWriter object
-			//FileSystemResource testFile = new FileSystemResource(UserInputsTrainer.TESTFILE);
-			
+			// FileSystemResource testFile = new
+			// FileSystemResource(UserInputsTrainer.TESTFILE);
+
 			fileWriter = new FileWriter(UserInputsTrainer.TESTFILE, append);
-			
+
 			// initialize CSVPrinter object
-			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
+			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);// NOPMD
 
 			// Write a new student object list to the CSV file
 			for (UserInputTrainingRecord student : trainings) {
@@ -151,20 +178,25 @@ public class TrainingFileDB implements ServletContextAware {
 				csvFilePrinter.printRecord(studentDataRecord);
 			}
 
-			System.out.println("CSV file was created successfully !!!");
+			// System.out.println("CSV file was created successfully !!!");
 
-		} catch (Exception e) {
-			System.out.println("Error in CsvFileWriter !!!");
-			e.printStackTrace();
-		} finally {
+		} catch (Exception e) {// NOPMD
+			throw new IOException("Error in CsvFileWriter !!!");// NOPMD
+			// e.printStackTrace();
+		} finally {// NOPMD
 			try {
-				fileWriter.flush();
-				fileWriter.close();
-				csvFilePrinter.close();
-			} catch (IOException e) {
-				System.out
-						.println("Error while flushing/closing fileWriter/csvPrinter !!!");
-				e.printStackTrace();
+				if (null != fileWriter) {
+					fileWriter.flush();
+					fileWriter.close();
+
+				}
+				if (null != csvFilePrinter) {
+					csvFilePrinter.close();
+				}
+			} catch (IOException e) { // NOPMD
+				throw new IOException(//NOPMD
+						"Error while flushing/closing fileWriter/csvPrinter !!!"); // NOPMD
+				// e.printStackTrace();
 			}
 		}
 	}
@@ -172,20 +204,27 @@ public class TrainingFileDB implements ServletContextAware {
 	/**
 	 * Write cache csv file.
 	 *
-	 * @param absoluteCacheFilePath the absolute cache file path
-	 * @param beginningComments the beginning comments
-	 * @param endingComments the ending comments
-	 * @param trainedRecords the trained records
-	 * @param append the append
+	 * @param absoluteCacheFilePath
+	 *            the absolute cache file path
+	 * @param beginningComments
+	 *            the beginning comments
+	 * @param endingComments
+	 *            the ending comments
+	 * @param trainedRecords
+	 *            the trained records
+	 * @param append
+	 *            the append
+	 * @throws IOException
 	 */
 	public static void writeCacheCsvFile(String absoluteCacheFilePath,
 			String beginningComments, String endingComments,
-			List<UserInputTrainingRecord> trainedRecords, boolean append) {
+			List<UserInputTrainingRecord> trainedRecords, boolean append)
+			throws IOException {
 		// Create new students objects
 
-		FileWriter fileWriter = null;
+		FileWriter fileWriter = null;// NOPMD
 
-		CSVPrinter csvFilePrinter = null;
+		CSVPrinter csvFilePrinter = null;// NOPMD
 
 		// Create the CSVFormat object with "\n" as a record delimiter
 		CSVFormat csvFileFormat = getCSVFormat();
@@ -222,30 +261,33 @@ public class TrainingFileDB implements ServletContextAware {
 				csvFilePrinter.printRecord(studentDataRecord);
 			}
 			csvFilePrinter.printComment(endingComments);
-			System.out.println("CSV file was created successfully !!!");
+			// System.out.println("CSV file was created successfully !!!");
 
-		} catch (Exception e) {
-			System.out.println("Error in CsvFileWriter !!!");
-			e.printStackTrace();
-		} finally {
+		} catch (Exception e) {// NOPMD
+			throw new IOException("Error in CsvFileWriter !!!");// NOPMD
+			// e.printStackTrace();
+		} finally { //NOPMD
 			try {
-				fileWriter.flush();
-				fileWriter.close();
-				csvFilePrinter.close();
-			} catch (IOException e) {
-				System.out
-						.println("Error while flushing/closing fileWriter/csvPrinter !!!");
-				e.printStackTrace();
+				if (null != fileWriter) {
+					fileWriter.flush();
+					fileWriter.close();
+				}
+				if (null != csvFilePrinter)
+					csvFilePrinter.close();
+			} catch (IOException e) {//NOPMD
+				//System.out
+				throw new IOException("Error while flushing/closing fileWriter/csvPrinter !!!");//NOPMD
+				//e.printStackTrace();
 			}
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
-	*/
+	 */
 	@Override
-	public void setServletContext(ServletContext servletContext) {
+	public void setServletContext(@Nullable ServletContext servletContext) {
 		TrainingFileDB.servletContext = servletContext;
-		
+
 	}
 }

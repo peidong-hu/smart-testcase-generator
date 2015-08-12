@@ -25,8 +25,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.bigtester.ate.tcg.utils.exception.Html2DomException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,7 +38,7 @@ import org.w3c.dom.NodeList;
  * @author Peidong Hu
  *
  */
-abstract public class AbstractWebFormElementsCollector {
+public class BaseWebFormElementsCollector {
 
 	/** The dom doc. */
 	final private Document domDoc;
@@ -55,18 +58,27 @@ abstract public class AbstractWebFormElementsCollector {
 	 *            the parent frame, Nullable
 	 * @throws ParserConfigurationException
 	 *             the parser configuration exception
+	 * @throws Html2DomException
 	 */
-	public AbstractWebFormElementsCollector(Document domDoc,
-			String xpathOfParentFrame) throws ParserConfigurationException {
+	public BaseWebFormElementsCollector(Document domDoc,
+			String xpathOfParentFrame) throws ParserConfigurationException,
+			Html2DomException {
 		this.domDoc = domDoc;
+		this.xpathOfParentFrame = "";
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
 		DocumentBuilder builder = dbf.newDocumentBuilder();
-		cleanedDoc = builder.newDocument();
+		Document tempDoc = builder.newDocument();
+		if (null == tempDoc)
+			throw new Html2DomException("dom builder");
+		cleanedDoc = tempDoc;
 
 		Node root = cleanedDoc.importNode(domDoc.getDocumentElement(), true);
 		cleanedDoc.appendChild(root);
-		fnCleanNode(cleanedDoc.getDocumentElement());
+		Element tempElement = cleanedDoc.getDocumentElement();
+		if (tempElement == null)
+			throw new Html2DomException("dom element");
+		fnCleanNode(tempElement);
 		this.setXpathOfParentFrame(xpathOfParentFrame);
 	}
 
@@ -80,23 +92,24 @@ abstract public class AbstractWebFormElementsCollector {
 		int index = 0;
 		NodeList cNodes = node.getChildNodes();
 		Node tmpNode;
-		while ((tmpNode = cNodes.item(index++)) != null)
-			switch (tmpNode.getNodeType()) {
+		while ((tmpNode = cNodes.item(index++)) != null)//NOPMD
+			// NOPMD
+			switch (tmpNode.getNodeType()) { // NOPMD
 			case Node.ELEMENT_NODE: // Element Node
 				if (tmpNode.getNodeName().equalsIgnoreCase("br")) {
 					node.removeChild(tmpNode);
-					index--;
+					index--;// NOPMD
 					break;
 				} else {
 					fnCleanNode(tmpNode);
 					break;
 				}
 			case Node.TEXT_NODE: // Text Node
-				if (!tmpNode.getNodeValue().trim().equals(""))
-					break;
-				else {
+				if (tmpNode.getNodeValue().trim().equals("")) {
 					node.removeChild(tmpNode);
-					index--;
+					index--; //NOPMD
+					break;
+				} else {
 					break;
 				}
 			case Node.COMMENT_NODE: // Comment Node (and Text Node without

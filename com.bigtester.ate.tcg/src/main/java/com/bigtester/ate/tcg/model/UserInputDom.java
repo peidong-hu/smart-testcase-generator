@@ -82,7 +82,7 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @param labelDomPointer the labelDomPointer to set
 	 */
-	public final void setLabelDomPointer(Node labelDomPointer) {
+	public final void setLabelDomPointer(@Nullable Node labelDomPointer) {
 		this.labelDomPointer = labelDomPointer;
 	}
 	/**
@@ -151,7 +151,7 @@ public class UserInputDom extends WebElementDom {
 	 * @param previousUserViewableHtmlSibling the previousUserViewableHtmlSibling to set
 	 */
 	public void setPreviousUserViewableHtmlSibling(
-			Node previousUserViewableHtmlSibling) {
+			@Nullable Node previousUserViewableHtmlSibling) {
 		this.previousUserViewableHtmlSibling = previousUserViewableHtmlSibling;
 	}
 	/**
@@ -165,7 +165,7 @@ public class UserInputDom extends WebElementDom {
 	 * @param nextUserViewableHtmlSibling the nextUserViewableHtmlSibling to set
 	 */
 	public void setNextUserViewableHtmlSibling(
-			Node nextUserViewableHtmlSibling) {
+			@Nullable Node nextUserViewableHtmlSibling) {
 		this.nextUserViewableHtmlSibling = nextUserViewableHtmlSibling;
 	}
 	/**
@@ -178,7 +178,7 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @param parentFormPointer the parentFormPointer to set
 	 */
-	public void setParentFormPointer(Node parentFormPointer) {
+	public void setParentFormPointer(@Nullable Node parentFormPointer) {
 		this.parentFormPointer = parentFormPointer;
 	}
 	

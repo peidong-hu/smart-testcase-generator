@@ -37,20 +37,32 @@ import org.eclipse.jdt.annotation.Nullable;
 public class WebPageTrainingRecord  {
 	
 	/** The input label name. */
+	@Nullable
 	private String inputLabelName; //htmlLabelContent
 	
 	/** The input ml html code. */
+	@Nullable
 	private String inputMLHtmlCode;
 	
+	/** The trained result. */
+	@Nullable
 	private String trainedResult; //"__ATE__Error___" or succeed with eventid
 	
+	/** The pio predict label result. */
+	@Nullable
 	private String pioPredictLabelResult; 
 	
+	/** The pio predict confidence. */
+	@Nullable
 	private Double pioPredictConfidence;
 	
 	
+	/** The user finalized label result. */
 	private boolean userFinalizedLabelResult; //user has revised the pio predicted result if !=null.
 		
+	/**
+	 * Instantiates a new web page training record.
+	 */
 	public WebPageTrainingRecord() {
 		super();
 	}
@@ -67,6 +79,7 @@ public class WebPageTrainingRecord  {
 	/**
 	 * @return the inputLabelName
 	 */
+	@Nullable
 	public final String getInputLabelName() {
 		return inputLabelName;
 	}
@@ -79,6 +92,7 @@ public class WebPageTrainingRecord  {
 	/**
 	 * @return the inputMLHtmlCode
 	 */
+	@Nullable
 	public final String getInputMLHtmlCode() {
 		return inputMLHtmlCode;
 	}
@@ -91,6 +105,7 @@ public class WebPageTrainingRecord  {
 	/**
 	 * @return the trainedResult
 	 */
+	@Nullable
 	public String getTrainedResult() {
 		return trainedResult;
 	}
@@ -103,6 +118,7 @@ public class WebPageTrainingRecord  {
 	/**
 	 * @return the pioPredictLabelResult
 	 */
+	@Nullable
 	public String getPioPredictLabelResult() {
 		return pioPredictLabelResult;
 	}
@@ -115,6 +131,7 @@ public class WebPageTrainingRecord  {
 	/**
 	 * @return the pioPredictConfidence
 	 */
+	@Nullable
 	public Double getPioPredictConfidence() {
 		return pioPredictConfidence;
 	}

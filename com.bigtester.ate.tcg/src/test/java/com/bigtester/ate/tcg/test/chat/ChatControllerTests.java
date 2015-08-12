@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.easymock.EasyMock;
+import org.eclipse.jdt.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,9 +42,11 @@ import com.bigtester.ate.tcg.chat.ChatRepository;
 public class ChatControllerTests {
 
 	/** The mock mvc. */
+	@Nullable
 	private transient MockMvc mockMvc;
 
 	/** The chat repository. */
+	@Nullable
 	private transient ChatRepository chatRepository;
 
 	/**
@@ -52,44 +55,55 @@ public class ChatControllerTests {
 	@Before
 	public void setup() {
 		this.chatRepository = EasyMock.createMock(ChatRepository.class);
-		this.mockMvc = standaloneSetup(new ChatController(this.chatRepository)).build();
+		if (null != this.chatRepository)
+			this.mockMvc = standaloneSetup(
+					new ChatController(this.chatRepository)).build();
 	}
 
 	/**
 	 * Gets the messages.
 	 *
 	 * @return the messages
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
-	public void getMessages() throws Exception {//NOPMD
+	public void getMessages() throws Exception {// NOPMD
 		List<String> messages = Arrays.asList("a", "b", "c");
-		expect(this.chatRepository.getMessages(9)).andReturn(messages);
-		replay(this.chatRepository);
+		if (null != this.chatRepository) {
+			expect(this.chatRepository.getMessages(9)).andReturn(messages);
+			replay(this.chatRepository);
+			if (null != this.mockMvc)
+				this.mockMvc
+						.perform(get("/mvc/chat").param("messageIndex", "9"))
+						.andExpect(status().isOk())
+						.andExpect(request().asyncStarted())
+						.andExpect(request().asyncResult(messages));
 
-		this.mockMvc.perform(get("/mvc/chat").param("messageIndex", "9"))
-				.andExpect(status().isOk())
-				.andExpect(request().asyncStarted())
-				.andExpect(request().asyncResult(messages));
-
-		verify(this.chatRepository);
+			verify(this.chatRepository);
+		}
 	}
 
 	/**
 	 * Gets the messages start async.
 	 *
 	 * @return the messages start async
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
 	@Test
-	public void getMessagesStartAsync() throws Exception { //NOPMD
-		expect(this.chatRepository.getMessages(9)).andReturn(Arrays.<String>asList());
-		replay(this.chatRepository);
-
-		this.mockMvc.perform(get("/mvc/chat").param("messageIndex", "9"))
-				.andExpect(request().asyncStarted());
-
-		verify(this.chatRepository);
+	public void getMessagesStartAsync() throws Exception { // NOPMD
+		if (null != this.chatRepository) {
+			expect(this.chatRepository.getMessages(9)).andReturn(
+					Arrays.<String> asList());
+			replay(this.chatRepository);
+			if (null != this.mockMvc) {
+				this.mockMvc.perform(
+						get("/mvc/chat").param("messageIndex", "9")).andExpect(
+						request().asyncStarted());
+			}
+			verify(this.chatRepository);
+		}
 	}
 
 }

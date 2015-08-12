@@ -24,19 +24,22 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 
+import com.bigtester.ate.tcg.utils.exception.Html2DomException;
+
 // TODO: Auto-generated Javadoc
 /**
  * This class ConfirmButtonCandidateCollector defines ....
  * @author Peidong Hu
  *
  */
-public class ConfirmButtonCandidatesCollector extends AbstractWebFormElementsCollector{
+public class ConfirmButtonCandidatesCollector extends BaseWebFormElementsCollector{
 
 	/**
 	 * @param webD
 	 * @throws ParserConfigurationException 
+	 * @throws Html2DomException 
 	 */
-	public ConfirmButtonCandidatesCollector(Document doc, String xpathOfParentFrame) throws ParserConfigurationException {
+	public ConfirmButtonCandidatesCollector(Document doc, String xpathOfParentFrame) throws ParserConfigurationException, Html2DomException {
 		super(doc, xpathOfParentFrame);
 	}
 

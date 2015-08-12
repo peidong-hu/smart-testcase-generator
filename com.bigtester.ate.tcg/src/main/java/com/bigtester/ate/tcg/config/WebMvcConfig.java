@@ -2,6 +2,7 @@ package com.bigtester.ate.tcg.config;
 
 import java.util.List;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 	 * {@inheritDoc}
 	*/
 	@Override
-	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+	public void configureAsyncSupport(@Nullable AsyncSupportConfigurer configurer) {
+		if (null == configurer) return;
 		configurer.setDefaultTimeout(30*1000L);
 	}
 
@@ -37,14 +39,16 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 	 * {@inheritDoc}
 	*/
 	@Override
-	protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+	protected void configureMessageConverters(@Nullable List<HttpMessageConverter<?>> converters) {
+		if (null == converters) return;
 		converters.add(new MappingJackson2HttpMessageConverter());
 	}
 
 	/**
 	 * {@inheritDoc}
 	*/
-	public void addViewControllers(ViewControllerRegistry registry) {
+	public void addViewControllers(@Nullable ViewControllerRegistry registry) {
+		if (null == registry) return;
 		registry.addViewController("/").setViewName("chat");
 	}
 
@@ -52,7 +56,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 	 * {@inheritDoc}
 	*/
 	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	public void addResourceHandlers(@Nullable ResourceHandlerRegistry registry) {
+		if (null == registry) return;
 		registry.addResourceHandler("/resources/**").addResourceLocations("resources/");
 	}
 

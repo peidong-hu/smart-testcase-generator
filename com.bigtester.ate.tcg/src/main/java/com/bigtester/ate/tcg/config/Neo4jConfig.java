@@ -49,16 +49,28 @@ public class Neo4jConfig extends Neo4jConfiguration {
     public GraphDatabaseService graphDatabaseService() {
         return new SpringCypherRestGraphDatabase("http://172.16.173.50:7474/db/data/", "neo4j", "hello1234567");
     }
+    
+    /**
+     * {@inheritDoc}
+    */
     @Bean
     public Neo4jTemplate neo4jTemplate() {
         return new Neo4jTemplate(graphDatabaseService());
     }
 
+    /**
+     * Graph repository factory.
+     *
+     * @return the graph repository factory
+     */
     @Bean
     public GraphRepositoryFactory graphRepositoryFactory() {
         return new GraphRepositoryFactory(neo4jTemplate(), neo4jMappingContext());
     }
 
+    /**
+     * {@inheritDoc}
+    */
     @Bean
     public Neo4jMappingContext neo4jMappingContext() {
         return new Neo4jMappingContext();

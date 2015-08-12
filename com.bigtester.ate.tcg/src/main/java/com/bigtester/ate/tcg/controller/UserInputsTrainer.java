@@ -24,10 +24,10 @@ import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 
 import edu.stanford.nlp.classify.Classifier;
 import edu.stanford.nlp.classify.ColumnDataClassifier;
-import edu.stanford.nlp.classify.LinearClassifier;
+//import edu.stanford.nlp.classify.LinearClassifier;
 import edu.stanford.nlp.ling.Datum;
 import edu.stanford.nlp.objectbank.ObjectBank;
-import edu.stanford.nlp.util.ErasureUtils;
+//import edu.stanford.nlp.util.ErasureUtils;
 // TODO: Auto-generated Javadoc
 
 /**
@@ -37,7 +37,7 @@ import edu.stanford.nlp.util.ErasureUtils;
 public class UserInputsTrainer {
 	
 	/** The propertyfile. */
-	public final static String PROPERTYFILE = System.getProperty("user.dir") + "/trainer/userinput/fieldtest.prop";
+	public final static String PROPERTYFILE = System.getProperty("user.dir") + "/trainer/userinput/fieldtest.prop";//NOPMD
 	
 	/** The trainingfile. */
 	public final static String TRAININGFILE = System.getProperty("user.dir") + "/trainer/userinput/train.txt";
@@ -75,17 +75,17 @@ public class UserInputsTrainer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public List<UserInputTrainingRecord> train() throws ClassNotFoundException, IOException {
-		ColumnDataClassifier cdc = new ColumnDataClassifier(
-				 PROPERTYFILE);
-		Classifier<String, String> cl = cdc.makeClassifier(cdc
-				.readTrainingExamples( TRAININGFILE));
-		for (String line : ObjectBank.getLineIterator( TESTFILE, "utf-8")) {
+		//ColumnDataClassifier cdc = new ColumnDataClassifier(
+		//		 PROPERTYFILE);
+		//Classifier<String, String> cl = cdc.makeClassifier(cdc //NOPMD
+		//		.readTrainingExamples( TRAININGFILE));
+		//for (String line : ObjectBank.getLineIterator( TESTFILE, "utf-8")) {
 			// instead of the method in the line below, if you have the
 			// individual elements
 			// already you can use cdc.makeDatumFromStrings(String[])
-			Datum<String, String> d = cdc.makeDatumFromLine(line);
-			System.out.println(line + "  ==>  " + cl.classOf(d));
-		}
+			//Datum<String, String> d = cdc.makeDatumFromLine(line);
+			//System.out.println(line + "  ==>  " + cl.classOf(d));
+		//}
 
 		return demonstrateSerialization();
 	}
@@ -99,21 +99,21 @@ public class UserInputsTrainer {
 	 */
 	public List<UserInputTrainingRecord> demonstrateSerialization() throws IOException,
 			ClassNotFoundException {
-		System.out
-				.println("Demonstrating working with a serialized classifier");
+		//System.out
+		//		.println("Demonstrating working with a serialized classifier");
 		ColumnDataClassifier cdc = new ColumnDataClassifier(
 				 PROPERTYFILE);
 		Classifier<String, String> classifier = cdc.makeClassifier(cdc
 				.readTrainingExamples( TRAININGFILE));
 		
-		Classifier<String, String> cl2 = cdc.makeClassifier(cdc
-				.readTrainingExamples( TESTFILE));
+		//Classifier<String, String> cl2 = cdc.makeClassifier(cdc
+		//		.readTrainingExamples( TESTFILE));
 		
 		
 		// Exhibit serialization and deserialization working. Serialized to
 		// bytes in memory for simplicity
-		System.out.println();
-		System.out.println();
+		//System.out.println();
+		//System.out.println();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(classifier);
@@ -121,11 +121,11 @@ public class UserInputsTrainer {
 		byte[] object = baos.toByteArray();
 		ByteArrayInputStream bais = new ByteArrayInputStream(object);
 		ObjectInputStream ois = new ObjectInputStream(bais);
-		LinearClassifier<String, String> linerCls = ErasureUtils.uncheckedCast(ois
-				.readObject());
+		//LinearClassifier<String, String> linerCls = ErasureUtils.uncheckedCast(ois //NOPMD
+		//		.readObject());
 		ois.close();
-		ColumnDataClassifier cdc2 = new ColumnDataClassifier(
-				 PROPERTYFILE);
+		//ColumnDataClassifier cdc2 = new ColumnDataClassifier(
+		//		 PROPERTYFILE);
 
 		// We compare the output of the deserialized classifier lc versus the
 		// original one cl
@@ -135,19 +135,22 @@ public class UserInputsTrainer {
 		for (String line : ObjectBank.getLineIterator(
 				 TESTFILE, "utf-8")) {
 			Datum<String, String> datum1 = cdc.makeDatumFromLine(line);
-			Datum<String, String> datum2 = cdc2.makeDatumFromLine(line);
-			if (TrainingFileDB.parseLine(line) != null)
-				retVal.add(new UserInputTrainingRecord(classifier.classOf(datum1),TrainingFileDB.parseLine(line).getInputMLHtmlCode()));
+			//Datum<String, String> datum2 = cdc2.makeDatumFromLine(line);
+			String temp = classifier.classOf(datum1);
 			
-			System.out.println(classifier.classOf(datum1) + "  =origi=>  " + line );
-			System.out.println(cl2.classOf(datum1)+ "  =test origi=> " + line);
-			System.out.println("score against email: " + linerCls.scoreOf(datum2, "email") + "  =deser=>  " +  line );
-			System.out.println("score against firstname: " + linerCls.scoreOf(datum2, "firstname") + "  =deser=>  " +  line );
-			System.out.println("score against reenterpassword: " + linerCls.scoreOf(datum2, "reenterpassword") + "  =deser=>  " +  line );
-			System.out.println("score against password: " + linerCls.scoreOf(datum2, "password") + "  =deser=>  " +  line );
-			System.out.println("score against lastname: " + linerCls.scoreOf(datum2, "lastname") + "  =deser=>  " +  line );
-			System.out.println("score against "+ classifier.classOf(datum1) + ": " + linerCls.scoreOf(datum2, classifier.classOf(datum1)) + "  =deser=>  " +  line );
-			System.out.println("==========================");
+			if (null != line && null != temp && TrainingFileDB.parseLine(line) != null) {
+				
+				retVal.add(new UserInputTrainingRecord(temp,TrainingFileDB.parseLine(line).getInputMLHtmlCode()));
+			}
+//			System.out.println(classifier.classOf(datum1) + "  =origi=>  " + line );
+//			System.out.println(cl2.classOf(datum1)+ "  =test origi=> " + line);
+//			System.out.println("score against email: " + linerCls.scoreOf(datum2, "email") + "  =deser=>  " +  line );
+//			System.out.println("score against firstname: " + linerCls.scoreOf(datum2, "firstname") + "  =deser=>  " +  line );
+//			System.out.println("score against reenterpassword: " + linerCls.scoreOf(datum2, "reenterpassword") + "  =deser=>  " +  line );
+//			System.out.println("score against password: " + linerCls.scoreOf(datum2, "password") + "  =deser=>  " +  line );
+//			System.out.println("score against lastname: " + linerCls.scoreOf(datum2, "lastname") + "  =deser=>  " +  line );
+//			System.out.println("score against "+ classifier.classOf(datum1) + ": " + linerCls.scoreOf(datum2, classifier.classOf(datum1)) + "  =deser=>  " +  line );
+//			System.out.println("==========================");
 		}
 		return retVal;
 	}

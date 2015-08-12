@@ -16,10 +16,12 @@
 
 package com.bigtester.ate.tcg.chat;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
@@ -28,12 +30,16 @@ public class InMemoryChatRepository implements ChatRepository {
 
 	private final List<String> messages = new CopyOnWriteArrayList<String>();
 
+	
 	public List<String> getMessages(int index) {
 		if (this.messages.isEmpty()) {
-			return Collections.<String> emptyList();
+			List<String> temp = Collections.<String> emptyList();
+			if (null == temp ) temp = new ArrayList<String>();
+			return temp;
 		}
 		Assert.isTrue((index >= 0) && (index <= this.messages.size()), "Invalid message index");
-		return this.messages.subList(index, this.messages.size());
+		
+		return new ArrayList<String>(); //this.messages.subList(index, this.messages.size());
 	}
 
 	public void addMessage(String message) {

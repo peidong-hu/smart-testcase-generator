@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.controller;
+package com.bigtester.ate.tcg.controller;//NOPMD
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,6 +35,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Iterables;
 import com.bigtester.ate.tcg.model.UserInputDom;
+import com.bigtester.ate.tcg.utils.exception.Html2DomException;
 
 import static org.joox.JOOX.*;
 
@@ -44,8 +46,7 @@ import static org.joox.JOOX.*;
  * @author Peidong Hu
  *
  */
-public class WebFormUserInputsCollector extends
-		AbstractWebFormElementsCollector {
+public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 
 	/** The Constant USER_NOT_CHANGABLE_INPUT_TYPES. */
 	final static public String[] USER_NOT_CHANGABLE_INPUT_TYPES = { "hidden" };
@@ -77,15 +78,16 @@ public class WebFormUserInputsCollector extends
 	 * @throws ParserConfigurationException
 	 *             the parser configuration exception
 	 * @throws IOException
+	 * @throws Html2DomException
 	 */
 	public WebFormUserInputsCollector(Document domDoc, String xpathOfParentFrame)
-			throws ParserConfigurationException, IOException {
+			throws ParserConfigurationException, IOException, Html2DomException {
 		super(domDoc, xpathOfParentFrame);
-		collectUserInputs(super.getCleanedDoc(), super.getDomDoc());
+		collectUserInputs(super.getCleanedDoc());
 	}
 
 	private boolean isUserChangableInputType(Node node) {
-		boolean retVal = true;
+		boolean retVal = true; // NOPMD
 		String nodeTag = node.getNodeName();
 
 		if ("input".equalsIgnoreCase(nodeTag)) {
@@ -95,7 +97,7 @@ public class WebFormUserInputsCollector extends
 				for (int i = 0; i < USER_NOT_CHANGABLE_INPUT_TYPES.length; i++) {
 					if ($(node).attr("type").equalsIgnoreCase(
 							USER_NOT_CHANGABLE_INPUT_TYPES[i])) {
-						retVal = false;
+						retVal = false;// NOPMD
 						break;
 					}
 				}
@@ -116,29 +118,35 @@ public class WebFormUserInputsCollector extends
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	private void collectUserInputs(Document cleanedDoc, Document originalDoc)
-			throws IOException {
+	private void collectUserInputs(Document cleanedDoc) throws IOException {
 		for (int j = 0; j < USER_CHANGABLE_INPUT_TAGS.length; j++) {
 			NodeList htmlInputs = cleanedDoc
 					.getElementsByTagName(USER_CHANGABLE_INPUT_TAGS[j]);
 			for (int i = 0; i < htmlInputs.getLength(); i++) {
 				Node coreNode = htmlInputs.item(i);
 				List<Element> parentsUntilForm = $(coreNode).parentsUntil(
-						"form").get();
-				if ((parentsUntilForm.isEmpty() || !Iterables
-						.get(parentsUntilForm, parentsUntilForm.size() - 1)
-						.getNodeName().equalsIgnoreCase("html"))
+						"form").get();// NOPMD
+				if (null != coreNode
+						&& (parentsUntilForm.isEmpty() || !Iterables
+								.get(parentsUntilForm,
+										parentsUntilForm.size() - 1)
+								.getNodeName().equalsIgnoreCase("html"))
 						&& isUserChangableInputType(coreNode)
 						&& !((Element) coreNode).getAttribute("ate-invisible")
 								.equalsIgnoreCase("yes")) {
+
 					if (parentsUntilForm.isEmpty()) {
+						Node coreNodeParent = coreNode.getParentNode();
+
 						userInputs.add(initUserInputDomInsideOfForm(cleanedDoc,
-								coreNode, coreNode.getParentNode()));
+								coreNode, coreNodeParent));
+
 					} else {
 						List<Element> parents = $(coreNode)
 								.parentsUntil("form").parent().get();
+						Node tempNode = parents.get(parents.size() - 1);
 						userInputs.add(initUserInputDomInsideOfForm(cleanedDoc,
-								coreNode, parents.get(parents.size() - 1)));
+								coreNode, tempNode));
 					}
 				} else {
 					// TODO collect input out of form element
@@ -165,11 +173,12 @@ public class WebFormUserInputsCollector extends
 			// Or we will use the nearest input sibling node as the
 			// label node;
 			if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
-				return;
+				return; //NOPMD
+
 			valueHolder.setLabelDomPointer(tempParent2.getPreviousSibling());
 		} else {
 			while (tempParent2.getNextSibling() == null
-					&& tempParent2 != searchUpEndingNode) {
+					&& !tempParent2.equals(searchUpEndingNode)) {
 				tempParent2 = tempParent2.getParentNode();
 			}
 			// if tempParent2 is form node, we will use the form's
@@ -185,16 +194,16 @@ public class WebFormUserInputsCollector extends
 	}
 
 	private void fillOutAddtionalInfoNode(UserInputDom valueHolder,
-			Node searchStartingNode, Node searchUpEndingNode,
+			Node searchStartingNode, @Nullable Node searchUpEndingNode,
 			boolean endingNodeInclusive, boolean nextSiblingOnly) {
 		// fill out addtional info nodes
 		Node tempParent2 = searchStartingNode;
-		Node tempNode = tempParent2;
+		Node tempNode = tempParent2;// NOPMD
 
 		while (tempParent2.getNextSibling() == null
-				&& tempParent2 != searchUpEndingNode) {
+				&& !tempParent2.equals(searchUpEndingNode)) {
 			tempParent2 = tempParent2.getParentNode();
-			tempNode = tempParent2;
+			tempNode = tempParent2; // NOPMD
 		}
 		if (tempNode.equals(searchUpEndingNode) && !endingNodeInclusive)
 			return;
@@ -212,12 +221,12 @@ public class WebFormUserInputsCollector extends
 	}
 
 	private void fillOutUserViewablePreviousSibling(UserInputDom valueHolder,
-			Node searchStartingNode, Node searchUpEndingNode,
+			Node searchStartingNode, @Nullable Node searchUpEndingNode,
 			boolean endingNodeInclusive) {
 		Node tempParent2 = searchStartingNode;
 
 		while (tempParent2.getPreviousSibling() == null
-				&& tempParent2 != searchUpEndingNode) {
+				&& !tempParent2.equals(searchUpEndingNode)) {
 			tempParent2 = tempParent2.getParentNode();
 		}
 		// if tempParent2 is form node, we will use the form's
@@ -232,7 +241,7 @@ public class WebFormUserInputsCollector extends
 	}
 
 	private void fillOutUserViewableNextSibling(UserInputDom valueHolder,
-			Node maxInputParentNoOtherChild, Node searchUpEndingNode,
+			Node maxInputParentNoOtherChild, @Nullable Node searchUpEndingNode,
 			boolean endingNodeInclusive) {
 
 		Node tempParent2 = maxInputParentNoOtherChild;
@@ -249,16 +258,17 @@ public class WebFormUserInputsCollector extends
 
 	private Node getMaxInputParentNoOtherChild(Node inputNode) {
 		Node tempParent2 = inputNode.getParentNode();
-		Node maxInputParentNoOtherChild = inputNode;
-		while ($(tempParent2).children().get().size() <= 1) {
-			maxInputParentNoOtherChild = tempParent2;
+		Node maxInputParentNoOtherChild = inputNode; // NOPMD
+		while (tempParent2 != null
+				&& $(tempParent2).children().get().size() <= 1) {
+			maxInputParentNoOtherChild = tempParent2;// NOPMD
 			tempParent2 = tempParent2.getParentNode();
 		}
 		return maxInputParentNoOtherChild;
 	}
 
 	private int getNumberOfUserChangableInputsInNode(Node node) {
-		int retVal = 0;
+		int retVal = 0; // NOPMD
 		for (int i = 0; i < USER_CHANGABLE_INPUT_TAGS.length; i++) {
 			retVal = $(node).find(USER_CHANGABLE_INPUT_TAGS[i]).get().size()
 					+ retVal;
@@ -269,9 +279,10 @@ public class WebFormUserInputsCollector extends
 	private Node getMaxInputParentNoOtherInput(Node inputNode,
 			boolean inputInForm) {
 		Node tempParent = inputNode.getParentNode();
-		Node maxInputParentNoOtherInput = inputNode;
-		while (getNumberOfUserChangableInputsInNode(tempParent) <= 1) {
-			maxInputParentNoOtherInput = tempParent;
+		Node maxInputParentNoOtherInput = inputNode; //NOPMD
+		while (tempParent != null
+				&& getNumberOfUserChangableInputsInNode(tempParent) <= 1) {
+			maxInputParentNoOtherInput = tempParent; //NOPMD
 			if (inputInForm
 					&& tempParent.getNodeName().equalsIgnoreCase("form")) {
 				break;
@@ -283,8 +294,8 @@ public class WebFormUserInputsCollector extends
 
 	private boolean isLeftLabeled(Node inputNode) {
 		Node inputType = inputNode.getAttributes().getNamedItem("type");
-		boolean retVal = true;
-		if (null != inputType) {
+		boolean retVal = true; // NOPMD
+		if (null != inputType) { // NOPMD
 			retVal = Arrays.asList(LEFT_LABELED_INPUT_TYPES).contains(
 					inputType.getNodeValue());
 		} else if (inputNode.getNodeName().equalsIgnoreCase("textarea")) {
@@ -296,18 +307,20 @@ public class WebFormUserInputsCollector extends
 	}
 
 	private boolean siblingHasInput(Node node) {
-		boolean retVal = false;
+		boolean retVal = false; // NOPMD
 		for (int i = 0; i < USER_CHANGABLE_INPUT_TAGS.length; i++) {
-			boolean nextSiblingIsInput = false;
-			if (node.getNextSibling() != null && $(node.getNextSibling()).tag() != null) {
+			boolean nextSiblingIsInput = false; // NOPMD
+			if (node.getNextSibling() != null
+					&& $(node.getNextSibling()).tag() != null) {
 				nextSiblingIsInput = Arrays.asList(USER_CHANGABLE_INPUT_TAGS)
 						.contains($(node.getNextSibling()).tag().toLowerCase())
 						|| $(node.getNextSibling()).find(
 								USER_CHANGABLE_INPUT_TAGS[i]).isNotEmpty();
 			}
-			boolean previousSiblingIsInput = false;
+			boolean previousSiblingIsInput = false; //NOPMD
 
-			if (node.getPreviousSibling() != null && $(node.getPreviousSibling()).tag() != null) {
+			if (node.getPreviousSibling() != null
+					&& $(node.getPreviousSibling()).tag() != null) {
 				previousSiblingIsInput = Arrays.asList(
 						USER_CHANGABLE_INPUT_TAGS).contains(
 						$(node.getPreviousSibling()).tag().toLowerCase())
@@ -323,15 +336,15 @@ public class WebFormUserInputsCollector extends
 
 	private boolean leftRightDirectedSiblingHasNoInput(Node node,
 			boolean leftLabeled) {
-		boolean retVal = true;
+		boolean retVal = true; // NOPMD
 		for (int i = 0; i < USER_CHANGABLE_INPUT_TAGS.length; i++) {
 
 			if (leftLabeled) {
 				if (node.getPreviousSibling() == null) {
-					retVal = true;
+					retVal = true; // NOPMD
 				} else if (Arrays.asList(USER_CHANGABLE_INPUT_TAGS).contains(
 						node.getPreviousSibling().getNodeName().toLowerCase()))
-					retVal = false;
+					retVal = false; //NOPMD
 				else
 					retVal = retVal
 							&& $(node.getPreviousSibling()).find(
@@ -339,10 +352,10 @@ public class WebFormUserInputsCollector extends
 			}
 			if (!leftLabeled) {
 				if (node.getNextSibling() == null) {
-					retVal = true;
+					retVal = true; // NOPMD
 				} else if (Arrays.asList(USER_CHANGABLE_INPUT_TAGS).contains(
 						node.getNextSibling().getNodeName().toLowerCase()))
-					retVal = false;
+					retVal = false;// NOPMD
 				else
 					retVal = retVal
 							&& $(node.getNextSibling()).find(
@@ -354,10 +367,10 @@ public class WebFormUserInputsCollector extends
 
 	private boolean leftRightDirectedSiblingWithLabel(Node node,
 			boolean leftLabeled) {
-		boolean retVal = false;
+		boolean retVal = false; // NOPMD
 		if (leftLabeled) {
 			if (node.getPreviousSibling() != null) {
-				retVal = $(node.getPreviousSibling()).find("label")
+				retVal = $(node.getPreviousSibling()).find("label") // NOPMD
 						.isNotEmpty()
 						|| node.getPreviousSibling().getNodeName()
 								.equalsIgnoreCase("label");
@@ -374,7 +387,7 @@ public class WebFormUserInputsCollector extends
 
 	private List<Element> getLeftRightDirectedSiblingLabelInNode(Node node,
 			boolean leftLabeled) {
-		List<Element> labels2 = new ArrayList<Element>();
+		List<Element> labels2 = new ArrayList<Element>(); // NOPMD
 
 		if (leftLabeled) {
 			if (node.getPreviousSibling().getNodeName()
@@ -388,24 +401,27 @@ public class WebFormUserInputsCollector extends
 			else
 				labels2 = $(node.getNextSibling()).find("label").get();
 		}
+		if (labels2 == null)
+			labels2 = new ArrayList<Element>();
 		return labels2;
 	}
 
 	private UserInputDom initUserInputDomInsideOfForm(Document domDoc,
-			Node inputNode, Node form) {
+			Node inputNode, @Nullable Node form) {
 		// NodeList allInputNodes, Node inputNodeParentForm) {
 		UserInputDom retVal = new UserInputDom(inputNode);
 
-		boolean leftLabeled = isLeftLabeled(inputNode);
-
-		retVal.setXPath($(inputNode).xpath());
+		boolean leftLabeled = isLeftLabeled(inputNode); // NOPMD
+		String tempstr = $(inputNode).xpath();
+		if (tempstr != null)
+			retVal.setXPath(tempstr);
 		retVal.setParentFormPointer(form);
 
 		Node maxInputParentNoOtherInput = getMaxInputParentNoOtherInput(
 				inputNode, true);
 
 		// Node tempParent = inputNode.getParentNode();
-		boolean singleInputFieldForm = false;
+		boolean singleInputFieldForm = false; //NOPMD
 
 		// Node maxInputParentNoOtherInput = tempParent;
 		// while (($(tempParent).find("input").get().size() + $(tempParent)
@@ -420,13 +436,13 @@ public class WebFormUserInputsCollector extends
 		// if signlefieldform leastInputsCommonParent is the form node
 		Node leastInputsCommonParent;
 		if (maxInputParentNoOtherInput.getNodeName().equalsIgnoreCase("form")) {
-			leastInputsCommonParent = maxInputParentNoOtherInput;
+			leastInputsCommonParent = maxInputParentNoOtherInput; //NOPMD
 			singleInputFieldForm = true;
 		} else
-			leastInputsCommonParent = maxInputParentNoOtherInput
+			leastInputsCommonParent = maxInputParentNoOtherInput //NOPMD
 					.getParentNode();
 
-		boolean singleFieldFormInputHasNoSibling = false;
+		boolean singleFieldFormInputHasNoSibling = false; //NOPMD
 		Node maxInputParentNoOtherChild = getMaxInputParentNoOtherChild(inputNode);
 		// Node tempParent2 = inputNode.getParentNode();
 		// Node maxInputParentNoOtherChild = inputNode;
@@ -458,7 +474,7 @@ public class WebFormUserInputsCollector extends
 		// }
 		// TODO the parent of maxInputParentNoOtherChild might have input
 		// fields, might not have input fields
-		Node leastNonInputSiblingsParent = maxInputParentNoOtherChild
+		Node leastNonInputSiblingsParent = maxInputParentNoOtherChild //NOPMD
 				.getParentNode();
 		if (singleInputFieldForm && !singleFieldFormInputHasNoSibling) {
 			List<Node> temp = new ArrayList<Node>();
@@ -470,7 +486,7 @@ public class WebFormUserInputsCollector extends
 
 			List<Element> labels = $(leastInputsCommonParent).find("label")
 					.get();
-			if (!labels.isEmpty()) {
+			if (!labels.isEmpty()) { //NOPMD
 				retVal.setLabelDomPointer(labels.get(0));
 			} else {
 
@@ -540,14 +556,14 @@ public class WebFormUserInputsCollector extends
 
 			List<Element> labels = $(maxInputParentNoOtherInput).find("label")
 					.get();
-			if (!labels.isEmpty()) {
+			if (!labels.isEmpty()) { //NOPMD
 
 				List<Node> tempList = new ArrayList<Node>();
 				tempList.add(maxInputParentNoOtherInput);
 				retVal.setMachineLearningDomHtmlPointer(tempList);
 
 				retVal.setLabelDomPointer(labels.get(0));
-				if (leftLabeled)
+				if (leftLabeled && leastNonInputSiblingsParent!=null)
 					fillOutAddtionalInfoNode(retVal,
 							maxInputParentNoOtherChild,
 							leastNonInputSiblingsParent, false, false);

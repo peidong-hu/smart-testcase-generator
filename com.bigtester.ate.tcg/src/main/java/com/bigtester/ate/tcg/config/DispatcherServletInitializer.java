@@ -18,6 +18,7 @@ package com.bigtester.ate.tcg.config;
 
 import javax.servlet.ServletRegistration.Dynamic;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 // TODO: Auto-generated Javadoc
@@ -30,6 +31,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 	 * {@inheritDoc}
 	*/
 	@Override
+	@Nullable
 	protected Class<?>[] getRootConfigClasses() {//NOPMD
 		return null;
 	}
@@ -54,7 +56,8 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 	 * {@inheritDoc}
 	*/
 	@Override
-	protected void customizeRegistration(Dynamic registration) {
+	protected void customizeRegistration(@Nullable Dynamic registration) {
+		if (null == registration) return;
 		registration.setAsyncSupported(true);
 	}
 
