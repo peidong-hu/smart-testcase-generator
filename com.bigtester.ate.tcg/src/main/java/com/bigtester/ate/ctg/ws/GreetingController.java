@@ -11,6 +11,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import com.bigtester.ate.ctg.controller.PredictionIOTrainer;
 import com.bigtester.ate.ctg.model.Greeting;
 import com.bigtester.ate.ctg.model.HTMLSource;
 import com.bigtester.ate.ctg.model.IntermediateResult;
+import com.bigtester.ate.ctg.model.Neo4jScreenNode;
 import com.bigtester.ate.ctg.model.UserInputTrainingRecord;
 import com.bigtester.ate.ctg.utils.GlobalUtils;
 
@@ -35,7 +38,8 @@ public class GreetingController {
 
 	/** The counter. */
 	private final transient AtomicLong counter = new AtomicLong();
-
+	@Autowired 
+	private Neo4jTemplate template;
 	/**
 	 * Predict.
 	 *
@@ -80,21 +84,21 @@ public class GreetingController {
 	@RequestMapping(value = "/saveIntermediateResult", method = RequestMethod.POST)
 	public boolean saveIntermediateResult(@RequestBody IntermediateResult intermediateResult) throws IOException,
 			ClassNotFoundException, ExecutionException, InterruptedException {
-
+		getTemplate().save(new Neo4jScreenNode("firstNode", "http://helloworld.com", intermediateResult));
 		return true;
 	}
 
 	
-	@CrossOrigin
-	@RequestMapping(value = "/saveResult", method = RequestMethod.POST)
-	public List<UserInputTrainingRecord> saveResult(@RequestBody List<UserInputTrainingRecord> records) throws IOException,
-			ClassNotFoundException, ExecutionException, InterruptedException {
-
-		for (UserInputTrainingRecord record : records) {
-			PredictionIOTrainer.quertEntity(record);
-		}
-		return records;
-	}
+//	@CrossOrigin
+//	@RequestMapping(value = "/saveResult", method = RequestMethod.POST)
+//	public List<UserInputTrainingRecord> saveResult(@RequestBody List<UserInputTrainingRecord> records) throws IOException,
+//			ClassNotFoundException, ExecutionException, InterruptedException {
+//
+//		for (UserInputTrainingRecord record : records) {
+//			PredictionIOTrainer.quertEntity(record);
+//		}
+//		return records;
+//	}
 
 	
 	@CrossOrigin
@@ -179,6 +183,20 @@ public class GreetingController {
 		// webD.switchTo().parentFrame();
 		return retVal;
 
+	}
+
+	/**
+	 * @return the template
+	 */
+	public Neo4jTemplate getTemplate() {
+		return template;
+	}
+
+	/**
+	 * @param template the template to set
+	 */
+	public void setTemplate(Neo4jTemplate template) {
+		this.template = template;
 	}
 
 }
