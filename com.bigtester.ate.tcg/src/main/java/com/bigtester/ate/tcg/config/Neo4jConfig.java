@@ -37,7 +37,7 @@ import org.springframework.data.neo4j.support.mapping.Neo4jMappingContext;
  *
  */
 @Configuration
-@EnableNeo4jRepositories(basePackages = "com.bigtester.ate.ctg")
+@EnableNeo4jRepositories(basePackages = "com.bigtester.ate.tcg")
 public class Neo4jConfig extends Neo4jConfiguration {
 
     /**

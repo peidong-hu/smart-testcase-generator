@@ -22,7 +22,7 @@ import org.thymeleaf.templateresolver.TemplateResolver;
  * The Class WebMvcConfig.
  */
 @Configuration
-@ComponentScan(basePackages = { "com.bigtester.ate.ctg" })
+@ComponentScan(basePackages = { "com.bigtester.ate.tcg" })
 public class WebMvcConfig extends WebMvcConfigurationSupport {
 
 	/**
