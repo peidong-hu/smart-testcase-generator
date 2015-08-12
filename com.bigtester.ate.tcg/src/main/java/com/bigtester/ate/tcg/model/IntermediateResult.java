@@ -25,7 +25,7 @@ import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
- * This class IntermediateResult defines ....
+ * This class IntermediateResult is the frontend response holder
  * @author Peidong Hu
  *
  */

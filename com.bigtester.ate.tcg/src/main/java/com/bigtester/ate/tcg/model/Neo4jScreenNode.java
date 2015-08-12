@@ -28,9 +28,11 @@ import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
+import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.support.index.IndexType;
 
 import com.bigtester.ate.tcg.model.relationship.Relations;
+import com.bigtester.ate.tcg.model.relationship.StepInto;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -58,12 +60,13 @@ public class Neo4jScreenNode {
 	@RelatedTo(type=Relations.SOURCING_DOMS)
 	private Set<HTMLSource> sourcingDoms;
 	
-	/** The intermediate result. */
+	/** The predicted user input results. */
 	@RelatedTo(type=Relations.PREDICTED_RESULTS)
 	private Set<UserInputTrainingRecord> uitrs;
 
-	@RelatedTo(type = "STEP_INTO", direction = Direction.INCOMING)
-	private Set<Neo4jScreenNode> screenNodes;
+	/** The Steps. */
+	@RelatedToVia(type = "STEP_INTO", direction = Direction.BOTH)
+	private Iterable<StepInto> Steps;
 
 	public Neo4jScreenNode() {
 		
@@ -122,23 +125,6 @@ public class Neo4jScreenNode {
 	}
 
 	
-
-	
-
-	/**
-	 * @return the screenNodes
-	 */
-	public Set<Neo4jScreenNode> getScreenNodes() {
-		return screenNodes;
-	}
-
-	/**
-	 * @param screenNodes
-	 *            the screenNodes to set
-	 */
-	public void setScreenNodes(Set<Neo4jScreenNode> screenNodes) {
-		this.screenNodes = screenNodes;
-	}
 
 	
 

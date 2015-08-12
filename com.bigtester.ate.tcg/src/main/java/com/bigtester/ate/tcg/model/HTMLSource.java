@@ -2,12 +2,19 @@ package com.bigtester.ate.tcg.model;
 
 import java.io.Serializable;
 
+import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.NodeEntity;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Greeting.
  */
+@NodeEntity
 public class HTMLSource implements Serializable {
-
+	
+	/** The id. */
+	@GraphId
+	private Long id; //NOPMD
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5806929726322626369L;
 
@@ -16,12 +23,13 @@ public class HTMLSource implements Serializable {
 	/** The content. */
 	private String domDoc;
 
+	/** The parent index. */
 	private int parentIndex;
 
 	/**
 	 * Instantiates a new HTML source.
 	 */
-	public HTMLSource() {// spring won't be able to match the class to json if
+	public HTMLSource() {//NOPMD spring won't be able to match the class to json if
 							// there is no empty constructor
 
 	}
@@ -73,5 +81,23 @@ public class HTMLSource implements Serializable {
 	 */
 	public void setParentIndex(int parentIndex) {
 		this.parentIndex = parentIndex;
+	}
+
+
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {//NOPMD
+		this.id = id;
 	}
 }

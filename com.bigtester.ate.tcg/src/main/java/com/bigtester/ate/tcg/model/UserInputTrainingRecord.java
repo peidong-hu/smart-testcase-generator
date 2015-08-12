@@ -21,6 +21,8 @@
 package com.bigtester.ate.tcg.model;
 
 import org.eclipse.jdt.annotation.Nullable;
+import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.NodeEntity;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,8 +36,10 @@ import org.eclipse.jdt.annotation.Nullable;
  * @author ashraf
  *
  */
+@NodeEntity
 public class UserInputTrainingRecord  {
-	
+	@GraphId
+	private Long id;
 	/** The input label name. */
 	private String inputLabelName; //htmlLabelContent
 	

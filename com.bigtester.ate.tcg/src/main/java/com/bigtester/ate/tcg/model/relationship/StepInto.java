@@ -35,10 +35,22 @@ import com.bigtester.ate.tcg.model.UserInputTrainingRecord;
  */
 @RelationshipEntity (type=Relations.STEP_INTO)
 public class StepInto {
+	
+	/** The start node. */
 	@StartNode
 	private Neo4jScreenNode startNode;
+	
+	/** The end node. */
 	@EndNode
 	private Neo4jScreenNode endNode;
 	
-	private UserInputTrainingRecord triggerUITR;
+	/** The trigger uitr. */
+	private long triggerUITR_ID;
+	
+	/** The step weight. 
+	 *  stepWeight is dynamically changed based on the current execution test case. 
+	 *  ML will predict weight value according several factors including, 
+	 *  current execution test case, test suite
+	 * */
+	private long stepWeight; 
 }
