@@ -1,7 +1,8 @@
-package com.bigtester.ate.tcg.model;
+package com.bigtester.ate.tcg.model.domain;
 
 import java.io.Serializable;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
@@ -14,6 +15,7 @@ public class HTMLSource implements Serializable {
 	
 	/** The id. */
 	@GraphId
+	@Nullable
 	private Long id; //NOPMD
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5806929726322626369L;
@@ -28,10 +30,13 @@ public class HTMLSource implements Serializable {
 
 	/**
 	 * Instantiates a new HTML source.
+	 * spring won't be able to match the class to json if
+	 * there is no empty constructor
 	 */
-	public HTMLSource() {//NOPMD spring won't be able to match the class to json if
-							// there is no empty constructor
-
+	public HTMLSource() {
+		super();
+		xpathOfFrame = "";
+		domDoc = "";
 	}
 
 
@@ -88,6 +93,7 @@ public class HTMLSource implements Serializable {
 	/**
 	 * @return the id
 	 */
+	@Nullable
 	public Long getId() {
 		return id;
 	}

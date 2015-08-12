@@ -18,7 +18,9 @@ import org.springframework.stereotype.Controller;
 
 
 
-import com.bigtester.ate.tcg.model.UserInputTrainingRecord;
+
+
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 
 import edu.stanford.nlp.classify.Classifier;
 import edu.stanford.nlp.classify.ColumnDataClassifier;

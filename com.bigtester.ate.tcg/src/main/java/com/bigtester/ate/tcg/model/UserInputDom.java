@@ -20,8 +20,10 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.w3c.dom.Node;
 
 // TODO: Auto-generated Javadoc
@@ -33,27 +35,33 @@ import org.w3c.dom.Node;
 public class UserInputDom extends WebElementDom {
 	
 	/** The label dom pointer. */
+	@Nullable
 	private Node labelDomPointer;
 	
 	/** The machine learning dom html pointers. */
-	private transient List<Node> machineLearningDomHtmlPointers;
+	private transient List<Node> machineLearningDomHtmlPointers = new ArrayList<Node>();
 	
 	/** The additional info nodes. */
-	private List<Node> additionalInfoNodes;
+	private List<Node> additionalInfoNodes = new ArrayList<Node>();
 	
 	/** The previous sibling. */
+	@Nullable
 	private UserInputDom previousSibling;
 	
 	/** The next sibling. */
+	@Nullable
 	private UserInputDom nextSibling;
 	
 	/** The previous user viewable html sibling. */
+	@Nullable
 	private Node previousUserViewableHtmlSibling;
 	
 	/** The next user viewable html sibling. */
+	@Nullable
 	private Node nextUserViewableHtmlSibling;
 	
 	/** The parent form pointer. */
+	@Nullable
 	private Node parentFormPointer;
 	
 	/**
@@ -67,6 +75,7 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @return the labelDomPointer
 	 */
+	@Nullable
 	public final Node getLabelDomPointer() {
 		return labelDomPointer;
 	}
@@ -104,6 +113,7 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @return the previousSibling
 	 */
+	@Nullable
 	public final UserInputDom getPreviousSibling() {
 		return previousSibling;
 	}
@@ -116,6 +126,7 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @return the nextSibling
 	 */
+	@Nullable
 	public final UserInputDom getNextSibling() {
 		return nextSibling;
 	}
@@ -132,6 +143,7 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @return the previousUserViewableHtmlSibling
 	 */
+	@Nullable
 	public Node getPreviousUserViewableHtmlSibling() {
 		return previousUserViewableHtmlSibling;
 	}
@@ -145,6 +157,7 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @return the nextUserViewableHtmlSibling
 	 */
+	@Nullable
 	public Node getNextUserViewableHtmlSibling() {
 		return nextUserViewableHtmlSibling;
 	}
@@ -158,6 +171,7 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @return the parentFormPointer
 	 */
+	@Nullable
 	public Node getParentFormPointer() {
 		return parentFormPointer;
 	}

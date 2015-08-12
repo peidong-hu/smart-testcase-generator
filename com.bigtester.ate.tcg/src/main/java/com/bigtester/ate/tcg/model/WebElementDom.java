@@ -38,7 +38,8 @@ public class WebElementDom {
 	
 
 	WebElementDom(Node domPointer) {
-		setDomNodePointer(domPointer);
+		this.domNodePointer = domPointer;
+		xPath = "";
 	}
 	/**
 	 * @return the domNodePointer

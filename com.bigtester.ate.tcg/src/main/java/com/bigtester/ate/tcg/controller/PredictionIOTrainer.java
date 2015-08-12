@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import com.bigtester.ate.tcg.model.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

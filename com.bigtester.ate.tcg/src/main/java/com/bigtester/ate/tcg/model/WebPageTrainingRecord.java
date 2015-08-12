@@ -48,10 +48,11 @@ public class WebPageTrainingRecord  {
 	
 	private Double pioPredictConfidence;
 	
-	@Nullable
+	
 	private boolean userFinalizedLabelResult; //user has revised the pio predicted result if !=null.
 		
 	public WebPageTrainingRecord() {
+		super();
 	}
 	/**
 	 * Instantiates a new user input training record.

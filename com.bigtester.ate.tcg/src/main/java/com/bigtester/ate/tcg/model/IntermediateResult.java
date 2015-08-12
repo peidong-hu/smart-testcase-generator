@@ -23,6 +23,9 @@ package com.bigtester.ate.tcg.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bigtester.ate.tcg.model.domain.HTMLSource;
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+
 // TODO: Auto-generated Javadoc
 /**
  * This class IntermediateResult is the frontend response holder
@@ -42,7 +45,7 @@ public class IntermediateResult {
 	 */
 	public IntermediateResult() { //NOPMD 
 		//For spring web services, an empty constructor has to be placed in models receiving web request.
-		
+		super();
 	}
 	/**
 	 * @return the domStrings

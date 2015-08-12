@@ -22,8 +22,8 @@ package com.bigtester.ate.tcg.controller;
 
 import org.w3c.dom.Document;
 
-import com.bigtester.ate.tcg.model.UserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.WebPageTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 
 // TODO: Auto-generated Javadoc
 /**

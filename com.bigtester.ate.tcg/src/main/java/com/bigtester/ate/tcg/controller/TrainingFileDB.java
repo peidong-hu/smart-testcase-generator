@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.ServletContextAware;
 
-import com.bigtester.ate.tcg.model.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 
 /**
  * @author ashraf

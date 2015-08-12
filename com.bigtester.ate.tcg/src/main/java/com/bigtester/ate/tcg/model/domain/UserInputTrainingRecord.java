@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.model;
+package com.bigtester.ate.tcg.model.domain;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.data.neo4j.annotation.GraphId;
@@ -31,113 +31,166 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
  *
  */
 
-
 /**
  * @author ashraf
  *
  */
 @NodeEntity
-public class UserInputTrainingRecord  {
+public class UserInputTrainingRecord {
+
+	/** The id. */
 	@GraphId
-	private Long id;
+	@Nullable
+	private Long id;// NOPMD
 	/** The input label name. */
-	private String inputLabelName; //htmlLabelContent
-	
+	private String inputLabelName; // htmlLabelContent
+
 	/** The input ml html code. */
 	private String inputMLHtmlCode;
-	
-	private String trainedResult; //"__ATE__Error___" or succeed with eventid
-	
-	private String pioPredictLabelResult; 
-	
+
+	/** The trained result. */
+	private String trainedResult; // "__ATE__Error___" or succeed with eventid
+
+	/** The pio predict label result. */
+	private String pioPredictLabelResult;
+
+	/** The pio predict confidence. */
 	private Double pioPredictConfidence;
-	
-//	@Nullable
-//	private boolean userFinalizedLabelResult; //user has revised the pio predicted result if !=null.
-//		
+
+	// @Nullable
+	// private boolean userFinalizedLabelResult; //user has revised the pio
+	// predicted result if !=null.
+	/**
+	 * Instantiates a new user input training record.
+	 */
+
 	public UserInputTrainingRecord() {
+		super();
+		inputLabelName = ""; // htmlLabelContent
+		inputMLHtmlCode = "";
+		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
+		pioPredictLabelResult = "";
+		pioPredictConfidence = 0.0;
 	}
+
 	/**
 	 * Instantiates a new user input training record.
 	 *
-	 * @param labelName the label name
-	 * @param mlHtmlCode the ml html code
+	 * @param labelName
+	 *            the label name
+	 * @param mlHtmlCode
+	 *            the ml html code
 	 */
 	public UserInputTrainingRecord(String labelName, String mlHtmlCode) {
 		this.inputLabelName = labelName;
 		this.inputMLHtmlCode = mlHtmlCode;
+		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
+		pioPredictLabelResult = "";
+		pioPredictConfidence = 0.0;
+
 	}
+
 	/**
 	 * @return the inputLabelName
 	 */
 	public final String getInputLabelName() {
 		return inputLabelName;
 	}
+
 	/**
-	 * @param inputLabelName the inputLabelName to set
+	 * @param inputLabelName
+	 *            the inputLabelName to set
 	 */
 	public final void setInputLabelName(String inputLabelName) {
 		this.inputLabelName = inputLabelName;
 	}
+
 	/**
 	 * @return the inputMLHtmlCode
 	 */
 	public final String getInputMLHtmlCode() {
 		return inputMLHtmlCode;
 	}
+
 	/**
-	 * @param inputMLHtmlCode the inputMLHtmlCode to set
+	 * @param inputMLHtmlCode
+	 *            the inputMLHtmlCode to set
 	 */
 	public final void setInputMLHtmlCode(String inputMLHtmlCode) {
 		this.inputMLHtmlCode = inputMLHtmlCode;
 	}
+
 	/**
 	 * @return the trainedResult
 	 */
 	public String getTrainedResult() {
 		return trainedResult;
 	}
+
 	/**
-	 * @param trainedResult the trainedResult to set
+	 * @param trainedResult
+	 *            the trainedResult to set
 	 */
 	public void setTrainedResult(String trainedResult) {
 		this.trainedResult = trainedResult;
 	}
+
 	/**
 	 * @return the pioPredictLabelResult
 	 */
 	public String getPioPredictLabelResult() {
 		return pioPredictLabelResult;
 	}
+
 	/**
-	 * @param pioPredictLabelResult the pioPredictLabelResult to set
+	 * @param pioPredictLabelResult
+	 *            the pioPredictLabelResult to set
 	 */
 	public void setPioPredictLabelResult(String pioPredictLabelResult) {
 		this.pioPredictLabelResult = pioPredictLabelResult;
 	}
+
 	/**
 	 * @return the pioPredictConfidence
 	 */
 	public Double getPioPredictConfidence() {
 		return pioPredictConfidence;
 	}
+
 	/**
-	 * @param pioPredictConfidence the pioPredictConfidence to set
+	 * @param pioPredictConfidence
+	 *            the pioPredictConfidence to set
 	 */
 	public void setPioPredictConfidence(Double pioPredictConfidence) {
 		this.pioPredictConfidence = pioPredictConfidence;
 	}
+
 	/**
 	 * @return the userFinalizedLabelResult
 	 */
-//	public boolean isUserFinalizedLabelResult() {
-//		return userFinalizedLabelResult;
-//	}
-//	/**
-//	 * @param userFinalizedLabelResult the userFinalizedLabelResult to set
-//	 */
-//	public void setUserFinalizedLabelResult(boolean userFinalizedLabelResult) {
-//		this.userFinalizedLabelResult = userFinalizedLabelResult;
-//	}
-}
+	// public boolean isUserFinalizedLabelResult() {
+	// return userFinalizedLabelResult;
+	// }
+	// /**
+	// * @param userFinalizedLabelResult the userFinalizedLabelResult to set
+	// */
+	// public void setUserFinalizedLabelResult(boolean userFinalizedLabelResult)
+	// {
+	// this.userFinalizedLabelResult = userFinalizedLabelResult;
+	// }
+	/**
+	 * @return the id
+	 */
+	@Nullable
+	public Long getId() {
+		return id;
+	}
 
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {//NOPMD required by neo4j
+		this.id = id;
+	}
+}

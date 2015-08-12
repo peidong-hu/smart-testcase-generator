@@ -20,12 +20,13 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.relationship;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.data.neo4j.annotation.EndNode;
+import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.RelationshipEntity;
 import org.springframework.data.neo4j.annotation.StartNode;
 
-import com.bigtester.ate.tcg.model.Neo4jScreenNode;
-import com.bigtester.ate.tcg.model.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -36,21 +37,108 @@ import com.bigtester.ate.tcg.model.UserInputTrainingRecord;
 @RelationshipEntity (type=Relations.STEP_INTO)
 public class StepInto {
 	
+	/** The node id. */
+	@Nullable 
+	@GraphId 
+	private Long nodeId;
+	
 	/** The start node. */
 	@StartNode
+	@Nullable
 	private Neo4jScreenNode startNode;
 	
 	/** The end node. */
 	@EndNode
+	@Nullable
 	private Neo4jScreenNode endNode;
 	
 	/** The trigger uitr. */
-	private long triggerUITR_ID;
+	private long triggerUitrId;
 	
 	/** The step weight. 
 	 *  stepWeight is dynamically changed based on the current execution test case. 
 	 *  ML will predict weight value according several factors including, 
 	 *  current execution test case, test suite
 	 * */
-	private long stepWeight; 
+	private long stepWeight;
+
+	/**
+	 * Instantiates a new step into.
+	 */
+	public StepInto() {//NOPMD
+		super();
+	}
+	/**
+	 * @return the startNode
+	 */
+	@Nullable
+	public Neo4jScreenNode getStartNode() {
+		return startNode;
+	}
+
+	/**
+	 * @param startNode the startNode to set
+	 */
+	public void setStartNode(Neo4jScreenNode startNode) {
+		this.startNode = startNode;
+	}
+
+	/**
+	 * @return the endNode
+	 */
+	@Nullable
+	public Neo4jScreenNode getEndNode() {
+		return endNode;
+	}
+
+	/**
+	 * @param endNode the endNode to set
+	 */
+	public void setEndNode(Neo4jScreenNode endNode) {
+		this.endNode = endNode;
+	}
+
+
+	/**
+	 * @return the stepWeight
+	 */
+	public long getStepWeight() {
+		return stepWeight;
+	}
+
+	/**
+	 * @param stepWeight the stepWeight to set
+	 */
+	public void setStepWeight(long stepWeight) {
+		this.stepWeight = stepWeight;
+	}
+
+	/**
+	 * @return the nodeId
+	 */
+	@Nullable
+	public Long getNodeId() {
+		return nodeId;
+	}
+
+	/**
+	 * @param nodeId the nodeId to set
+	 */
+	public void setNodeId(Long nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	/**
+	 * @return the triggerUitrId
+	 */
+	public long getTriggerUitrId() {
+		return triggerUitrId;
+	}
+
+	/**
+	 * @param triggerUitrId the triggerUitrId to set
+	 */
+	public void setTriggerUitrId(long triggerUitrId) {
+		this.triggerUitrId = triggerUitrId;
+	} 
 }

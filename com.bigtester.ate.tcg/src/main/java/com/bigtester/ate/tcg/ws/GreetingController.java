@@ -23,10 +23,10 @@ import org.w3c.dom.Node;
 
 import com.bigtester.ate.tcg.controller.PredictionIOTrainer;
 import com.bigtester.ate.tcg.model.Greeting;
-import com.bigtester.ate.tcg.model.HTMLSource;
 import com.bigtester.ate.tcg.model.IntermediateResult;
-import com.bigtester.ate.tcg.model.Neo4jScreenNode;
-import com.bigtester.ate.tcg.model.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.HTMLSource;
+import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 
 // TODO: Auto-generated Javadoc

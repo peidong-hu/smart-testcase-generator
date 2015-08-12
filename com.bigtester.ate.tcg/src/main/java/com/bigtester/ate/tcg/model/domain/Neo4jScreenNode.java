@@ -18,11 +18,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.model;
+package com.bigtester.ate.tcg.model.domain;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
@@ -31,6 +32,7 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.support.index.IndexType;
 
+import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.relationship.Relations;
 import com.bigtester.ate.tcg.model.relationship.StepInto;
 
@@ -46,32 +48,44 @@ public class Neo4jScreenNode {
 
 	/** The id. */
 	@GraphId
+	@Nullable
 	private Long id; //NOPMD
 
 	/** The name. */
 	@Indexed(indexType = IndexType.FULLTEXT, indexName = "screenName")
-	private String name;
+	private String name = "";
 
 	/** The url. */
 	@Indexed(indexType = IndexType.FULLTEXT, indexName = "screenUrl")
-	private String url;
+	private String url="";
 		
 	/** The sourcing doms. */
 	@RelatedTo(type=Relations.SOURCING_DOMS)
-	private Set<HTMLSource> sourcingDoms;
+	private Set<HTMLSource> sourcingDoms = new HashSet<HTMLSource>();
 	
 	/** The predicted user input results. */
 	@RelatedTo(type=Relations.PREDICTED_RESULTS)
-	private Set<UserInputTrainingRecord> uitrs;
+	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
 
 	/** The Steps. */
 	@RelatedToVia(type = "STEP_INTO", direction = Direction.BOTH)
-	private Iterable<StepInto> Steps;
+	private Iterable<StepInto> steps = new HashSet<StepInto>();
 
+	/**
+	 * Instantiates a new neo4j screen node.
+	 * no-arg constructor for restful call.
+	 */
 	public Neo4jScreenNode() {
-		
+		super();
 	}
 	
+	/**
+	 * Instantiates a new neo4j screen node.
+	 *
+	 * @param name the name
+	 * @param url the url
+	 * @param iResult the i result
+	 */
 	public Neo4jScreenNode(String name, String url, IntermediateResult iResult) {
 		this.name = name;
 		this.url = url;
@@ -82,6 +96,7 @@ public class Neo4jScreenNode {
 	/**
 	 * @return the id
 	 */
+	@Nullable
 	public Long getId() {
 		return id;
 	}
@@ -90,7 +105,7 @@ public class Neo4jScreenNode {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(Long id) {//NOPMD
 		this.id = id;
 	}
 
@@ -154,6 +169,20 @@ public class Neo4jScreenNode {
 	 */
 	public void setUitrs(Set<UserInputTrainingRecord> uitrs) {
 		this.uitrs = uitrs;
+	}
+
+	/**
+	 * @return the steps
+	 */
+	public Iterable<StepInto> getSteps() {
+		return steps;
+	}
+
+	/**
+	 * @param steps the steps to set
+	 */
+	public void setSteps(Iterable<StepInto> steps) {
+		this.steps = steps;
 	}
 
 	// @RelatedToVia(type = "RATED")
