@@ -28,6 +28,7 @@ import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 import com.bigtester.ate.tcg.utils.exception.Html2DomException;
+import com.thoughtworks.xstream.XStream;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -120,10 +121,21 @@ public class GreetingController {
 			@RequestBody IntermediateResult intermediateResult)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
+		Neo4jScreenNode firstNode = new Neo4jScreenNode("firstNode", "http://helloworld.com",
+				intermediateResult);
+		XStream xstream = new XStream();
+
+	    Neo4jScreenNode secondNode = (Neo4jScreenNode) xstream.fromXML(xstream.toXML(firstNode));
+	    secondNode.setName("secondNode");
+		firstNode.steppedInto(
+				secondNode, 1);
+		
 		getTemplate().save(
-				new Neo4jScreenNode("firstNode", "http://helloworld.com",
-						intermediateResult));
+				secondNode);
+		getTemplate().save(
+				firstNode);
 		return true;
+		
 	}
 
 	// @CrossOrigin

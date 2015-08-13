@@ -64,6 +64,19 @@ public class StepInto {
 
 	/**
 	 * Instantiates a new step into.
+	 *
+	 * @param startNode the start node
+	 * @param endNode the end node
+	 * @param uitrId the uitr id
+	 */
+	public StepInto(Neo4jScreenNode startNode, Neo4jScreenNode endNode, long uitrId) {
+		this.startNode = startNode;
+		this.endNode = endNode;
+		this.triggerUitrId = uitrId;
+	}
+	
+	/**
+	 * Instantiates a new step into.
 	 */
 	public StepInto() {//NOPMD
 		super();

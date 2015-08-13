@@ -20,6 +20,7 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,8 +70,20 @@ public class Neo4jScreenNode {
 
 	/** The Steps. */
 	@RelatedToVia(type = "STEP_INTO", direction = Direction.BOTH)
-	private Iterable<StepInto> steps = new HashSet<StepInto>();
+	private Collection<StepInto> steps = new HashSet<StepInto>();
 
+	/**
+	 * Stepped into.
+	 *
+	 * @param endNode the end node
+	 * @param uitrId the uitr id
+	 * @return the step into
+	 */
+	public StepInto steppedInto(Neo4jScreenNode endNode, long uitrId) {
+		StepInto tmp = new StepInto(this, endNode, uitrId);
+		steps.add(tmp);
+		return tmp;
+	}
 	/**
 	 * Instantiates a new neo4j screen node.
 	 * no-arg constructor for restful call.
@@ -181,7 +194,7 @@ public class Neo4jScreenNode {
 	/**
 	 * @param steps the steps to set
 	 */
-	public void setSteps(Iterable<StepInto> steps) {
+	public void setSteps(Collection<StepInto> steps) {
 		this.steps = steps;
 	}
 
