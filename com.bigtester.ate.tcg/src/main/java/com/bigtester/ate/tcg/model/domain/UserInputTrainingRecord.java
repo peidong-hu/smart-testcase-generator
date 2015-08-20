@@ -21,8 +21,8 @@
 package com.bigtester.ate.tcg.model.domain;
 
 import org.eclipse.jdt.annotation.Nullable;
-import org.springframework.data.neo4j.annotation.GraphId;
-import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
 
 // TODO: Auto-generated Javadoc
 /**

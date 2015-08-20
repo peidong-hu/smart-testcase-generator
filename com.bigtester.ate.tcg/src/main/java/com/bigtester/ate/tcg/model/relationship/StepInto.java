@@ -21,10 +21,10 @@
 package com.bigtester.ate.tcg.model.relationship;
 
 import org.eclipse.jdt.annotation.Nullable;
-import org.springframework.data.neo4j.annotation.EndNode;
-import org.springframework.data.neo4j.annotation.GraphId;
-import org.springframework.data.neo4j.annotation.RelationshipEntity;
-import org.springframework.data.neo4j.annotation.StartNode;
+import org.neo4j.ogm.annotation.EndNode;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.RelationshipEntity;
+import org.neo4j.ogm.annotation.StartNode;
 
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 

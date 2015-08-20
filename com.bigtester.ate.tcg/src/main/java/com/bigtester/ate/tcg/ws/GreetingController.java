@@ -12,11 +12,13 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
+import org.springframework.data.neo4j.template.Neo4jOperations;
+import org.springframework.data.neo4j.template.Neo4jTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -26,8 +28,10 @@ import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 import com.bigtester.ate.tcg.utils.exception.Html2DomException;
+import com.bigtester.ate.tcg.ws.entity.WsScreenNames;
 import com.thoughtworks.xstream.XStream;
 
 // TODO: Auto-generated Javadoc
@@ -40,8 +44,13 @@ public class GreetingController {
 	/** The template. */
 	@Autowired
 	@Nullable
-	private Neo4jTemplate template;
+	private Neo4jOperations template;
 
+	/** The screen node repo. */
+	@Autowired
+	@Nullable
+	private ScreenNodeRepo screenNodeRepo;
+	
 	/**
 	 * Predict.
 	 *
@@ -100,6 +109,32 @@ public class GreetingController {
 		return records;
 	}
 
+	/**
+	 * Gets the screen names.
+	 *
+	 * @param domainIndustryCode the domain industry code
+	 * @return the screen names
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws ExecutionException the execution exception
+	 * @throws InterruptedException the interrupted exception
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/queryScreenNames", method = RequestMethod.GET)
+	public WsScreenNames queryScreenNames(
+			@RequestParam(value="q", required=false) String queryStr, @RequestParam(required=false, value="domainIndustryCode") String domainIndustryCode)
+			throws IOException, ClassNotFoundException, ExecutionException,
+			InterruptedException {
+
+		Iterable<Neo4jScreenNode> allNodes = getScreenNodeRepo().findAll();
+		WsScreenNames retVal = new WsScreenNames(0, false);
+		for (Neo4jScreenNode node: allNodes) {
+			retVal.getScreenNames().add(retVal.new ScreenName(node.getName(), ""));
+		}
+		return retVal;
+	}
+
+	
 	/**
 	 * Save intermediate result.
 	 *
@@ -177,6 +212,8 @@ public class GreetingController {
 		}
 		return records;
 	}
+	
+	
 
 	/**
 	 * Preprocessing.
@@ -274,8 +311,8 @@ public class GreetingController {
 	 * @return the template
 	 */
 
-	public Neo4jTemplate getTemplate() {
-		final Neo4jTemplate template2 = template;
+	public Neo4jOperations getTemplate() {
+		final Neo4jOperations template2 = template;
 		if (template2 == null) {
 			throw new IllegalStateException("template not initialized");
 		} else {
@@ -291,6 +328,25 @@ public class GreetingController {
 	 */
 	public void setTemplate(Neo4jTemplate template) {
 		this.template = template;
+	}
+
+	/**
+	 * @return the screenNodeRepo
+	 */
+	public ScreenNodeRepo getScreenNodeRepo() {
+		final ScreenNodeRepo screenNodeRepo2 = screenNodeRepo;
+		if (screenNodeRepo2 == null) {
+			throw new IllegalStateException("screenNodeRepo Initialization");
+		} else {
+			return screenNodeRepo2;
+		}
+	}
+
+	/**
+	 * @param screenNodeRepo the screenNodeRepo to set
+	 */
+	public void setScreenNodeRepo(ScreenNodeRepo screenNodeRepo) {
+		this.screenNodeRepo = screenNodeRepo;
 	}
 
 }

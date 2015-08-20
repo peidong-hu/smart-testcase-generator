@@ -25,13 +25,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
-import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.GraphId;
-import org.springframework.data.neo4j.annotation.Indexed;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
-import org.springframework.data.neo4j.annotation.RelatedToVia;
-import org.springframework.data.neo4j.support.index.IndexType;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.relationship.Relations;
@@ -53,23 +49,21 @@ public class Neo4jScreenNode {
 	private Long id; //NOPMD
 
 	/** The name. */
-	@Indexed(indexType = IndexType.FULLTEXT, indexName = "screenName")
 	private String name = "";
 
 	/** The url. */
-	@Indexed(indexType = IndexType.FULLTEXT, indexName = "screenUrl")
 	private String url="";
 		
 	/** The sourcing doms. */
-	@RelatedTo(type=Relations.SOURCING_DOMS)
+	@Relationship(type=Relations.SOURCING_DOMS)
 	private Set<HTMLSource> sourcingDoms = new HashSet<HTMLSource>();
 	
 	/** The predicted user input results. */
-	@RelatedTo(type=Relations.PREDICTED_RESULTS)
+	@Relationship(type=Relations.PREDICTED_RESULTS)
 	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
 
 	/** The Steps. */
-	@RelatedToVia(type = "STEP_INTO", direction = Direction.BOTH)
+	@Relationship(type = "STEP_INTO", direction = Relationship.OUTGOING)
 	private Collection<StepInto> steps = new HashSet<StepInto>();
 
 	/**

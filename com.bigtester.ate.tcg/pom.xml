@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-neo4j</artifactId>
-			<version>3.3.2.RELEASE</version>
+			<version>4.0.0.RC1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.neo4j</groupId>
@@ -66,11 +66,11 @@
 			<version>1.1</version>
 		</dependency>
 		<dependency>
-	<groupId>com.thoughtworks.xstream</groupId>
-	<artifactId>xstream</artifactId>
-	<version>1.4.8</version>
-</dependency>
-		
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.8</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -194,6 +194,11 @@
 	</dependencies>
 
 	<repositories>
+		<repository>
+			<id>spring-libs-snapshot</id>
+			<name>Spring</name>
+			<url>http://repo.spring.io/libs-snapshot</url>
+		</repository>
 		<repository>
 			<id>SpringSource repository</id>
 			<url>http://repo.springsource.org/milestone</url>

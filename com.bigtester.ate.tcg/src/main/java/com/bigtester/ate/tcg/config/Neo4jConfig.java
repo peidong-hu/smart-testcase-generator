@@ -20,16 +20,19 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.config;
 
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.eclipse.jdt.annotation.Nullable;
+import org.neo4j.ogm.session.Session;
+import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
-import org.springframework.data.neo4j.repository.GraphRepositoryFactory;
-import org.springframework.data.neo4j.rest.SpringCypherRestGraphDatabase;
-import org.springframework.data.neo4j.rest.SpringRestGraphDatabase;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
-import org.springframework.data.neo4j.support.mapping.Neo4jMappingContext;
+import org.springframework.data.neo4j.server.Neo4jServer;
+import org.springframework.data.neo4j.server.RemoteServer;
+import org.springframework.data.neo4j.template.Neo4jTemplate;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -39,42 +42,38 @@ import org.springframework.data.neo4j.support.mapping.Neo4jMappingContext;
  */
 @Configuration
 @EnableNeo4jRepositories(basePackages = "com.bigtester.ate.tcg")
+@EnableTransactionManagement
 public class Neo4jConfig extends Neo4jConfiguration {
 
-    /**
-     * Graph database service.
-     *
-     * @return the graph database service
-     */
-    @Bean
-    public GraphDatabaseService graphDatabaseService() {
-        return new SpringRestGraphDatabase("http://172.16.173.50:7474/db/data/", "neo4j", "hello1234567");
-    }
     
     /**
      * {@inheritDoc}
+     * @throws Exception 
     */
     @Bean
-    public Neo4jTemplate neo4jTemplate() {
-        return new Neo4jTemplate(graphDatabaseService());
+    public Neo4jTemplate neo4jTemplate() throws Exception {
+        return new Neo4jTemplate(getSession());
     }
 
-    /**
-     * Graph repository factory.
-     *
-     * @return the graph repository factory
-     */
-    @Bean
-    public GraphRepositoryFactory graphRepositoryFactory() {
-        return new GraphRepositoryFactory(neo4jTemplate(), neo4jMappingContext());
-    }
 
-    /**
-     * {@inheritDoc}
-    */
-    @Bean
-    public Neo4jMappingContext neo4jMappingContext() {
-        return new Neo4jMappingContext();
+	/**
+	 * {@inheritDoc}
+	*/
+	@Override
+	public SessionFactory getSessionFactory() {
+		return new SessionFactory("com.bigtester.ate.tcg.model.domain", "com.bigtester.ate.tcg.model.relationship");
+	}
+
+	/**
+	 * {@inheritDoc}
+	*/
+	@Override
+	public Neo4jServer neo4jServer() {
+		return new RemoteServer("http://172.16.173.50:7474");
+	}
+	@Bean
+    @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public @Nullable Session getSession() throws Exception {
+        return super.getSession();
     }
-    
 }

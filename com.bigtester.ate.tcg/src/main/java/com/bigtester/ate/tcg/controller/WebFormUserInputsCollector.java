@@ -49,13 +49,13 @@ import static org.joox.JOOX.*;
 public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 
 	/** The Constant USER_NOT_CHANGABLE_INPUT_TYPES. */
-	final static public String[] USER_NOT_CHANGABLE_INPUT_TYPES = { "hidden" };
+	final static public String[] USER_NOT_CHANGABLE_INPUT_TYPES = { "hidden", "submit" };
 
 	/** The Constant LEFT_LABELED_INPUT_TYPES. */
 	final static public String[] LEFT_LABELED_INPUT_TYPES = { "text", "date",
 			"button", "datetime", "datetime-local", "email", "file", "image",
 			"month", "number", "password", "range", "reset", "search",
-			"submit", "tel", "time", "url", "week" };
+			 "tel", "time", "url", "week" };
 
 	/** The Constant RIGHT_LABELED_INPUT_TYPES. */
 	final static public String[] RIGHT_LABELED_INPUT_TYPES = { "radio",
