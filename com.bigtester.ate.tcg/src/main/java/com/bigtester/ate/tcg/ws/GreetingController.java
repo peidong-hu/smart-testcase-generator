@@ -152,10 +152,11 @@ public class GreetingController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/saveIntermediateResult", method = RequestMethod.POST)
-	public boolean saveIntermediateResult(
+	public List<UserInputTrainingRecord> saveIntermediateResult(
 			@RequestBody IntermediateResult intermediateResult)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
+		trainInputPIO(intermediateResult.getUitrs());
 		Neo4jScreenNode firstNode = new Neo4jScreenNode("firstNode", "http://helloworld.com",
 				intermediateResult);
 		XStream xstream = new XStream();
@@ -169,7 +170,7 @@ public class GreetingController {
 				secondNode);
 		getTemplate().save(
 				firstNode);
-		return true;
+		return intermediateResult.getUitrs();
 		
 	}
 
