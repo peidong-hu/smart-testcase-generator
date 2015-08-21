@@ -56,6 +56,19 @@ public class UserInputTrainingRecord {
 
 	/** The pio predict confidence. */
 	private Double pioPredictConfidence;
+	
+	/** The user value. */
+	private String userValue;
+	
+	/** The user input type. */
+	private UserInputType userInputType;
+	
+	/**
+	 * The Enum UserInputType.
+	 */
+	public enum UserInputType {
+		INPUT, CLICKABLE
+	}
 
 	// @Nullable
 	// private boolean userFinalizedLabelResult; //user has revised the pio
@@ -71,6 +84,8 @@ public class UserInputTrainingRecord {
 		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
 		pioPredictLabelResult = "";
 		pioPredictConfidence = 0.0;
+		userValue = "";
+		userInputType = UserInputType.INPUT;
 	}
 
 	/**
@@ -81,13 +96,14 @@ public class UserInputTrainingRecord {
 	 * @param mlHtmlCode
 	 *            the ml html code
 	 */
-	public UserInputTrainingRecord(String labelName, String mlHtmlCode) {
+	public UserInputTrainingRecord(String labelName, String mlHtmlCode, UserInputType userInputType) {
 		this.inputLabelName = labelName;
 		this.inputMLHtmlCode = mlHtmlCode;
 		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
 		pioPredictLabelResult = "";
 		pioPredictConfidence = 0.0;
-
+		userValue = "";
+		this.userInputType = userInputType;
 	}
 
 	/**
@@ -192,5 +208,33 @@ public class UserInputTrainingRecord {
 	 */
 	public void setId(Long id) {//NOPMD required by neo4j
 		this.id = id;
+	}
+
+	/**
+	 * @return the userValue
+	 */
+	public String getUserValue() {
+		return userValue;
+	}
+
+	/**
+	 * @param userValue the userValue to set
+	 */
+	public void setUserValue(String userValue) {
+		this.userValue = userValue;
+	}
+
+	/**
+	 * @return the userInputType
+	 */
+	public UserInputType getUserInputType() {
+		return userInputType;
+	}
+
+	/**
+	 * @param userInputType the userInputType to set
+	 */
+	public void setUserInputType(UserInputType userInputType) {
+		this.userInputType = userInputType;
 	}
 }

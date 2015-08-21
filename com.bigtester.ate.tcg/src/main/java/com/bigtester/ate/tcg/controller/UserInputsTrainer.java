@@ -140,7 +140,7 @@ public class UserInputsTrainer {
 			
 			if (null != line && null != temp && TrainingFileDB.parseLine(line) != null) {
 				
-				retVal.add(new UserInputTrainingRecord(temp,TrainingFileDB.parseLine(line).getInputMLHtmlCode()));
+				retVal.add(new UserInputTrainingRecord(temp,TrainingFileDB.parseLine(line).getInputMLHtmlCode(), UserInputTrainingRecord.UserInputType.INPUT));
 			}
 //			System.out.println(classifier.classOf(datum1) + "  =origi=>  " + line );
 //			System.out.println(cl2.classOf(datum1)+ "  =test origi=> " + line);

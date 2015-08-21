@@ -51,7 +51,7 @@ public class Neo4jConfig extends Neo4jConfiguration {
      * @throws Exception 
     */
     @Bean
-    public Neo4jTemplate neo4jTemplate() throws Exception {
+    public Neo4jTemplate neo4jTemplate() throws Exception {//NOPMD
         return new Neo4jTemplate(getSession());
     }
 
@@ -71,9 +71,13 @@ public class Neo4jConfig extends Neo4jConfiguration {
 	public Neo4jServer neo4jServer() {
 		return new RemoteServer("http://172.16.173.50:7474");
 	}
+	
+	/**
+	 * {@inheritDoc}
+	*/
 	@Bean
     @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public @Nullable Session getSession() throws Exception {
+    public @Nullable Session getSession() throws Exception {//NOPMD
         return super.getSession();
     }
 }

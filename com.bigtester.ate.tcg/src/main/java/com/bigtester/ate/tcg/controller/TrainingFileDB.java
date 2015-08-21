@@ -45,6 +45,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.ServletContextAware;
 
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord.UserInputType;
 
 /**
  * @author ashraf
@@ -86,7 +87,7 @@ public class TrainingFileDB implements ServletContextAware {
 				if (null == temp2)
 					temp2 = "";
 				retVal = new UserInputTrainingRecord(temp, // NOPMD
-						temp2);
+						temp2, UserInputType.INPUT);
 			}
 		}
 		if (null == retVal)
@@ -149,7 +150,7 @@ public class TrainingFileDB implements ServletContextAware {
 		for (int index = 0; index < mlInputs.size(); index++) {
 			String temp = mlInputs.get(index);
 			if (null != temp) {
-				trainings.add(new UserInputTrainingRecord(" ", temp));
+				trainings.add(new UserInputTrainingRecord(" ", temp, UserInputTrainingRecord.UserInputType.INPUT));
 			}
 		}
 
