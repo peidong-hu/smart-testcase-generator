@@ -156,6 +156,15 @@ public class GreetingController {
 			@RequestBody IntermediateResult intermediateResult)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
+		boolean trainedAlready = false;
+		for (UserInputTrainingRecord uitr : intermediateResult.getUitrs()) {
+			uitr.setPioPredictConfidence(1.0);
+			if (!StringUtils.isEmpty(uitr.getTrainedResult())) {
+				trainedAlready = true;
+			}
+		}
+		
+		if (!trainedAlready)
 		trainInputPIO(intermediateResult.getUitrs());
 		Neo4jScreenNode firstNode = new Neo4jScreenNode("firstNode", "http://helloworld.com",
 				intermediateResult);
