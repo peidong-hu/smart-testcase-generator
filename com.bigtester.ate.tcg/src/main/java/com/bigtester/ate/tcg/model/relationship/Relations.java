@@ -31,6 +31,12 @@ public final class Relations {
 	/** The Constant STEP_INTO. */
 	final public static String STEP_INTO = "STEP_INTO";
 	
+	/** The Constant CONTAINS_SUB_INDUSTRY_CATEGORY. */
+	final public static String CONTAINS_SUB_INDUSTRY_CATEGORY = "CONTAINS_SUB_INDUSTRY_CATEGORY";
+	
+	/** The Constant PARENT_INDUSTRY_CATEGORY. */
+	final public static String PARENT_INDUSTRY_CATEGORY = "PARENT_INDUSTRY_CATEGORY";
+	
 	/** The Constant SOURCED_FROM. */
 	final public static String SOURCING_DOMS = "SOURCING_DOMS";
 	
