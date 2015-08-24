@@ -27,8 +27,12 @@ import com.bigtester.ate.tcg.controller.PredictionIOTrainer;
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
+import com.bigtester.ate.tcg.model.domain.TestCase;
+import com.bigtester.ate.tcg.model.domain.WebDomain;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
+import com.bigtester.ate.tcg.model.repository.TestCaseRepo;
+import com.bigtester.ate.tcg.model.repository.WebDomainRepo;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 import com.bigtester.ate.tcg.utils.exception.Html2DomException;
 import com.bigtester.ate.tcg.ws.entity.WsScreenNames;
@@ -51,6 +55,15 @@ public class GreetingController {
 	@Nullable
 	private ScreenNodeRepo screenNodeRepo;
 	
+	/** The web domain repo. */
+	@Autowired
+	@Nullable
+	private WebDomainRepo webDomainRepo; 
+	
+	/** The test case repo. */
+	@Autowired
+	@Nullable
+	private TestCaseRepo testCaseRepo;
 	/**
 	 * Predict.
 	 *
@@ -165,8 +178,35 @@ public class GreetingController {
 		}
 		
 		if (!trainedAlready)
-		trainInputPIO(intermediateResult.getUitrs());
-		Neo4jScreenNode firstNode = new Neo4jScreenNode("firstNode", "http://helloworld.com",
+			trainInputPIO(intermediateResult.getUitrs());
+		//save web domain
+		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(intermediateResult.getDomainName());
+		
+		if (null == domainNode ) {
+			domainNode = new WebDomain(intermediateResult.getDomainName());//NOPMD
+			domainNode = getWebDomainRepo().save(domainNode);
+		}
+		
+		
+		//1. query db for existing root test suite intermediateResult.getTestSuitesMap().get(0);
+		//2. add the testSuitesMap into the existing test suite tree if there is.
+		//3. or create a new test suite node tree (graph) in db.
+		//4. above step could be done by create a repository method, ex. save
+		//for (int index =0; index < intermediateResult.getTestSuitesMap().size(); index++) {
+		//	intermediateResult.getTestSuitesMap().get(index).setSubTestSuites(subTestSuites);
+		//}
+		//save test case
+		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(intermediateResult.getTestCaseName());
+		
+		if (null == testcaseNode ) {
+			testcaseNode = new TestCase(intermediateResult.getTestCaseName());//NOPMD
+			testcaseNode = getTestCaseRepo().save(testcaseNode);
+		}
+		//save industry categories map, similar with save test suite
+		
+		//save screen node
+		Neo4jScreenNode firstNode = new Neo4jScreenNode(intermediateResult.getScreenName(),
+				intermediateResult.getScreenUrl(),
 				intermediateResult);
 		XStream xstream = new XStream();
 
@@ -357,6 +397,52 @@ public class GreetingController {
 	 */
 	public void setScreenNodeRepo(ScreenNodeRepo screenNodeRepo) {
 		this.screenNodeRepo = screenNodeRepo;
+	}
+
+	/**
+	 * @return the webDomainRepo
+	 */
+	public WebDomainRepo getWebDomainRepo() {
+		final WebDomainRepo webDomainRepo2 = webDomainRepo;
+		if (webDomainRepo2 == null) {
+			throw new IllegalStateException("webdomainrepo");
+		} else {
+			return webDomainRepo2;
+		}
+	}
+
+	/**
+	 * @param webDomainRepo the webDomainRepo to set
+	 */
+	public void setWebDomainRepo(WebDomainRepo webDomainRepo) {
+		this.webDomainRepo = webDomainRepo;
+	}
+
+	/**
+	 * @param template the template to set
+	 */
+	public void setTemplate(Neo4jOperations template) {
+		this.template = template;
+	}
+
+	/**
+	 * @return the testCaseRepo
+	 */
+	public TestCaseRepo getTestCaseRepo() {
+		final TestCaseRepo testCaseRepo2 = testCaseRepo;
+		if (testCaseRepo2 == null) {
+			throw new IllegalStateException("test case repo");
+		} else {
+			return testCaseRepo2;
+
+		}
+	}
+
+	/**
+	 * @param testCaseRepo the testCaseRepo to set
+	 */
+	public void setTestCaseRepo(TestCaseRepo testCaseRepo) {
+		this.testCaseRepo = testCaseRepo;
 	}
 
 }

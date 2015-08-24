@@ -34,6 +34,15 @@ public final class Relations {
 	/** The Constant CONTAINS_SUB_INDUSTRY_CATEGORY. */
 	final public static String CONTAINS_SUB_INDUSTRY_CATEGORY = "CONTAINS_SUB_INDUSTRY_CATEGORY";
 	
+	/** The Constant CONTAINS_SUB_TEST_SUITE. */
+	final public static String CONTAINS_SUB_TEST_SUITE = "CONTAINS_SUB_TEST_SUITE";
+	
+	/** The Constant PARENT_TEST_SUITE. */
+	final public static String PARENT_TEST_SUITE= "PARENT_TEST_SUITE";
+	
+	/** The Constant HOSTING_TEST_SUITE. */
+	final public static String HOSTING_TEST_SUITE= "HOSTING_TEST_SUITE";
+	
 	/** The Constant PARENT_INDUSTRY_CATEGORY. */
 	final public static String PARENT_INDUSTRY_CATEGORY = "PARENT_INDUSTRY_CATEGORY";
 	

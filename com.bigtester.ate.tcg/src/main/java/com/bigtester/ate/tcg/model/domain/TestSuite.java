@@ -37,59 +37,43 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  *
  */
 @NodeEntity
-public class IndustryCategory {
+public class TestSuite {
 	
 	/** The gid. */
 	@GraphId
 	@Nullable
 	private Long gid; //NOPMD
 	
-	/** The code. */
-	private String code = ""; 
-	
 	/** The name. */
 	private String name;
 	
 	/** The industry categories. */
-	@Relationship(type=Relations.CONTAINS_SUB_INDUSTRY_CATEGORY)
+	@Relationship(type=Relations.CONTAINS_SUB_TEST_SUITE)
 	@Nullable
-	private Set<IndustryCategory> industryCategories= new HashSet<IndustryCategory>();
+	private Set<TestSuite> subTestSuites= new HashSet<TestSuite>();
 
 	/** The parent industry category. */
-	@Relationship(type=Relations.PARENT_INDUSTRY_CATEGORY)
+	@Relationship(type=Relations.PARENT_TEST_SUITE)
 	@Nullable //if null, it's the root industry node
-	private Set<IndustryCategory> parentIndustryCategory = new HashSet<IndustryCategory>();
+	private TestSuite parentTestSuite;
 
 	/**
-	 * Instantiates a new industry category.
+	 * Instantiates a new test suite. Constructor for web service call
 	 */
-	public IndustryCategory() {
+	public TestSuite() {
+		super();
 		this.name = "";
 	}
-	
 	/**
 	 * Instantiates a new test industry.
 	 *
 	 * @param code the code
 	 * @param name the name
 	 */
-	public IndustryCategory(String name) {
+	public TestSuite(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @return the code
-	 */
-	public String getCode() {
-		return code;
-	}
-
-	/**
-	 * @param code the code to set
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
 
 	/**
 	 * @return the name
@@ -120,36 +104,39 @@ public class IndustryCategory {
 		this.gid = gid;
 	}
 
+
+
+
 	/**
-	 * @return the industryCategories
+	 * @return the parentTestSuite
 	 */
 	@Nullable
-	public Set<IndustryCategory> getIndustryCategories() {
-		return industryCategories;
+	public TestSuite getParentTestSuite() {
+		return parentTestSuite;
 	}
 
+
 	/**
-	 * @param industryCategories the industryCategories to set
+	 * @param parentTestSuite the parentTestSuite to set
 	 */
-	public void setIndustryCategories(Set<IndustryCategory> industryCategories) {
-		this.industryCategories = industryCategories;
+	public void setParentTestSuite(TestSuite parentTestSuite) {
+		this.parentTestSuite = parentTestSuite;
 	}
 
+
 	/**
-	 * @return the parentIndustryCategory
+	 * @return the subTestSuites
 	 */
 	@Nullable
-	public Set<IndustryCategory> getParentIndustryCategory() {
-		return parentIndustryCategory;
+	public Set<TestSuite> getSubTestSuites() {
+		return subTestSuites;
 	}
+
 
 	/**
-	 * @param parentIndustryCategory the parentIndustryCategory to set
+	 * @param subTestSuites the subTestSuites to set
 	 */
-	public void setParentIndustryCategory(
-			Set<IndustryCategory> parentIndustryCategory) {
-		this.parentIndustryCategory = parentIndustryCategory;
+	public void setSubTestSuites(Set<TestSuite> subTestSuites) {
+		this.subTestSuites = subTestSuites;
 	}
-
-	
 }

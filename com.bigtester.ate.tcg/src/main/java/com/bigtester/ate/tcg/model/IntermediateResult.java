@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
+import com.bigtester.ate.tcg.model.domain.IndustryCategory;
+import com.bigtester.ate.tcg.model.domain.TestSuite;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 
 // TODO: Auto-generated Javadoc
@@ -40,6 +42,25 @@ public class IntermediateResult {
 	/** The uitrs. */
 	private List<UserInputTrainingRecord> uitrs = new ArrayList<UserInputTrainingRecord>();
 	
+	/** The test suites map. */
+	private List<TestSuite> testSuitesMap = new ArrayList<TestSuite>();
+	
+	/** The industry categories map. */
+	private List<IndustryCategory> industryCategoriesMap = new ArrayList<IndustryCategory>();
+	
+	/** The test case name. */
+	private String testCaseName="";
+	
+	/** The screen url. */
+	
+	private String screenUrl="";
+	
+	/** The domain name. */
+	
+	private String domainName="";
+	
+	/** The screen name. */
+	private String screenName="";
 	/**
 	 * Instantiates a new intermediate result.
 	 */
@@ -70,6 +91,79 @@ public class IntermediateResult {
 	 */
 	public void setUitrs(List<UserInputTrainingRecord> uitrs) {
 		this.uitrs = uitrs;
+	}
+	/**
+	 * @return the testSuitesMap
+	 */
+	public List<TestSuite> getTestSuitesMap() {
+		return testSuitesMap;
+	}
+	/**
+	 * @param testSuitesMap the testSuitesMap to set
+	 */
+	public void setTestSuitesMap(List<TestSuite> testSuitesMap) {
+		this.testSuitesMap = testSuitesMap;
+	}
+	/**
+	 * @return the industryCategoriesMap
+	 */
+	public List<IndustryCategory> getIndustryCategoriesMap() {
+		return industryCategoriesMap;
+	}
+	/**
+	 * @param industryCategoriesMap the industryCategoriesMap to set
+	 */
+	public void setIndustryCategoriesMap(
+			List<IndustryCategory> industryCategoriesMap) {
+		this.industryCategoriesMap = industryCategoriesMap;
+	}
+	/**
+	 * @return the testCaseName
+	 */
+	public String getTestCaseName() {
+		return testCaseName;
+	}
+	/**
+	 * @param testCaseName the testCaseName to set
+	 */
+	public void setTestCaseName(String testCaseName) {
+		this.testCaseName = testCaseName;
+	}
+	/**
+	 * @return the screenUrl
+	 */
+	public String getScreenUrl() {
+		return screenUrl;
+	}
+	/**
+	 * @param screenUrl the screenUrl to set
+	 */
+	public void setScreenUrl(String screenUrl) {
+		this.screenUrl = screenUrl;
+	}
+	/**
+	 * @return the domainName
+	 */
+	public String getDomainName() {
+		return domainName;
+	}
+	/**
+	 * @param domainName the domainName to set
+	 */
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
+	}
+	/**
+	 * @return the screenName
+	 */
+	public String getScreenName() {
+		return screenName;
+	}
+	/**
+	 * @param screenName the screenName to set
+	 */
+	public void setScreenName(String screenName) {
+		this.screenName = screenName;
 	}
 	
 	

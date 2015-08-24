@@ -20,9 +20,6 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -37,33 +34,26 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  *
  */
 @NodeEntity
-public class IndustryCategory {
+public class TestCase {
 	
 	/** The gid. */
 	@GraphId
 	@Nullable
 	private Long gid; //NOPMD
 	
-	/** The code. */
-	private String code = ""; 
-	
 	/** The name. */
 	private String name;
 	
-	/** The industry categories. */
-	@Relationship(type=Relations.CONTAINS_SUB_INDUSTRY_CATEGORY)
-	@Nullable
-	private Set<IndustryCategory> industryCategories= new HashSet<IndustryCategory>();
-
 	/** The parent industry category. */
-	@Relationship(type=Relations.PARENT_INDUSTRY_CATEGORY)
+	@Relationship(type=Relations.HOSTING_TEST_SUITE)
 	@Nullable //if null, it's the root industry node
-	private Set<IndustryCategory> parentIndustryCategory = new HashSet<IndustryCategory>();
+	private TestSuite hostingTestSuite;
 
 	/**
-	 * Instantiates a new industry category.
+	 * Instantiates a new test case.
 	 */
-	public IndustryCategory() {
+	public TestCase() {
+		super();
 		this.name = "";
 	}
 	
@@ -73,23 +63,10 @@ public class IndustryCategory {
 	 * @param code the code
 	 * @param name the name
 	 */
-	public IndustryCategory(String name) {
+	public TestCase(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @return the code
-	 */
-	public String getCode() {
-		return code;
-	}
-
-	/**
-	 * @param code the code to set
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
 
 	/**
 	 * @return the name
@@ -120,36 +97,29 @@ public class IndustryCategory {
 		this.gid = gid;
 	}
 
-	/**
-	 * @return the industryCategories
-	 */
-	@Nullable
-	public Set<IndustryCategory> getIndustryCategories() {
-		return industryCategories;
-	}
 
-	/**
-	 * @param industryCategories the industryCategories to set
-	 */
-	public void setIndustryCategories(Set<IndustryCategory> industryCategories) {
-		this.industryCategories = industryCategories;
-	}
 
-	/**
-	 * @return the parentIndustryCategory
-	 */
-	@Nullable
-	public Set<IndustryCategory> getParentIndustryCategory() {
-		return parentIndustryCategory;
-	}
-
-	/**
-	 * @param parentIndustryCategory the parentIndustryCategory to set
-	 */
-	public void setParentIndustryCategory(
-			Set<IndustryCategory> parentIndustryCategory) {
-		this.parentIndustryCategory = parentIndustryCategory;
-	}
 
 	
+	/**
+	 * @return the hostingTestSuite
+	 */
+	public TestSuite getHostingTestSuite() {
+		
+		final TestSuite hostingTestSuite2 = hostingTestSuite;
+		if (hostingTestSuite2 == null) {
+			throw new IllegalStateException();
+			
+		} else {
+			return hostingTestSuite2;
+		}
+	}
+
+
+	/**
+	 * @param hostingTestSuite the hostingTestSuite to set
+	 */
+	public void setHostingTestSuite(TestSuite hostingTestSuite) {
+		this.hostingTestSuite = hostingTestSuite;
+	}
 }
