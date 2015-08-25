@@ -3,8 +3,13 @@ package com.bigtester.ate.tcg.ws;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import org.neo4j.ogm.session.Session;
+import org.neo4j.ogm.session.transaction.Transaction;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -64,6 +69,10 @@ public class GreetingController {
 	@Autowired
 	@Nullable
 	private TestCaseRepo testCaseRepo;
+	
+	@Autowired
+	@Nullable
+	private Session neo4jSession;
 	/**
 	 * Predict.
 	 *
@@ -165,7 +174,7 @@ public class GreetingController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/saveIntermediateResult", method = RequestMethod.POST)
-	public List<UserInputTrainingRecord> saveIntermediateResult(
+	public Set<UserInputTrainingRecord> saveIntermediateResult(
 			@RequestBody IntermediateResult intermediateResult)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
@@ -179,13 +188,7 @@ public class GreetingController {
 		
 		if (!trainedAlready)
 			trainInputPIO(intermediateResult.getUitrs());
-		//save web domain
-		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(intermediateResult.getDomainName());
 		
-		if (null == domainNode ) {
-			domainNode = new WebDomain(intermediateResult.getDomainName());//NOPMD
-			domainNode = getWebDomainRepo().save(domainNode);
-		}
 		
 		
 		//1. query db for existing root test suite intermediateResult.getTestSuitesMap().get(0);
@@ -195,32 +198,74 @@ public class GreetingController {
 		//for (int index =0; index < intermediateResult.getTestSuitesMap().size(); index++) {
 		//	intermediateResult.getTestSuitesMap().get(index).setSubTestSuites(subTestSuites);
 		//}
+		
+		
 		//save test case
 		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(intermediateResult.getTestCaseName());
 		
 		if (null == testcaseNode ) {
 			testcaseNode = new TestCase(intermediateResult.getTestCaseName());//NOPMD
-			testcaseNode = getTestCaseRepo().save(testcaseNode);
+			
+		} else {
+			testcaseNode.setName(intermediateResult.getTestCaseName());
 		}
+		
 		//save industry categories map, similar with save test suite
 		
 		//save screen node
-		Neo4jScreenNode firstNode = new Neo4jScreenNode(intermediateResult.getScreenName(),
-				intermediateResult.getScreenUrl(),
-				intermediateResult);
-		XStream xstream = new XStream();
+		Neo4jScreenNode existingNode = getScreenNodeRepo().getNeo4jScreenNodeByUrlAndName(intermediateResult.getScreenUrl(), intermediateResult.getScreenName());
+		if (null == existingNode) {
+			existingNode = new Neo4jScreenNode(intermediateResult.getScreenName(),
+					intermediateResult.getScreenUrl(),
+					intermediateResult);
+		} else {
+			existingNode.setName(intermediateResult.getScreenName());
+			existingNode.setSourcingDoms(intermediateResult.getDomStrings());
+			existingNode.setUitrs(intermediateResult.getUitrs());
+			existingNode.setUrl(intermediateResult.getScreenUrl());
+		}
 
-	    Neo4jScreenNode secondNode = (Neo4jScreenNode) xstream.fromXML(xstream.toXML(firstNode));
-	    secondNode.setName("secondNode");
-		firstNode.steppedInto(
-				secondNode, 1);
+		if (!existingNode.getTestcases().contains(testcaseNode))
+			existingNode.getTestcases().add(testcaseNode);
 		
-		getTemplate().save(
-				secondNode);
-		getTemplate().save(
-				firstNode);
+		Neo4jScreenNode secondNode = getScreenNodeRepo().getNeo4jScreenNodeByUrlAndName(intermediateResult.getScreenUrl(), "secondPage");
+		if (null == secondNode) {
+			secondNode = new Neo4jScreenNode("secondPage",
+					intermediateResult.getScreenUrl(),
+					intermediateResult);
+		} else {
+			secondNode.setName("secondPage");
+			secondNode.setSourcingDoms(intermediateResult.getDomStrings());
+			secondNode.setUitrs(intermediateResult.getUitrs());
+			secondNode.setUrl(intermediateResult.getScreenUrl());
+		}
+
+		if (!secondNode.getTestcases().contains(testcaseNode))
+			secondNode.getTestcases().add(testcaseNode);	    
+		
+		secondNode.steppedFrom(
+				existingNode, 1);
+				
+		//save web domain
+		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(intermediateResult.getDomainName());
+		
+		if (null == domainNode ) {
+			domainNode = new WebDomain(intermediateResult.getDomainName());//NOPMD
+		} else {
+			domainNode.setDomainName(intermediateResult.getDomainName());
+		}
+		
+		if (!domainNode.getScreens().contains(existingNode)) domainNode.getScreens().add(existingNode);
+		if (!domainNode.getScreens().contains(secondNode)) domainNode.getScreens().add(secondNode);
+		
+		Transaction trx = getNeo4jSession().beginTransaction();
+		try {
+			domainNode = getWebDomainRepo().save(domainNode);
+			trx.commit();
+		} finally {
+			trx.close();
+		}
 		return intermediateResult.getUitrs();
-		
 	}
 
 	// @CrossOrigin
@@ -250,8 +295,8 @@ public class GreetingController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/trainIntoPIO", method = RequestMethod.POST)
-	public List<UserInputTrainingRecord> trainInputPIO(
-			@RequestBody List<UserInputTrainingRecord> records)
+	public Set<UserInputTrainingRecord> trainInputPIO(
+			@RequestBody Set<UserInputTrainingRecord> records)
 			throws ExecutionException, InterruptedException, IOException {
 		// List<Greeting> greetings = new ArrayList<Greeting>();
 		for (UserInputTrainingRecord record : records) {
@@ -443,6 +488,25 @@ public class GreetingController {
 	 */
 	public void setTestCaseRepo(TestCaseRepo testCaseRepo) {
 		this.testCaseRepo = testCaseRepo;
+	}
+
+	/**
+	 * @return the neo4jSession
+	 */
+	public Session getNeo4jSession() {
+		final Session neo4jSession2 = neo4jSession;
+		if (neo4jSession2 == null) {
+			throw new IllegalStateException("neo4j session");
+		} else {
+			return neo4jSession2;
+		}
+	}
+
+	/**
+	 * @param neo4jSession the neo4jSession to set
+	 */
+	public void setNeo4jSession(Session neo4jSession) {
+		this.neo4jSession = neo4jSession;
 	}
 
 }

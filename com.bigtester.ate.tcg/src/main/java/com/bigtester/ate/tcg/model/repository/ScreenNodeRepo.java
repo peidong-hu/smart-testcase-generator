@@ -20,6 +20,7 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.repository;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +34,12 @@ import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
  */
 @Repository
 public interface ScreenNodeRepo extends GraphRepository<Neo4jScreenNode> {
-
+	
+	/**
+	 * Gets the neo4j screen node by url and name.
+	 *
+	 * @return the neo4j screen node by url and name
+	 */
+	@Nullable
+	Neo4jScreenNode getNeo4jScreenNodeByUrlAndName(String screenUrl, String screenName);
 }

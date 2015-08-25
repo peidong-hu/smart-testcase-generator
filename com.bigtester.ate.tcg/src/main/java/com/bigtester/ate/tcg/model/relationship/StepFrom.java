@@ -34,8 +34,8 @@ import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
  * @author Peidong Hu
  *
  */
-@RelationshipEntity (type=Relations.STEP_INTO)
-public class StepInto {
+@RelationshipEntity (type=Relations.STEP_FROM)
+public class StepFrom {
 	
 	/** The node id. */
 	@Nullable 
@@ -69,7 +69,7 @@ public class StepInto {
 	 * @param endNode the end node
 	 * @param uitrId the uitr id
 	 */
-	public StepInto(Neo4jScreenNode startNode, Neo4jScreenNode endNode, long uitrId) {
+	public StepFrom(Neo4jScreenNode startNode, Neo4jScreenNode endNode, long uitrId) {
 		this.startNode = startNode;
 		this.endNode = endNode;
 		this.triggerUitrId = uitrId;
@@ -78,7 +78,7 @@ public class StepInto {
 	/**
 	 * Instantiates a new step into.
 	 */
-	public StepInto() {//NOPMD
+	public StepFrom() {//NOPMD
 		super();
 	}
 	/**

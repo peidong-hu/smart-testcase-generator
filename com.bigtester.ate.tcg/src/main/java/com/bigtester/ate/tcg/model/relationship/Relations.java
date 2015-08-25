@@ -29,7 +29,7 @@ package com.bigtester.ate.tcg.model.relationship;
 public final class Relations {
 	
 	/** The Constant STEP_INTO. */
-	final public static String STEP_INTO = "STEP_INTO";
+	final public static String STEP_FROM = "STEP_FROM";
 	
 	/** The Constant CONTAINS_SUB_INDUSTRY_CATEGORY. */
 	final public static String CONTAINS_SUB_INDUSTRY_CATEGORY = "CONTAINS_SUB_INDUSTRY_CATEGORY";
@@ -51,6 +51,12 @@ public final class Relations {
 	
 	/** The Constant PREDICTED_INTO. */
 	final public static String PREDICTED_RESULTS = "PREDICTED_RESULTS";
+	
+	/** The Constant IN_TESTCASE. */
+	final public static String IN_TESTCASE = "IN_TESTCASE";
+	
+	/** The Constant CONTAINS_SCREEN. */
+	final public static String CONTAINS_SCREEN = "CONTAINS_SCREEN";
 	
 	private Relations(){};
 	

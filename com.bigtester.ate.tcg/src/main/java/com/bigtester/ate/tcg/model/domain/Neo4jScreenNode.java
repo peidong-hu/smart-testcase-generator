@@ -31,7 +31,7 @@ import org.neo4j.ogm.annotation.Relationship;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.relationship.Relations;
-import com.bigtester.ate.tcg.model.relationship.StepInto;
+import com.bigtester.ate.tcg.model.relationship.StepFrom;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -63,8 +63,13 @@ public class Neo4jScreenNode {
 	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
 
 	/** The Steps. */
-	@Relationship(type = "STEP_INTO", direction = Relationship.OUTGOING)
-	private Collection<StepInto> steps = new HashSet<StepInto>();
+	@Relationship(type = Relations.STEP_FROM, direction = Relationship.INCOMING)
+	private Collection<StepFrom> steps = new HashSet<StepFrom>();
+	
+	/** The testcases. */
+	@Relationship(type = Relations.IN_TESTCASE)
+	private Collection<TestCase> testcases = new HashSet<TestCase>();
+	
 
 	/**
 	 * Stepped into.
@@ -73,8 +78,8 @@ public class Neo4jScreenNode {
 	 * @param uitrId the uitr id
 	 * @return the step into
 	 */
-	public StepInto steppedInto(Neo4jScreenNode endNode, long uitrId) {
-		StepInto tmp = new StepInto(this, endNode, uitrId);
+	public StepFrom steppedFrom(Neo4jScreenNode startNode, long uitrId) {
+		StepFrom tmp = new StepFrom(this, startNode, uitrId);
 		steps.add(tmp);
 		return tmp;
 	}
@@ -96,8 +101,8 @@ public class Neo4jScreenNode {
 	public Neo4jScreenNode(String name, String url, IntermediateResult iResult) {
 		this.name = name;
 		this.url = url;
-		this.sourcingDoms = new HashSet<HTMLSource>(iResult.getDomStrings());
-		this.uitrs = new HashSet<UserInputTrainingRecord>(iResult.getUitrs());
+		this.sourcingDoms = iResult.getDomStrings();
+		this.uitrs = iResult.getUitrs();
 	}
 	
 	/**
@@ -181,15 +186,27 @@ public class Neo4jScreenNode {
 	/**
 	 * @return the steps
 	 */
-	public Iterable<StepInto> getSteps() {
+	public Iterable<StepFrom> getSteps() {
 		return steps;
 	}
 
 	/**
 	 * @param steps the steps to set
 	 */
-	public void setSteps(Collection<StepInto> steps) {
+	public void setSteps(Collection<StepFrom> steps) {
 		this.steps = steps;
+	}
+	/**
+	 * @return the testcases
+	 */
+	public Collection<TestCase> getTestcases() {
+		return testcases;
+	}
+	/**
+	 * @param testcases the testcases to set
+	 */
+	public void setTestcases(Collection<TestCase> testcases) {
+		this.testcases = testcases;
 	}
 
 	// @RelatedToVia(type = "RATED")

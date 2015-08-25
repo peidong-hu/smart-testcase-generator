@@ -20,10 +20,15 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
-import org.eclipse.jdt.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashSet;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+
+import com.bigtester.ate.tcg.model.relationship.Relations;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -41,6 +46,10 @@ public class WebDomain {
 	
 	/** The name. */
 	private String domainName;
+	
+	/** The testcases. */
+	@Relationship(type = Relations.CONTAINS_SCREEN)
+	private Collection<Neo4jScreenNode> screens = new HashSet<Neo4jScreenNode>();
 	
 	/**
 	 * Instantiates a new web domain.
@@ -84,6 +93,20 @@ public class WebDomain {
 	 */
 	public void setDomainName(String domainName) {
 		this.domainName = domainName;
+	}
+
+	/**
+	 * @return the screens
+	 */
+	public Collection<Neo4jScreenNode> getScreens() {
+		return screens;
+	}
+
+	/**
+	 * @param screens the screens to set
+	 */
+	public void setScreens(Collection<Neo4jScreenNode> screens) {
+		this.screens = screens;
 	}
 
 }

@@ -21,7 +21,9 @@
 package com.bigtester.ate.tcg.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.IndustryCategory;
@@ -37,16 +39,16 @@ import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 public class IntermediateResult {
 	
 	/** The dom strings. */
-	private List<HTMLSource> domStrings = new ArrayList<HTMLSource>();
+	private Set<HTMLSource> domStrings = new HashSet<HTMLSource>();
 	
 	/** The uitrs. */
-	private List<UserInputTrainingRecord> uitrs = new ArrayList<UserInputTrainingRecord>();
+	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
 	
 	/** The test suites map. */
-	private List<TestSuite> testSuitesMap = new ArrayList<TestSuite>();
+	private Set<TestSuite> testSuitesMap = new HashSet<TestSuite>();
 	
 	/** The industry categories map. */
-	private List<IndustryCategory> industryCategoriesMap = new ArrayList<IndustryCategory>();
+	private Set<IndustryCategory> industryCategoriesMap = new HashSet<IndustryCategory>();
 	
 	/** The test case name. */
 	private String testCaseName="";
@@ -71,50 +73,50 @@ public class IntermediateResult {
 	/**
 	 * @return the domStrings
 	 */
-	public List<HTMLSource> getDomStrings() {
+	public Set<HTMLSource> getDomStrings() {
 		return domStrings;
 	}
 	/**
 	 * @param domStrings the domStrings to set
 	 */
-	public void setDomStrings(List<HTMLSource> domStrings) {
+	public void setDomStrings(Set<HTMLSource> domStrings) {
 		this.domStrings = domStrings;
 	}
 	/**
 	 * @return the uitrs
 	 */
-	public List<UserInputTrainingRecord> getUitrs() {
+	public Set<UserInputTrainingRecord> getUitrs() {
 		return uitrs;
 	}
 	/**
 	 * @param uitrs the uitrs to set
 	 */
-	public void setUitrs(List<UserInputTrainingRecord> uitrs) {
+	public void setUitrs(Set<UserInputTrainingRecord> uitrs) {
 		this.uitrs = uitrs;
 	}
 	/**
 	 * @return the testSuitesMap
 	 */
-	public List<TestSuite> getTestSuitesMap() {
+	public Set<TestSuite> getTestSuitesMap() {
 		return testSuitesMap;
 	}
 	/**
 	 * @param testSuitesMap the testSuitesMap to set
 	 */
-	public void setTestSuitesMap(List<TestSuite> testSuitesMap) {
+	public void setTestSuitesMap(Set<TestSuite> testSuitesMap) {
 		this.testSuitesMap = testSuitesMap;
 	}
 	/**
 	 * @return the industryCategoriesMap
 	 */
-	public List<IndustryCategory> getIndustryCategoriesMap() {
+	public Set<IndustryCategory> getIndustryCategoriesMap() {
 		return industryCategoriesMap;
 	}
 	/**
 	 * @param industryCategoriesMap the industryCategoriesMap to set
 	 */
 	public void setIndustryCategoriesMap(
-			List<IndustryCategory> industryCategoriesMap) {
+			Set<IndustryCategory> industryCategoriesMap) {
 		this.industryCategoriesMap = industryCategoriesMap;
 	}
 	/**
