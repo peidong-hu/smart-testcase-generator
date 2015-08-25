@@ -22,10 +22,16 @@ package com.bigtester.ate.tcg.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import javassist.bytecode.Descriptor.Iterator;
+
+import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
@@ -92,6 +98,44 @@ final public class PredictionIOTrainer {
 	}
 
 	/**
+	 * Sent training entity.
+	 *
+	 * @param pageFrames the page frames
+	 * @param screenName the screen name
+	 * @return the string
+	 * @throws ExecutionException the execution exception
+	 * @throws InterruptedException the interrupted exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static String sentTrainingEntity(Set<HTMLSource> pageFrames, String screenName)
+			throws ExecutionException, InterruptedException, IOException {
+		EventClient client = new EventClient(SAMPLETEXTCLASSIFIERACCESSKEY,
+				EVENTSERVERURL);
+		
+		StringBuilder tmp = new StringBuilder("");
+		for (java.util.Iterator<HTMLSource> itr=pageFrames.iterator(); itr.hasNext();){
+			 tmp.append(itr.next().getDomDoc());
+		}
+		
+		Event event = new Event()
+				.event("userfield")
+				.entityType("userfieldentity")
+				.entityId(UUID.randomUUID().toString())
+				.properties(
+						ImmutableMap.<String, Object> of("label",
+								toDouble(screenName), "text",
+								tmp.toString(), "category",
+								screenName));
+		String retVal = client.createEvent(event);
+		client.close();
+		if (null == retVal) {
+			retVal = "";
+		} 
+		return retVal;
+	}
+
+	
+	/**
 	 * To double.
 	 *
 	 * @param str the str
@@ -135,5 +179,35 @@ final public class PredictionIOTrainer {
 		record.setPioPredictConfidence(con);
 
 		return record;
+	}
+	
+	/**
+	 * Query entity.
+	 *
+	 * @param pageFrames the page frames
+	 * @return the map
+	 * @throws ExecutionException the execution exception
+	 * @throws InterruptedException the interrupted exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static Map<String, Double> queryEntity(
+			Set<HTMLSource> pageFrames) throws ExecutionException,
+			InterruptedException, IOException {
+		EngineClient client = new EngineClient(ENGINESERVERURL);
+		StringBuilder tmp = new StringBuilder("");
+		for (java.util.Iterator<HTMLSource> itr=pageFrames.iterator(); itr.hasNext();){
+			 tmp.append(itr.next().getDomDoc());
+		}
+		JsonObject jObj = client.sendQuery(ImmutableMap.<String, Object> of(
+				"text", tmp.toString()));
+		client.close();
+		String cat = jObj.get("category").getAsString();
+		if (null == cat) cat = "";
+		
+		Double con = jObj.get("confidence").getAsDouble();
+		if (null == con) con = 0.0;
+		Map<String, Double> retVal = new HashMap<String, Double>();
+		retVal.put(cat, con);
+		return retVal;
 	}
 }

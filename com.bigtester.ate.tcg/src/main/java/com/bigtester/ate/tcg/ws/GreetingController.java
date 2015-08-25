@@ -3,8 +3,11 @@ package com.bigtester.ate.tcg.ws;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -33,10 +36,12 @@ import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.TestCase;
+import com.bigtester.ate.tcg.model.domain.TestSuite;
 import com.bigtester.ate.tcg.model.domain.WebDomain;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
 import com.bigtester.ate.tcg.model.repository.TestCaseRepo;
+import com.bigtester.ate.tcg.model.repository.TestSuiteRepo;
 import com.bigtester.ate.tcg.model.repository.WebDomainRepo;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 import com.bigtester.ate.tcg.utils.exception.Html2DomException;
@@ -59,20 +64,26 @@ public class GreetingController {
 	@Autowired
 	@Nullable
 	private ScreenNodeRepo screenNodeRepo;
-	
+
 	/** The web domain repo. */
 	@Autowired
 	@Nullable
-	private WebDomainRepo webDomainRepo; 
-	
+	private WebDomainRepo webDomainRepo;
+
 	/** The test case repo. */
 	@Autowired
 	@Nullable
 	private TestCaseRepo testCaseRepo;
-	
+
+	/** The test suite repo. */
+	@Autowired
+	@Nullable
+	private TestSuiteRepo testSuiteRepo;
+
 	@Autowired
 	@Nullable
 	private Session neo4jSession;
+
 	/**
 	 * Predict.
 	 *
@@ -132,31 +143,65 @@ public class GreetingController {
 	}
 
 	/**
-	 * Gets the screen names.
+	 * Page predict.
 	 *
-	 * @param domainIndustryCode the domain industry code
-	 * @return the screen names
+	 * @param pageFrames the page frames
+	 * @return the map
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws ExecutionException the execution exception
 	 * @throws InterruptedException the interrupted exception
 	 */
 	@CrossOrigin
+	@RequestMapping(value = "/pagePredict", method = RequestMethod.POST)
+	public Map<String, Double> pagePredict(
+			@RequestBody Set<HTMLSource> pageFrames) throws IOException,
+			ClassNotFoundException, ExecutionException, InterruptedException {
+
+		Map<String, Double> retVal = new HashMap<String, Double>();//NOPMD
+
+		if (pageFrames.isEmpty()) {
+			retVal.put("", 0.0);
+		} else {
+			retVal = PredictionIOTrainer.queryEntity(pageFrames);
+
+		}
+
+		return retVal;
+	}
+
+	/**
+	 * Gets the screen names.
+	 *
+	 * @param domainIndustryCode
+	 *            the domain industry code
+	 * @return the screen names
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws ExecutionException
+	 *             the execution exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
+	@CrossOrigin
 	@RequestMapping(value = "/queryScreenNames", method = RequestMethod.GET)
 	public WsScreenNames queryScreenNames(
-			@RequestParam(value="q", required=false) String queryStr, @RequestParam(required=false, value="domainIndustryCode") String domainIndustryCode)
+			@RequestParam(value = "q", required = false) String queryStr,
+			@RequestParam(required = false, value = "domainIndustryCode") String domainIndustryCode)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
 
 		Iterable<Neo4jScreenNode> allNodes = getScreenNodeRepo().findAll();
 		WsScreenNames retVal = new WsScreenNames(0, false);
-		for (Neo4jScreenNode node: allNodes) {
-			retVal.getScreenNames().add(retVal.new ScreenName(node.getName(), ""));
+		for (Neo4jScreenNode node : allNodes) {
+			retVal.getScreenNames().add(
+					retVal.new ScreenName(node.getName(), ""));
 		}
 		return retVal;
 	}
 
-	
 	/**
 	 * Save intermediate result.
 	 *
@@ -185,39 +230,54 @@ public class GreetingController {
 				trainedAlready = true;
 			}
 		}
-		
+
 		if (!trainedAlready)
 			trainInputPIO(intermediateResult.getUitrs());
 		
-		
-		
-		//1. query db for existing root test suite intermediateResult.getTestSuitesMap().get(0);
-		//2. add the testSuitesMap into the existing test suite tree if there is.
-		//3. or create a new test suite node tree (graph) in db.
-		//4. above step could be done by create a repository method, ex. save
-		//for (int index =0; index < intermediateResult.getTestSuitesMap().size(); index++) {
-		//	intermediateResult.getTestSuitesMap().get(index).setSubTestSuites(subTestSuites);
-		//}
-		
-		
-		//save test case
-		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(intermediateResult.getTestCaseName());
-		
-		if (null == testcaseNode ) {
-			testcaseNode = new TestCase(intermediateResult.getTestCaseName());//NOPMD
-			
+		PredictionIOTrainer.sentTrainingEntity(intermediateResult.getDomStrings(), intermediateResult.getScreenName());
+
+		// 1. query db for existing root test suite
+		// intermediateResult.getTestSuitesMap().get(0);
+		// 2. add the testSuitesMap into the existing test suite tree if there
+		// is.
+		// 3. or create a new test suite node tree (graph) in db.
+		// 4. above step could be done by create a repository method, ex. save
+
+		// Iterator<TestSuite> itr =
+		// intermediateResult.getTestSuitesMap().iterator();
+		// TestSuite existingSuite;
+		// TestSuite newSuite;
+		// while (itr.hasNext()) {
+		// String testSuiteName = itr.next().getName();
+		// existingSuite = getTestSuiteRepo().getTestSuiteByName(testSuiteName);
+		// if (null == existingSuite) {
+		// newSuite = new TestSuite(testSuiteName);
+		// }
+		// }
+		//
+
+		// save test case
+		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(
+				intermediateResult.getTestCaseName());
+
+		if (null == testcaseNode) {
+			testcaseNode = new TestCase(intermediateResult.getTestCaseName());// NOPMD
+
 		} else {
 			testcaseNode.setName(intermediateResult.getTestCaseName());
 		}
-		
-		//save industry categories map, similar with save test suite
-		
-		//save screen node
-		Neo4jScreenNode existingNode = getScreenNodeRepo().getNeo4jScreenNodeByUrlAndName(intermediateResult.getScreenUrl(), intermediateResult.getScreenName());
+
+		// save industry categories map, similar with save test suite
+
+		// save screen node
+		Neo4jScreenNode existingNode = getScreenNodeRepo()
+				.getNeo4jScreenNodeByUrlAndName(
+						intermediateResult.getScreenUrl(),
+						intermediateResult.getScreenName());
 		if (null == existingNode) {
-			existingNode = new Neo4jScreenNode(intermediateResult.getScreenName(),
-					intermediateResult.getScreenUrl(),
-					intermediateResult);
+			existingNode = new Neo4jScreenNode(
+					intermediateResult.getScreenName(),
+					intermediateResult.getScreenUrl(), intermediateResult);
 		} else {
 			existingNode.setName(intermediateResult.getScreenName());
 			existingNode.setSourcingDoms(intermediateResult.getDomStrings());
@@ -227,14 +287,14 @@ public class GreetingController {
 
 		if (!existingNode.getTestcases().contains(testcaseNode))
 			existingNode.getTestcases().add(testcaseNode);
-		
-		Neo4jScreenNode secondNode = getScreenNodeRepo().getNeo4jScreenNodeByUrlAndName(intermediateResult.getScreenUrl(), "secondPage");
+
+		Neo4jScreenNode secondNode = getScreenNodeRepo()
+				.getNeo4jScreenNodeByUrlAndName(
+						intermediateResult.getScreenUrl(), "secondPage");
 		if (null == secondNode) {
 			secondNode = new Neo4jScreenNode("secondPage",
-					intermediateResult.getScreenUrl(),
-					intermediateResult);
-			secondNode.steppedFrom(
-					existingNode, 1);
+					intermediateResult.getScreenUrl(), intermediateResult);
+			secondNode.steppedFrom(existingNode, 1);
 		} else {
 			secondNode.setName("secondPage");
 			secondNode.setSourcingDoms(intermediateResult.getDomStrings());
@@ -243,20 +303,23 @@ public class GreetingController {
 		}
 
 		if (!secondNode.getTestcases().contains(testcaseNode))
-			secondNode.getTestcases().add(testcaseNode);	    
-				
-		//save web domain
-		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(intermediateResult.getDomainName());
-		
-		if (null == domainNode ) {
-			domainNode = new WebDomain(intermediateResult.getDomainName());//NOPMD
+			secondNode.getTestcases().add(testcaseNode);
+
+		// save web domain
+		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(
+				intermediateResult.getDomainName());
+
+		if (null == domainNode) {
+			domainNode = new WebDomain(intermediateResult.getDomainName());// NOPMD
 		} else {
 			domainNode.setDomainName(intermediateResult.getDomainName());
 		}
-		
-		if (!domainNode.getScreens().contains(existingNode)) domainNode.getScreens().add(existingNode);
-		if (!domainNode.getScreens().contains(secondNode)) domainNode.getScreens().add(secondNode);
-		
+
+		if (!domainNode.getScreens().contains(existingNode))
+			domainNode.getScreens().add(existingNode);
+		if (!domainNode.getScreens().contains(secondNode))
+			domainNode.getScreens().add(secondNode);
+
 		Transaction trx = getNeo4jSession().beginTransaction();
 		try {
 			domainNode = getWebDomainRepo().save(domainNode);
@@ -306,24 +369,27 @@ public class GreetingController {
 		}
 		return records;
 	}
-	
-	
 
 	/**
 	 * Preprocessing.
 	 *
-	 * @param dom the dom
+	 * @param dom
+	 *            the dom
 	 * @return the list
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ParserConfigurationException the parser configuration exception
-	 * @throws TransformerException the transformer exception
-	 * @throws Html2DomException 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws ParserConfigurationException
+	 *             the parser configuration exception
+	 * @throws TransformerException
+	 *             the transformer exception
+	 * @throws Html2DomException
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/preprocessing", method = RequestMethod.POST)
 	public List<UserInputTrainingRecord> preprocessing(
 			@RequestBody List<HTMLSource> dom) throws IOException,
-			ParserConfigurationException, TransformerException, Html2DomException {
+			ParserConfigurationException, TransformerException,
+			Html2DomException {
 		List<String> csvStrings = new ArrayList<String>();
 		for (int i = 0; i < dom.size(); i++) {
 			Document doc = GlobalUtils.html2Dom(dom.get(i).getDomDoc());
@@ -411,7 +477,7 @@ public class GreetingController {
 			throw new IllegalStateException("template not initialized");
 		} else {
 			return template2;
-			
+
 		}
 
 	}
@@ -437,7 +503,8 @@ public class GreetingController {
 	}
 
 	/**
-	 * @param screenNodeRepo the screenNodeRepo to set
+	 * @param screenNodeRepo
+	 *            the screenNodeRepo to set
 	 */
 	public void setScreenNodeRepo(ScreenNodeRepo screenNodeRepo) {
 		this.screenNodeRepo = screenNodeRepo;
@@ -456,14 +523,16 @@ public class GreetingController {
 	}
 
 	/**
-	 * @param webDomainRepo the webDomainRepo to set
+	 * @param webDomainRepo
+	 *            the webDomainRepo to set
 	 */
 	public void setWebDomainRepo(WebDomainRepo webDomainRepo) {
 		this.webDomainRepo = webDomainRepo;
 	}
 
 	/**
-	 * @param template the template to set
+	 * @param template
+	 *            the template to set
 	 */
 	public void setTemplate(Neo4jOperations template) {
 		this.template = template;
@@ -483,7 +552,8 @@ public class GreetingController {
 	}
 
 	/**
-	 * @param testCaseRepo the testCaseRepo to set
+	 * @param testCaseRepo
+	 *            the testCaseRepo to set
 	 */
 	public void setTestCaseRepo(TestCaseRepo testCaseRepo) {
 		this.testCaseRepo = testCaseRepo;
@@ -502,10 +572,31 @@ public class GreetingController {
 	}
 
 	/**
-	 * @param neo4jSession the neo4jSession to set
+	 * @param neo4jSession
+	 *            the neo4jSession to set
 	 */
 	public void setNeo4jSession(Session neo4jSession) {
 		this.neo4jSession = neo4jSession;
+	}
+
+	/**
+	 * @return the testSuiteRepo
+	 */
+	public TestSuiteRepo getTestSuiteRepo() {
+		final TestSuiteRepo testSuiteRepo2 = testSuiteRepo;
+		if (testSuiteRepo2 == null) {
+			throw new IllegalStateException("testsuiterepo");
+		} else {
+			return testSuiteRepo2;
+		}
+	}
+
+	/**
+	 * @param testSuiteRepo
+	 *            the testSuiteRepo to set
+	 */
+	public void setTestSuiteRepo(TestSuiteRepo testSuiteRepo) {
+		this.testSuiteRepo = testSuiteRepo;
 	}
 
 }
