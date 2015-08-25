@@ -174,7 +174,7 @@ public class GreetingController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/saveIntermediateResult", method = RequestMethod.POST)
-	public Set<UserInputTrainingRecord> saveIntermediateResult(
+	public IntermediateResult saveIntermediateResult(
 			@RequestBody IntermediateResult intermediateResult)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
@@ -233,6 +233,8 @@ public class GreetingController {
 			secondNode = new Neo4jScreenNode("secondPage",
 					intermediateResult.getScreenUrl(),
 					intermediateResult);
+			secondNode.steppedFrom(
+					existingNode, 1);
 		} else {
 			secondNode.setName("secondPage");
 			secondNode.setSourcingDoms(intermediateResult.getDomStrings());
@@ -242,9 +244,6 @@ public class GreetingController {
 
 		if (!secondNode.getTestcases().contains(testcaseNode))
 			secondNode.getTestcases().add(testcaseNode);	    
-		
-		secondNode.steppedFrom(
-				existingNode, 1);
 				
 		//save web domain
 		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(intermediateResult.getDomainName());
@@ -265,7 +264,7 @@ public class GreetingController {
 		} finally {
 			trx.close();
 		}
-		return intermediateResult.getUitrs();
+		return intermediateResult;
 	}
 
 	// @CrossOrigin

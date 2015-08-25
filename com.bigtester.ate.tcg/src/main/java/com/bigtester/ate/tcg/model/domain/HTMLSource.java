@@ -11,14 +11,14 @@ import org.neo4j.ogm.annotation.NodeEntity;
  * The Class Greeting.
  */
 @NodeEntity
-public class HTMLSource implements Serializable {
+public class HTMLSource {
 	
 	/** The id. */
 	@GraphId
 	@Nullable
 	private Long id; //NOPMD
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 5806929726322626369L;
+	///** The Constant serialVersionUID. */
+	//private static final long serialVersionUID = 5806929726322626369L;
 
 	/** The xpath of frame. */
 	private String xpathOfFrame;
