@@ -27,6 +27,9 @@ public class HTMLSource {
 
 	/** The parent index. */
 	private int parentIndex;
+	
+	/** The doc text. */
+	private String docText;
 
 	/**
 	 * Instantiates a new HTML source.
@@ -37,6 +40,7 @@ public class HTMLSource {
 		super();
 		xpathOfFrame = "";
 		domDoc = "";
+		docText = "";
 	}
 
 
@@ -105,5 +109,23 @@ public class HTMLSource {
 	 */
 	public void setId(Long id) {//NOPMD
 		this.id = id;
+	}
+
+
+
+	/**
+	 * @return the docText
+	 */
+	public String getDocText() {
+		return docText;
+	}
+
+
+
+	/**
+	 * @param docText the docText to set
+	 */
+	public void setDocText(String docText) {
+		this.docText = docText;
 	}
 }

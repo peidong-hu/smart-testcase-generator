@@ -114,7 +114,8 @@ final public class PredictionIOTrainer {
 		
 		StringBuilder tmp = new StringBuilder("");
 		for (java.util.Iterator<HTMLSource> itr=pageFrames.iterator(); itr.hasNext();){
-			 tmp.append(itr.next().getDomDoc());
+			tmp.append(" ");//NOPMD
+			tmp.append(itr.next().getDocText());
 		}
 		
 		Event event = new Event()
@@ -196,7 +197,8 @@ final public class PredictionIOTrainer {
 		EngineClient client = new EngineClient(ENGINESERVERURL);
 		StringBuilder tmp = new StringBuilder("");
 		for (java.util.Iterator<HTMLSource> itr=pageFrames.iterator(); itr.hasNext();){
-			 tmp.append(itr.next().getDomDoc());
+			tmp.append(" ");
+			tmp.append(itr.next().getDocText());
 		}
 		JsonObject jObj = client.sendQuery(ImmutableMap.<String, Object> of(
 				"text", tmp.toString()));
