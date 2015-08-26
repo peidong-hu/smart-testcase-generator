@@ -50,8 +50,9 @@ import io.prediction.EventClient;
 final public class PredictionIOTrainer {
 	
 	/** The Constant SAMPLETEXTCLASSIFIERACCESSKEY. */
-	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "qdQkFtusKxikK8n3L7fjorqbTeNIeRa7z2NbXwvsd4m95WSC6kVPuKNrw4baiJTl";
-	
+	//public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "qdQkFtusKxikK8n3L7fjorqbTeNIeRa7z2NbXwvsd4m95WSC6kVPuKNrw4baiJTl";
+	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "KoKbS9tPyzLxZpaRunfoCUWNxd4o7YOK4h29nPTnMPKHykBDyDZuaS74CFd3AX1o";
+	  
 	/** The Constant EVENTSERVERURL. */
 	public static final String EVENTSERVERURL = "http://172.16.173.50:7070";
 	
@@ -81,14 +82,23 @@ final public class PredictionIOTrainer {
 				EVENTSERVERURL);
 
 		Event event = new Event()
-				.event("userfield")
-				.entityType("userfieldentity")
-				.entityId(UUID.randomUUID().toString())
-				.properties(
-						ImmutableMap.<String, Object> of("label",
-								toDouble(record.getInputLabelName()), "text",
-								record.getInputMLHtmlCode(), "category",
-								record.getInputLabelName()));
+		.event("$set")
+		.entityType("phrase")
+		.entityId(UUID.randomUUID().toString())
+		.properties(
+				ImmutableMap.<String, Object> of( "phrase",
+						record.getInputMLHtmlCode(), "Interest",
+						record.getInputLabelName()));
+		
+//		Event event = new Event()
+//				.event("userfield")
+//				.entityType("userfieldentity")
+//				.entityId(UUID.randomUUID().toString())
+//				.properties(
+//						ImmutableMap.<String, Object> of("label",
+//								toDouble(record.getInputLabelName()), "text",
+//								record.getInputMLHtmlCode(), "category",
+//								record.getInputLabelName()));
 		String retVal = client.createEvent(event);
 		client.close();
 		if (null == retVal) {
@@ -119,14 +129,23 @@ final public class PredictionIOTrainer {
 		}
 		
 		Event event = new Event()
-				.event("userfield")
-				.entityType("userfieldentity")
-				.entityId(UUID.randomUUID().toString())
-				.properties(
-						ImmutableMap.<String, Object> of("label",
-								toDouble(screenName), "text",
-								tmp.toString(), "category",
-								screenName));
+		.event("$set")
+		.entityType("phrase")
+		.entityId(UUID.randomUUID().toString())
+		.properties(
+				ImmutableMap.<String, Object> of("phrase",
+						tmp.toString(), "Interest",
+						screenName));
+		
+//		Event event = new Event()
+//				.event("userfield")
+//				.entityType("userfieldentity")
+//				.entityId(UUID.randomUUID().toString())
+//				.properties(
+//						ImmutableMap.<String, Object> of("label",
+//								toDouble(screenName), "text",
+//								tmp.toString(), "category",
+//								screenName));
 		String retVal = client.createEvent(event);
 		client.close();
 		if (null == retVal) {
@@ -170,13 +189,14 @@ final public class PredictionIOTrainer {
 		EngineClient client = new EngineClient(ENGINESERVERURL);
 
 		JsonObject jObj = client.sendQuery(ImmutableMap.<String, Object> of(
-				"text", record.getInputMLHtmlCode()));
+				"sentence", record.getInputMLHtmlCode()));
 		client.close();
-		String cat = jObj.get("category").getAsString();
+		String cat = jObj.get("interest").getAsString();
 		if (null == cat) cat = "";
 		record.setPioPredictLabelResult(cat);
-		Double con = jObj.get("confidence").getAsDouble();
-		if (null == con) con = 0.0;
+		//Double con = jObj.get("confidence").getAsDouble();
+		//if (null == con) con = 0.0;
+		Double con = 0.0;
 		record.setPioPredictConfidence(con);
 
 		return record;
@@ -201,13 +221,14 @@ final public class PredictionIOTrainer {
 			tmp.append(itr.next().getDocText());
 		}
 		JsonObject jObj = client.sendQuery(ImmutableMap.<String, Object> of(
-				"text", tmp.toString()));
+				"sentence", tmp.toString()));
 		client.close();
-		String cat = jObj.get("category").getAsString();
+		String cat = jObj.get("interest").getAsString();
 		if (null == cat) cat = "";
 		
-		Double con = jObj.get("confidence").getAsDouble();
-		if (null == con) con = 0.0;
+		//Double con = jObj.get("confidence").getAsDouble();
+		//if (null == con) con = 0.0;
+		Double con = 0.0;
 		Map<String, Double> retVal = new HashMap<String, Double>();
 		retVal.put(cat, con);
 		return retVal;
