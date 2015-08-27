@@ -194,9 +194,9 @@ final public class PredictionIOTrainer {
 		String cat = jObj.get("interest").getAsString();
 		if (null == cat) cat = "";
 		record.setPioPredictLabelResult(cat);
-		//Double con = jObj.get("confidence").getAsDouble();
-		//if (null == con) con = 0.0;
-		Double con = 0.0;
+		Double con = jObj.get("confidence").getAsDouble();
+		if (null == con) con = 0.0;
+//		Double con = 0.0;
 		record.setPioPredictConfidence(con);
 
 		return record;
@@ -226,9 +226,9 @@ final public class PredictionIOTrainer {
 		String cat = jObj.get("interest").getAsString();
 		if (null == cat) cat = "";
 		
-		//Double con = jObj.get("confidence").getAsDouble();
-		//if (null == con) con = 0.0;
-		Double con = 0.0;
+		Double con = jObj.get("confidence").getAsDouble();
+		if (null == con) con = 0.0;
+		//Double con = 0.0;
 		Map<String, Double> retVal = new HashMap<String, Double>();
 		retVal.put(cat, con);
 		return retVal;
