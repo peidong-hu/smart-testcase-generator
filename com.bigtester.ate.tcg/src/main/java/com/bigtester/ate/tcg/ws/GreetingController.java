@@ -161,11 +161,16 @@ public class GreetingController {
 				String tmpMLHtmlCode = record.getInputMLHtmlCode();
 				Iterable<UserInputTrainingRecord> existingRecord = getUserInputTrainingRecordRepo()
 						.findByInputMLHtmlCode(tmpMLHtmlCode);
-				if (existingRecord.iterator().hasNext())
-					record = existingRecord.iterator().next();
+				String tmpLabel = record.getPioPredictLabelResult()
+						.getValue();
+				Double confidencetmp = record.getPioPredictConfidence();
+				if (existingRecord.iterator().hasNext()) {
+					records.set(records.indexOf(record), existingRecord.iterator().next());
+					records.get(records.indexOf(record)).setPioPredictConfidence(confidencetmp);
+					records.get(records.indexOf(record)).getPioPredictLabelResult().setValue(tmpLabel);
+				}
 				else {
-					String tmpLabel = record.getPioPredictLabelResult()
-							.getValue();
+					
 					Iterable<UserInputTrainingRecord> allSameFieldUitrs = getUserInputTrainingRecordRepo()
 							.findByPioPredictLabelResultValue(tmpLabel);
 					for (java.util.Iterator<UserInputTrainingRecord> itr = allSameFieldUitrs
