@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,22 +29,29 @@ import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import scala.collection.Iterator;
+
 import com.bigtester.ate.tcg.controller.PredictionIOTrainer;
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
+import com.bigtester.ate.tcg.model.domain.PredictedFieldName;
 import com.bigtester.ate.tcg.model.domain.TestCase;
-import com.bigtester.ate.tcg.model.domain.TestSuite;
+import com.bigtester.ate.tcg.model.domain.UserInputValue;
 import com.bigtester.ate.tcg.model.domain.WebDomain;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
 import com.bigtester.ate.tcg.model.repository.TestCaseRepo;
 import com.bigtester.ate.tcg.model.repository.TestSuiteRepo;
+import com.bigtester.ate.tcg.model.repository.UserInputTrainingRecordRepo;
+import com.bigtester.ate.tcg.model.repository.UserInputValueRepo;
 import com.bigtester.ate.tcg.model.repository.WebDomainRepo;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 import com.bigtester.ate.tcg.utils.exception.Html2DomException;
+import com.bigtester.ate.tcg.ws.entity.WsPredictedFieldNames;
 import com.bigtester.ate.tcg.ws.entity.WsScreenNames;
-import com.thoughtworks.xstream.XStream;
+import com.bigtester.ate.tcg.ws.entity.WsUserInputValues;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -64,6 +69,21 @@ public class GreetingController {
 	@Autowired
 	@Nullable
 	private ScreenNodeRepo screenNodeRepo;
+
+	/** The user input value repo. */
+	@Autowired
+	@Nullable
+	private UserInputValueRepo userInputValueRepo;
+
+	/** The predicted field name repo. */
+	@Autowired
+	@Nullable
+	private PredictedFieldNameRepo predictedFieldNameRepo;
+
+	/** The user input training record repo. */
+	@Autowired
+	@Nullable
+	UserInputTrainingRecordRepo userInputTrainingRecordRepo;
 
 	/** The web domain repo. */
 	@Autowired
@@ -136,8 +156,25 @@ public class GreetingController {
 			InterruptedException {
 
 		for (UserInputTrainingRecord record : records) {
-			if (null != record)
+			if (null != record) {
 				PredictionIOTrainer.queryEntity(record);
+				String tmpMLHtmlCode = record.getInputMLHtmlCode();
+				Iterable<UserInputTrainingRecord> existingRecord = getUserInputTrainingRecordRepo()
+						.findByInputMLHtmlCode(tmpMLHtmlCode);
+				if (existingRecord.iterator().hasNext())
+					record = existingRecord.iterator().next();
+				else {
+					String tmpLabel = record.getPioPredictLabelResult()
+							.getValue();
+					Iterable<UserInputTrainingRecord> allSameFieldUitrs = getUserInputTrainingRecordRepo()
+							.findByPioPredictLabelResultValue(tmpLabel);
+					for (java.util.Iterator<UserInputTrainingRecord> itr = allSameFieldUitrs
+							.iterator(); itr.hasNext();) {
+						record.getUserValues().addAll(
+								itr.next().getUserValues());
+					}
+				}
+			}
 		}
 		return records;
 	}
@@ -145,12 +182,17 @@ public class GreetingController {
 	/**
 	 * Page predict.
 	 *
-	 * @param pageFrames the page frames
+	 * @param pageFrames
+	 *            the page frames
 	 * @return the map
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws ExecutionException the execution exception
-	 * @throws InterruptedException the interrupted exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws ExecutionException
+	 *             the execution exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/pagePredict", method = RequestMethod.POST)
@@ -158,7 +200,7 @@ public class GreetingController {
 			@RequestBody Set<HTMLSource> pageFrames) throws IOException,
 			ClassNotFoundException, ExecutionException, InterruptedException {
 
-		Map<String, Double> retVal = new HashMap<String, Double>();//NOPMD
+		Map<String, Double> retVal = new HashMap<String, Double>();// NOPMD
 
 		if (pageFrames.isEmpty()) {
 			retVal.put("", 0.0);
@@ -203,6 +245,74 @@ public class GreetingController {
 	}
 
 	/**
+	 * Query user input values.
+	 *
+	 * @param queryStr
+	 *            the query str
+	 * @param domainIndustryCode
+	 *            the domain industry code
+	 * @return the ws user input values
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws ExecutionException
+	 *             the execution exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/queryUserInputValues", method = RequestMethod.GET)
+	public WsUserInputValues queryUserInputValues(
+			@RequestParam(value = "q", required = false) String queryStr,
+			@RequestParam(required = false, value = "domainIndustryCode") String domainIndustryCode)
+			throws IOException, ClassNotFoundException, ExecutionException,
+			InterruptedException {
+
+		Iterable<UserInputValue> allNodes = getUserInputValueRepo().findAll();
+		WsUserInputValues retVal = new WsUserInputValues(0, false);
+		for (UserInputValue node : allNodes) {
+			retVal.getUserValues().add(new UserInputValue(node.getValue(), ""));
+		}
+		return retVal;
+	}
+
+	/**
+	 * Query pio predicted field names.
+	 *
+	 * @param queryStr
+	 *            the query str
+	 * @param domainIndustryCode
+	 *            the domain industry code
+	 * @return the ws predicted field names
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException
+	 *             the class not found exception
+	 * @throws ExecutionException
+	 *             the execution exception
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/queryPioPredictedFieldNames", method = RequestMethod.GET)
+	public WsPredictedFieldNames queryPioPredictedFieldNames(
+			@RequestParam(value = "q", required = false) String queryStr,
+			@RequestParam(required = false, value = "domainIndustryCode") String domainIndustryCode)
+			throws IOException, ClassNotFoundException, ExecutionException,
+			InterruptedException {
+
+		Iterable<PredictedFieldName> allNodes = getPredictedFieldNameRepo()
+				.findAll();
+		WsPredictedFieldNames retVal = new WsPredictedFieldNames(0, false);
+		for (PredictedFieldName node : allNodes) {
+			retVal.getFieldNames().add(
+					new PredictedFieldName(node.getValue(), ""));
+		}
+		return retVal;
+	}
+
+	/**
 	 * Save intermediate result.
 	 *
 	 * @param intermediateResult
@@ -225,7 +335,7 @@ public class GreetingController {
 			InterruptedException {
 		boolean trainedAlready = false;
 		for (UserInputTrainingRecord uitr : intermediateResult.getUitrs()) {
-			uitr.setPioPredictConfidence(1.0);
+			// uitr.setPioPredictConfidence(1.0);
 			if (!StringUtils.isEmpty(uitr.getTrainedResult())) {
 				trainedAlready = true;
 			}
@@ -233,8 +343,10 @@ public class GreetingController {
 
 		if (!trainedAlready)
 			trainInputPIO(intermediateResult.getUitrs());
-		
-		PredictionIOTrainer.sentTrainingEntity(intermediateResult.getDomStrings(), intermediateResult.getScreenName());
+
+		PredictionIOTrainer.sentTrainingEntity(
+				intermediateResult.getDomStrings(),
+				intermediateResult.getScreenName());
 
 		// 1. query db for existing root test suite
 		// intermediateResult.getTestSuitesMap().get(0);
@@ -451,6 +563,7 @@ public class GreetingController {
 				uitr.setInputMLHtmlCode("");
 			else
 				uitr.setInputMLHtmlCode(temp2);
+
 			retVal.add(uitr);
 
 		}
@@ -597,6 +710,70 @@ public class GreetingController {
 	 */
 	public void setTestSuiteRepo(TestSuiteRepo testSuiteRepo) {
 		this.testSuiteRepo = testSuiteRepo;
+	}
+
+	/**
+	 * @return the userInputValueRepo
+	 */
+	public UserInputValueRepo getUserInputValueRepo() {
+		final UserInputValueRepo userInputValueRepo2 = userInputValueRepo;
+		if (userInputValueRepo2 == null) {
+			throw new IllegalStateException("userinputvaluerepo");
+
+		} else {
+			return userInputValueRepo2;
+		}
+	}
+
+	/**
+	 * @param userInputValueRepo
+	 *            the userInputValueRepo to set
+	 */
+	public void setUserInputValueRepo(UserInputValueRepo userInputValueRepo) {
+		this.userInputValueRepo = userInputValueRepo;
+	}
+
+	/**
+	 * @return the predictedFieldNameRepo
+	 */
+	public PredictedFieldNameRepo getPredictedFieldNameRepo() {
+		final PredictedFieldNameRepo predictedFieldNameRepo2 = predictedFieldNameRepo;
+		if (predictedFieldNameRepo2 == null) {
+			throw new IllegalStateException("PredictedFieldnameRepo");
+		} else {
+			return predictedFieldNameRepo2;
+
+		}
+	}
+
+	/**
+	 * @param predictedFieldNameRepo
+	 *            the predictedFieldNameRepo to set
+	 */
+	public void setPredictedFieldNameRepo(
+			PredictedFieldNameRepo predictedFieldNameRepo) {
+		this.predictedFieldNameRepo = predictedFieldNameRepo;
+	}
+
+	/**
+	 * @return the userInputTrainingRecordRepo
+	 */
+	public UserInputTrainingRecordRepo getUserInputTrainingRecordRepo() {
+		final UserInputTrainingRecordRepo userInputTrainingRecordRepo2 = userInputTrainingRecordRepo;
+		if (userInputTrainingRecordRepo2 == null) {
+			throw new IllegalStateException("userinputtrainingrecordrepo");
+		} else {
+			return userInputTrainingRecordRepo2;
+		}
+	}
+
+	/**
+	 * @param userInputTrainingRecordRepo
+	 *            the userInputTrainingRecordRepo to set
+	 */
+	public void setUserInputTrainingRecordRepo(
+			UserInputTrainingRecordRepo userInputTrainingRecordRepo) {
+		this.userInputTrainingRecordRepo = userInputTrainingRecordRepo;
 	}
 
 }

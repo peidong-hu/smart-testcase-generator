@@ -22,14 +22,12 @@ package com.bigtester.ate.tcg.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-
-import javassist.bytecode.Descriptor.Iterator;
 
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
@@ -83,7 +81,7 @@ final public class PredictionIOTrainer {
 
 		Event event = new Event()
 		.event("$set")
-		.entityType("phrase")
+		.entityType("phrase") //NOPMD
 		.entityId(UUID.randomUUID().toString())
 		.properties(
 				ImmutableMap.<String, Object> of( "phrase",
@@ -155,24 +153,24 @@ final public class PredictionIOTrainer {
 	}
 
 	
-	/**
-	 * To double.
-	 *
-	 * @param str the str
-	 * @return the double
-	 */
-	private static Double toDouble(String str) {
-		Double retVal;
-		Integer index = categories.indexOf(str);
-		if (index.equals(-1)) {
-			categories.add(str);
-			retVal = ((Integer) categories.indexOf(str)).doubleValue();
-		} else {
-			retVal = index.doubleValue();
-		}
-		if (null == retVal) retVal = 0.0;
-		return retVal;
-	}
+//	/**
+//	 * To double.
+//	 *
+//	 * @param str the str
+//	 * @return the double
+//	 */
+//	private static Double toDouble(String str) {
+//		Double retVal;
+//		Integer index = categories.indexOf(str);
+//		if (index.equals(-1)) {
+//			categories.add(str);
+//			retVal = ((Integer) categories.indexOf(str)).doubleValue();
+//		} else {
+//			retVal = index.doubleValue();
+//		}
+//		if (null == retVal) retVal = 0.0;
+//		return retVal;
+//	}
 
 	/**
 	 * Quert entity.
@@ -193,10 +191,9 @@ final public class PredictionIOTrainer {
 		client.close();
 		String cat = jObj.get("interest").getAsString();
 		if (null == cat) cat = "";
-		record.setPioPredictLabelResult(cat);
+		record.getPioPredictLabelResult().setValue(cat);
 		Double con = jObj.get("confidence").getAsDouble();
 		if (null == con) con = 0.0;
-//		Double con = 0.0;
 		record.setPioPredictConfidence(con);
 
 		return record;
@@ -217,7 +214,7 @@ final public class PredictionIOTrainer {
 		EngineClient client = new EngineClient(ENGINESERVERURL);
 		StringBuilder tmp = new StringBuilder("");
 		for (java.util.Iterator<HTMLSource> itr=pageFrames.iterator(); itr.hasNext();){
-			tmp.append(" ");
+			tmp.append(" "); //NOPMD
 			tmp.append(itr.next().getDocText());
 		}
 		JsonObject jObj = client.sendQuery(ImmutableMap.<String, Object> of(
@@ -229,7 +226,7 @@ final public class PredictionIOTrainer {
 		Double con = jObj.get("confidence").getAsDouble();
 		if (null == con) con = 0.0;
 		//Double con = 0.0;
-		Map<String, Double> retVal = new HashMap<String, Double>();
+		Map<String, Double> retVal = new ConcurrentHashMap<String, Double>();
 		retVal.put(cat, con);
 		return retVal;
 	}

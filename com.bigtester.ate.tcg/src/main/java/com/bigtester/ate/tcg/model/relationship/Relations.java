@@ -52,6 +52,12 @@ public final class Relations {
 	/** The Constant PREDICTED_INTO. */
 	final public static String PREDICTED_RESULTS = "PREDICTED_RESULTS";
 	
+	/** The Constant USER_VALUES. */
+	final public static String USER_VALUES = "USER_VALUES";
+	
+	/** The Constant PREDICTED_FIELD_NAME. */
+	final public static String PREDICTED_FIELD_NAME = "PREDICTED_FIELD_NAME";
+	
 	/** The Constant IN_TESTCASE. */
 	final public static String IN_TESTCASE = "IN_TESTCASE";
 	

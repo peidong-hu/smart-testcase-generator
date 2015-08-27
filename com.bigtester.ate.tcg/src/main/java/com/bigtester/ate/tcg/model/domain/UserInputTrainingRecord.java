@@ -20,9 +20,15 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+
+import com.bigtester.ate.tcg.model.relationship.Relations;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -51,14 +57,20 @@ public class UserInputTrainingRecord {
 	/** The trained result. */
 	private String trainedResult; // "__ATE__Error___" or succeed with eventid
 
-	/** The pio predict label result. */
-	private String pioPredictLabelResult;
-
-	/** The pio predict confidence. */
-	private Double pioPredictConfidence;
 	
-	/** The user value. */
-	private String userValue;
+	/** The pio predict label result. */
+	@Relationship(type=Relations.PREDICTED_FIELD_NAME)
+	
+	private PredictedFieldName pioPredictLabelResult = new PredictedFieldName();	
+	///** The user value. */
+	//private String userValue;
+	
+	/** The pio predict confidence. */
+	private Double pioPredictConfidence = - 1.0;
+	
+	/** The user values. */
+	@Relationship(type=Relations.USER_VALUES)
+	private Set<UserInputValue> userValues = new HashSet<UserInputValue>();
 	
 	/** The user input type. */
 	private UserInputType userInputType;
@@ -82,9 +94,6 @@ public class UserInputTrainingRecord {
 		inputLabelName = ""; // htmlLabelContent
 		inputMLHtmlCode = "";
 		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
-		pioPredictLabelResult = "";
-		pioPredictConfidence = 0.0;
-		userValue = "";
 		userInputType = UserInputType.INPUT;
 	}
 
@@ -100,9 +109,7 @@ public class UserInputTrainingRecord {
 		this.inputLabelName = labelName;
 		this.inputMLHtmlCode = mlHtmlCode;
 		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
-		pioPredictLabelResult = "";
-		pioPredictConfidence = 0.0;
-		userValue = "";
+		
 		this.userInputType = userInputType;
 	}
 
@@ -154,7 +161,7 @@ public class UserInputTrainingRecord {
 	/**
 	 * @return the pioPredictLabelResult
 	 */
-	public String getPioPredictLabelResult() {
+	public PredictedFieldName getPioPredictLabelResult() {
 		return pioPredictLabelResult;
 	}
 
@@ -162,24 +169,10 @@ public class UserInputTrainingRecord {
 	 * @param pioPredictLabelResult
 	 *            the pioPredictLabelResult to set
 	 */
-	public void setPioPredictLabelResult(String pioPredictLabelResult) {
+	public void setPioPredictLabelResult(PredictedFieldName pioPredictLabelResult) {
 		this.pioPredictLabelResult = pioPredictLabelResult;
 	}
 
-	/**
-	 * @return the pioPredictConfidence
-	 */
-	public Double getPioPredictConfidence() {
-		return pioPredictConfidence;
-	}
-
-	/**
-	 * @param pioPredictConfidence
-	 *            the pioPredictConfidence to set
-	 */
-	public void setPioPredictConfidence(Double pioPredictConfidence) {
-		this.pioPredictConfidence = pioPredictConfidence;
-	}
 
 	/**
 	 * @return the userFinalizedLabelResult
@@ -211,20 +204,6 @@ public class UserInputTrainingRecord {
 	}
 
 	/**
-	 * @return the userValue
-	 */
-	public String getUserValue() {
-		return userValue;
-	}
-
-	/**
-	 * @param userValue the userValue to set
-	 */
-	public void setUserValue(String userValue) {
-		this.userValue = userValue;
-	}
-
-	/**
 	 * @return the userInputType
 	 */
 	public UserInputType getUserInputType() {
@@ -236,5 +215,33 @@ public class UserInputTrainingRecord {
 	 */
 	public void setUserInputType(UserInputType userInputType) {
 		this.userInputType = userInputType;
+	}
+
+	/**
+	 * @return the userValues
+	 */
+	public Set<UserInputValue> getUserValues() {
+		return userValues;
+	}
+
+	/**
+	 * @param userValues the userValues to set
+	 */
+	public void setUserValues(Set<UserInputValue> userValues) {
+		this.userValues = userValues;
+	}
+
+	/**
+	 * @return the pioPredictConfidence
+	 */
+	public Double getPioPredictConfidence() {
+		return pioPredictConfidence;
+	}
+
+	/**
+	 * @param pioPredictConfidence the pioPredictConfidence to set
+	 */
+	public void setPioPredictConfidence(Double pioPredictConfidence) {
+		this.pioPredictConfidence = pioPredictConfidence;
 	}
 }

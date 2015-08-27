@@ -1,6 +1,5 @@
 package com.bigtester.ate.tcg.model.domain;
 
-import java.io.Serializable;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.GraphId;
