@@ -155,23 +155,22 @@ public class GreetingController {
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
 
-		for (int i = 0; i<records.size(); i++) {
+		for (int i = 0; i < records.size(); i++) {
 			UserInputTrainingRecord record = records.get(i);
 			if (null != record) {
 				PredictionIOTrainer.queryEntity(record);
 				String tmpMLHtmlCode = record.getInputMLHtmlCode();
 				Iterable<UserInputTrainingRecord> existingRecord = getUserInputTrainingRecordRepo()
 						.findByInputMLHtmlCode(tmpMLHtmlCode);
-				String tmpLabel = record.getPioPredictLabelResult()
-						.getValue();
+				String tmpLabel = record.getPioPredictLabelResult().getValue();
 				Double confidencetmp = record.getPioPredictConfidence();
 				if (existingRecord.iterator().hasNext()) {
 					records.set(i, existingRecord.iterator().next());
 					records.get(i).setPioPredictConfidence(confidencetmp);
-					records.get(i).getPioPredictLabelResult().setValue(tmpLabel);
-				}
-				else {
-					
+					records.get(i).getPioPredictLabelResult()
+							.setValue(tmpLabel);
+				} else {
+
 					Iterable<UserInputTrainingRecord> allSameFieldUitrs = getUserInputTrainingRecordRepo()
 							.findByPioPredictLabelResultValue(tmpLabel);
 					for (java.util.Iterator<UserInputTrainingRecord> itr = allSameFieldUitrs
@@ -388,40 +387,42 @@ public class GreetingController {
 		// save industry categories map, similar with save test suite
 
 		// save screen node
-		Neo4jScreenNode existingNode = getScreenNodeRepo()
+		Neo4jScreenNode prevousScreenNode = null;//NOPMD
+		IntermediateResult previousIntermediateResult = intermediateResult.getLastScreenNodeIntermediateResult();
+		if (null != previousIntermediateResult && !previousIntermediateResult.getScreenName().equals("") ) {
+			prevousScreenNode = getScreenNodeRepo()
+					.getNeo4jScreenNodeByUrlAndName(
+							previousIntermediateResult 
+									.getScreenUrl(),
+									previousIntermediateResult 
+									.getScreenName());
+			if (null == prevousScreenNode) {
+				throw new IllegalStateException("previousScreenNode");
+			}
+
+			if (!prevousScreenNode.getTestcases().contains(testcaseNode))
+				prevousScreenNode.getTestcases().add(testcaseNode);
+		}
+		Neo4jScreenNode currentNode = getScreenNodeRepo()
 				.getNeo4jScreenNodeByUrlAndName(
 						intermediateResult.getScreenUrl(),
 						intermediateResult.getScreenName());
-		if (null == existingNode) {
-			existingNode = new Neo4jScreenNode(
+		if (null == currentNode) {
+			currentNode = new Neo4jScreenNode(
 					intermediateResult.getScreenName(),
 					intermediateResult.getScreenUrl(), intermediateResult);
+			
 		} else {
-			existingNode.setName(intermediateResult.getScreenName());
-			existingNode.setSourcingDoms(intermediateResult.getDomStrings());
-			existingNode.setUitrs(intermediateResult.getUitrs());
-			existingNode.setUrl(intermediateResult.getScreenUrl());
+			currentNode.setName(intermediateResult.getScreenName());
+			currentNode.setSourcingDoms(intermediateResult.getDomStrings());
+			currentNode.setUitrs(intermediateResult.getUitrs());
+			currentNode.setUrl(intermediateResult.getScreenUrl());
 		}
+		if (null != prevousScreenNode)
+			currentNode.steppedFrom(prevousScreenNode, 1);
 
-		if (!existingNode.getTestcases().contains(testcaseNode))
-			existingNode.getTestcases().add(testcaseNode);
-
-		Neo4jScreenNode secondNode = getScreenNodeRepo()
-				.getNeo4jScreenNodeByUrlAndName(
-						intermediateResult.getScreenUrl(), "secondPage");
-		if (null == secondNode) {
-			secondNode = new Neo4jScreenNode("secondPage",
-					intermediateResult.getScreenUrl(), intermediateResult);
-			secondNode.steppedFrom(existingNode, 1);
-		} else {
-			secondNode.setName("secondPage");
-			secondNode.setSourcingDoms(intermediateResult.getDomStrings());
-			secondNode.setUitrs(intermediateResult.getUitrs());
-			secondNode.setUrl(intermediateResult.getScreenUrl());
-		}
-
-		if (!secondNode.getTestcases().contains(testcaseNode))
-			secondNode.getTestcases().add(testcaseNode);
+		if (!currentNode.getTestcases().contains(testcaseNode))
+			currentNode.getTestcases().add(testcaseNode);
 
 		// save web domain
 		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(
@@ -433,10 +434,10 @@ public class GreetingController {
 			domainNode.setDomainName(intermediateResult.getDomainName());
 		}
 
-		if (!domainNode.getScreens().contains(existingNode))
-			domainNode.getScreens().add(existingNode);
-		if (!domainNode.getScreens().contains(secondNode))
-			domainNode.getScreens().add(secondNode);
+		if (null != prevousScreenNode && !domainNode.getScreens().contains(prevousScreenNode))
+			domainNode.getScreens().add(prevousScreenNode);
+		if (!domainNode.getScreens().contains(currentNode))
+			domainNode.getScreens().add(currentNode);
 
 		Transaction trx = getNeo4jSession().beginTransaction();
 		try {
@@ -445,6 +446,10 @@ public class GreetingController {
 		} finally {
 			trx.close();
 		}
+		Long tmp = currentNode.getId();
+		if (null == tmp)
+			throw new IllegalStateException("node id");
+		intermediateResult.setScreenNodeNeo4jId(tmp);
 		return intermediateResult;
 	}
 

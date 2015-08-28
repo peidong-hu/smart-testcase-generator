@@ -29,7 +29,9 @@ import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import com.bigtester.ate.tcg.model.ATENeo4jNodeComparision;
 import com.bigtester.ate.tcg.model.IntermediateResult;
+import com.bigtester.ate.tcg.model.RelationshipHashSet;
 import com.bigtester.ate.tcg.model.relationship.Relations;
 import com.bigtester.ate.tcg.model.relationship.StepFrom;
 
@@ -41,7 +43,7 @@ import com.bigtester.ate.tcg.model.relationship.StepFrom;
  *
  */
 @NodeEntity
-public class Neo4jScreenNode {
+public class Neo4jScreenNode implements ATENeo4jNodeComparision{
 
 	/** The id. */
 	@GraphId
@@ -64,7 +66,7 @@ public class Neo4jScreenNode {
 
 	/** The Steps. */
 	@Relationship(type = Relations.STEP_FROM, direction = Relationship.INCOMING)
-	private Collection<StepFrom> steps = new HashSet<StepFrom>();
+	private Collection<StepFrom> steps = new RelationshipHashSet<StepFrom>();
 	
 	/** The testcases. */
 	@Relationship(type = Relations.IN_TESTCASE)
@@ -80,7 +82,15 @@ public class Neo4jScreenNode {
 	 */
 	public StepFrom steppedFrom(Neo4jScreenNode startNode, long uitrId) {
 		StepFrom tmp = new StepFrom(this, startNode, uitrId);
-		steps.add(tmp);
+		if (!steps.contains(tmp))
+			steps.add(tmp);
+		else {
+			Object tmp1 = ((RelationshipHashSet<StepFrom>)steps).getSameNode();
+			if (null != tmp1)
+				//TODO update the stepfrom relationship with new weight value
+				//start and end node will be updated by themselves
+			((StepFrom) tmp1).setStepWeight(0);
+		}
 		return tmp;
 	}
 	/**
@@ -207,6 +217,18 @@ public class Neo4jScreenNode {
 	 */
 	public void setTestcases(Collection<TestCase> testcases) {
 		this.testcases = testcases;
+	}
+	/**
+	 * {@inheritDoc}
+	*/
+	@Override
+	public boolean sameNode(@Nullable Object obj) {
+		boolean retVal = false;
+		if (obj instanceof Neo4jScreenNode) {
+			retVal = ((Neo4jScreenNode) obj).getName() == this.getName()
+					&& ((Neo4jScreenNode) obj).getUrl() == this.getUrl(); 
+		}
+		return retVal;
 	}
 	
 	

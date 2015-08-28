@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.IndustryCategory;
 import com.bigtester.ate.tcg.model.domain.TestSuite;
@@ -37,6 +39,8 @@ import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
  *
  */
 public class IntermediateResult {
+	
+	
 	
 	/** The dom strings. */
 	private Set<HTMLSource> domStrings = new HashSet<HTMLSource>();
@@ -63,6 +67,14 @@ public class IntermediateResult {
 	
 	/** The screen name. */
 	private String screenName="";
+	
+	/** The last screen node. */
+	@Nullable
+	private IntermediateResult lastScreenNodeIntermediateResult;
+	
+	/** The last screen node neo4j id. */
+	@Nullable
+	private Long screenNodeNeo4jId;
 	/**
 	 * Instantiates a new intermediate result.
 	 */
@@ -166,6 +178,34 @@ public class IntermediateResult {
 	 */
 	public void setScreenName(String screenName) {
 		this.screenName = screenName;
+	}
+	
+	/**
+	 * @return the lastScreenNodeIntermediateResult
+	 */
+	@Nullable
+	public IntermediateResult getLastScreenNodeIntermediateResult() {
+		return lastScreenNodeIntermediateResult;
+	}
+	/**
+	 * @param lastScreenNodeIntermediateResult the lastScreenNodeIntermediateResult to set
+	 */
+	public void setLastScreenNodeIntermediateResult(
+			IntermediateResult lastScreenNodeIntermediateResult) {
+		this.lastScreenNodeIntermediateResult = lastScreenNodeIntermediateResult;
+	}
+	/**
+	 * @return the screenNodeNeo4jId
+	 */
+	@Nullable
+	public Long getScreenNodeNeo4jId() {
+		return screenNodeNeo4jId;
+	}
+	/**
+	 * @param screenNodeNeo4jId the screenNodeNeo4jId to set
+	 */
+	public void setScreenNodeNeo4jId(@Nullable Long screenNodeNeo4jId) {
+		this.screenNodeNeo4jId = screenNodeNeo4jId;
 	}
 	
 	

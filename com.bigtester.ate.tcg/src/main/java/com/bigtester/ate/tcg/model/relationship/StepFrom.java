@@ -26,7 +26,9 @@ import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.RelationshipEntity;
 import org.neo4j.ogm.annotation.StartNode;
 
+import com.bigtester.ate.tcg.model.ATENeo4jNodeComparision;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,11 +37,12 @@ import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
  *
  */
 @RelationshipEntity (type=Relations.STEP_FROM)
-public class StepFrom {
+public class StepFrom implements ATENeo4jNodeComparision{
 	
 	/** The node id. */
 	@Nullable 
-	@GraphId 
+	@GraphId
+	@XStreamOmitField
 	private Long nodeId;
 	
 	/** The start node. */
@@ -153,5 +156,26 @@ public class StepFrom {
 	 */
 	public void setTriggerUitrId(long triggerUitrId) {
 		this.triggerUitrId = triggerUitrId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	*/
+	@Override
+	public boolean sameNode(Object obj) {
+		boolean retVal = false;
+		if (obj instanceof StepFrom) {
+			Neo4jScreenNode startNodeObj = ((StepFrom) obj).getStartNode();
+			Neo4jScreenNode endNodeObj = ((StepFrom) obj).getEndNode();
+			if (startNodeObj == null && this.startNode == null && endNodeObj == null && this.endNode == null) retVal = true;
+			else if (startNodeObj != null && this.startNode != null 
+					&& endNodeObj != null && this.endNode != null)
+			{
+			retVal = startNodeObj.sameNode(this.startNode)
+					&& endNodeObj.sameNode(this.endNode)
+					&& ((StepFrom) obj).getTriggerUitrId()==this.getTriggerUitrId();
+			}
+		}
+		return retVal;
 	} 
 }
