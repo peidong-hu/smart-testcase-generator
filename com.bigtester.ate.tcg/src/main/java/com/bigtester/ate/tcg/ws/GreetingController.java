@@ -155,7 +155,8 @@ public class GreetingController {
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
 
-		for (UserInputTrainingRecord record : records) {
+		for (int i = 0; i<records.size(); i++) {
+			UserInputTrainingRecord record = records.get(i);
 			if (null != record) {
 				PredictionIOTrainer.queryEntity(record);
 				String tmpMLHtmlCode = record.getInputMLHtmlCode();
@@ -165,9 +166,9 @@ public class GreetingController {
 						.getValue();
 				Double confidencetmp = record.getPioPredictConfidence();
 				if (existingRecord.iterator().hasNext()) {
-					records.set(records.indexOf(record), existingRecord.iterator().next());
-					records.get(records.indexOf(record)).setPioPredictConfidence(confidencetmp);
-					records.get(records.indexOf(record)).getPioPredictLabelResult().setValue(tmpLabel);
+					records.set(i, existingRecord.iterator().next());
+					records.get(i).setPioPredictConfidence(confidencetmp);
+					records.get(i).getPioPredictLabelResult().setValue(tmpLabel);
 				}
 				else {
 					

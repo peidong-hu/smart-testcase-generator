@@ -50,7 +50,7 @@ public class Neo4jScreenNode {
 
 	/** The name. */
 	private String name = "";
-
+	
 	/** The url. */
 	private String url="";
 		
@@ -208,7 +208,8 @@ public class Neo4jScreenNode {
 	public void setTestcases(Collection<TestCase> testcases) {
 		this.testcases = testcases;
 	}
-
+	
+	
 	// @RelatedToVia(type = "RATED")
 	// Iterable<Rating> ratings;
 	//

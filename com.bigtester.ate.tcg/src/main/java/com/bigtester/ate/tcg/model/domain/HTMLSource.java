@@ -19,6 +19,10 @@ public class HTMLSource {
 	///** The Constant serialVersionUID. */
 	//private static final long serialVersionUID = 5806929726322626369L;
 
+	/** The timestamp. */
+	@Nullable
+	private Long timestamp=System.currentTimeMillis(); 
+	
 	/** The xpath of frame. */
 	private String xpathOfFrame;
 	/** The content. */
@@ -40,6 +44,7 @@ public class HTMLSource {
 		xpathOfFrame = "";
 		domDoc = "";
 		docText = "";
+		
 	}
 
 
@@ -126,5 +131,24 @@ public class HTMLSource {
 	 */
 	public void setDocText(String docText) {
 		this.docText = docText;
+	}
+
+
+
+	/**
+	 * @return the timestamp
+	 */
+	@Nullable
+	public Long getTimestamp() {
+		return timestamp;
+	}
+
+
+
+	/**
+	 * @param timestamp the timestamp to set
+	 */
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
 	}
 }
