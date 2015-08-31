@@ -22,6 +22,7 @@ package com.bigtester.ate.tcg.model;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -33,53 +34,38 @@ import org.eclipse.jdt.annotation.Nullable;
  * @param <E>
  *
  */
-public class RelationshipHashSet<E> extends HashSet<E> {
+public class RelationshipHashSetComparator<E> {
 	
-	/** The same node. */
-	@Nullable
-	private transient Object sameNode; 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -495119507019527688L;
 	
-	/**
-	 * {@inheritDoc}
-	*/
-	@Override
-	public boolean contains(@Nullable Object obj) {
-		boolean retVal = false;
+	@Nullable	
+	public E contains(Set<E> theSet, @Nullable Object obj) {
+		boolean isContain = false;
+		Object retVal = null;
 		if (obj instanceof ATENeo4jNodeComparision) {
-			Iterator<E> itr = super.iterator();
+			Iterator<E> itr = theSet.iterator();
 			while (itr.hasNext()) {
 				Object next = itr.next();
 				if (next instanceof ATENeo4jNodeComparision) {
-					retVal = ((ATENeo4jNodeComparision) next).sameNode(obj);
+					isContain = ((ATENeo4jNodeComparision) next).sameNode(obj);
 				}
-				if (retVal) {
-					this.sameNode = next;
+				if (isContain) {
+					retVal = next;
 					break;
 				}
 			}
 		} else {
-			retVal = super.contains(obj);
+			isContain = theSet.contains(obj);
+			if (isContain) {
+					for (Iterator<E> itr = theSet.iterator(); itr.hasNext();) {
+						Object next = itr.next();
+						if (next.equals(obj)) {
+							retVal = next;
+							break;
+						}
+					}
+			}
 		}
-		return retVal;
+		
+		return (E) retVal;
 	}
-
-	/**
-	 * @return the sameNode
-	 */
-	@Nullable
-	public Object getSameNode() {
-		return sameNode;
-	}
-
-	/**
-	 * @param sameNode the sameNode to set
-	 */
-	public void setSameNode(Object sameNode) {
-		this.sameNode = sameNode;
-	}
-
 }

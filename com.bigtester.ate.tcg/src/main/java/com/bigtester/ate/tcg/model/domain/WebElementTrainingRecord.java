@@ -20,12 +20,14 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.Relationship;
 
 import com.bigtester.ate.tcg.model.relationship.Relations;
@@ -42,37 +44,62 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  *
  */
 @NodeEntity
-public class UserInputTrainingRecord {
-
+public class WebElementTrainingRecord {
 	/** The id. */
 	@GraphId
 	@Nullable
 	private Long id;// NOPMD
+	
+	/**
+	 * @return the id
+	 */
+	@Nullable
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {//NOPMD required by neo4j
+		this.id = id;
+	}
+
+	
 	/** The input label name. */
+	@Property
 	private String inputLabelName; // htmlLabelContent
 
 	/** The input ml html code. */
+	@Property
 	private String inputMLHtmlCode;
 
 	/** The trained result. */
+	@Property
 	private String trainedResult; // "__ATE__Error___" or succeed with eventid
 
 	
 	/** The pio predict label result. */
 	@Relationship(type=Relations.PREDICTED_FIELD_NAME)
-	
 	private PredictedFieldName pioPredictLabelResult = new PredictedFieldName();	
 	///** The user value. */
 	//private String userValue;
 	
 	/** The pio predict confidence. */
+	@Property
 	private Double pioPredictConfidence = - 1.0;
 	
 	/** The user values. */
 	@Relationship(type=Relations.USER_VALUES)
 	private Set<UserInputValue> userValues = new HashSet<UserInputValue>();
 	
+	/** The testcases. */
+	@Relationship(type = Relations.IN_TESTCASE)
+	private Collection<TestCase> testcases = new HashSet<TestCase>();
+	
 	/** The user input type. */
+	@Property
 	private UserInputType userInputType;
 	
 	/**
@@ -89,7 +116,7 @@ public class UserInputTrainingRecord {
 	 * Instantiates a new user input training record.
 	 */
 
-	public UserInputTrainingRecord() {
+	public WebElementTrainingRecord() {
 		super();
 		inputLabelName = ""; // htmlLabelContent
 		inputMLHtmlCode = "";
@@ -105,7 +132,7 @@ public class UserInputTrainingRecord {
 	 * @param mlHtmlCode
 	 *            the ml html code
 	 */
-	public UserInputTrainingRecord(String labelName, String mlHtmlCode, UserInputType userInputType) {
+	public WebElementTrainingRecord(String labelName, String mlHtmlCode, UserInputType userInputType) {
 		this.inputLabelName = labelName;
 		this.inputMLHtmlCode = mlHtmlCode;
 		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
@@ -187,21 +214,6 @@ public class UserInputTrainingRecord {
 	// {
 	// this.userFinalizedLabelResult = userFinalizedLabelResult;
 	// }
-	/**
-	 * @return the id
-	 */
-	@Nullable
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Long id) {//NOPMD required by neo4j
-		this.id = id;
-	}
 
 	/**
 	 * @return the userInputType
@@ -243,5 +255,19 @@ public class UserInputTrainingRecord {
 	 */
 	public void setPioPredictConfidence(Double pioPredictConfidence) {
 		this.pioPredictConfidence = pioPredictConfidence;
+	}
+
+	/**
+	 * @return the testcases
+	 */
+	public Collection<TestCase> getTestcases() {
+		return testcases;
+	}
+
+	/**
+	 * @param testcases the testcases to set
+	 */
+	public void setTestcases(Collection<TestCase> testcases) {
+		this.testcases = testcases;
 	}
 }

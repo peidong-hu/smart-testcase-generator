@@ -44,8 +44,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.ServletContextAware;
 
-import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord.UserInputType;
+import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord.UserInputType;
 
 /**
  * @author ashraf
@@ -72,12 +72,12 @@ public class TrainingFileDB implements ServletContextAware {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static UserInputTrainingRecord parseLine(String line)
+	public static WebElementTrainingRecord parseLine(String line)
 			throws IOException {
 		CSVParser lineParser = CSVParser.parse(line,
 				TrainingFileDB.getCSVFormat());
 		List<CSVRecord> csvRecords = lineParser.getRecords();
-		UserInputTrainingRecord retVal = null; // NOPMD
+		WebElementTrainingRecord retVal = null; // NOPMD
 		for (CSVRecord record : csvRecords) {
 			if (null != record) {
 				String temp = record.get(0);
@@ -86,7 +86,7 @@ public class TrainingFileDB implements ServletContextAware {
 					temp = "";
 				if (null == temp2)
 					temp2 = "";
-				retVal = new UserInputTrainingRecord(temp, // NOPMD
+				retVal = new WebElementTrainingRecord(temp, // NOPMD
 						temp2, UserInputType.INPUT);
 			}
 		}
@@ -146,11 +146,11 @@ public class TrainingFileDB implements ServletContextAware {
 			return;
 
 		// Create new students objects
-		List<UserInputTrainingRecord> trainings = new ArrayList<UserInputTrainingRecord>();
+		List<WebElementTrainingRecord> trainings = new ArrayList<WebElementTrainingRecord>();
 		for (int index = 0; index < mlInputs.size(); index++) {
 			String temp = mlInputs.get(index);
 			if (null != temp) {
-				trainings.add(new UserInputTrainingRecord(" ", temp, UserInputTrainingRecord.UserInputType.INPUT));
+				trainings.add(new WebElementTrainingRecord(" ", temp, WebElementTrainingRecord.UserInputType.INPUT));
 			}
 		}
 
@@ -172,7 +172,7 @@ public class TrainingFileDB implements ServletContextAware {
 			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);// NOPMD
 
 			// Write a new student object list to the CSV file
-			for (UserInputTrainingRecord student : trainings) {
+			for (WebElementTrainingRecord student : trainings) {
 				List<String> studentDataRecord = new ArrayList<String>();
 				studentDataRecord.add(student.getInputLabelName());
 				studentDataRecord.add(student.getInputMLHtmlCode());
@@ -219,7 +219,7 @@ public class TrainingFileDB implements ServletContextAware {
 	 */
 	public static void writeCacheCsvFile(String absoluteCacheFilePath,
 			String beginningComments, String endingComments,
-			List<UserInputTrainingRecord> trainedRecords, boolean append)
+			List<WebElementTrainingRecord> trainedRecords, boolean append)
 			throws IOException {
 		// Create new students objects
 
@@ -254,7 +254,7 @@ public class TrainingFileDB implements ServletContextAware {
 
 			// Write a new student object list to the CSV file
 			csvFilePrinter.printComment(beginningComments);
-			for (UserInputTrainingRecord student : trainedRecords) {
+			for (WebElementTrainingRecord student : trainedRecords) {
 				List<String> studentDataRecord = new ArrayList<String>();
 				studentDataRecord.add(student.getInputLabelName());
 				studentDataRecord.add(student.getInputMLHtmlCode());

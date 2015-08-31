@@ -23,6 +23,7 @@ package com.bigtester.ate.tcg.model.repository;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.stereotype.Repository;
 
+import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
 
@@ -34,7 +35,7 @@ import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
  *
  */
 @Repository
-public interface UserInputTrainingRecordRepo extends GraphRepository<ScreenUserInputTrainingRecord> {
+public interface ActionElementTrainingRecordRepo extends GraphRepository<ScreenActionElementTrainingRecord> {
 	
 	/**
 	 * Find by pio predict label result value.
@@ -42,7 +43,7 @@ public interface UserInputTrainingRecordRepo extends GraphRepository<ScreenUserI
 	 * @param value the value
 	 * @return the iterable
 	 */
-	Iterable<ScreenUserInputTrainingRecord> findByPioPredictLabelResultValue(String value);
+	Iterable<ScreenActionElementTrainingRecord> findByPioPredictLabelResultValue(String value);
 	
 	/**
 	 * Find by input ml html code.
@@ -50,6 +51,6 @@ public interface UserInputTrainingRecordRepo extends GraphRepository<ScreenUserI
 	 * @param htmlCode the html code
 	 * @return the iterable
 	 */
-	Iterable<ScreenUserInputTrainingRecord> findByInputMLHtmlCode(String htmlCode);
+	Iterable<ScreenActionElementTrainingRecord> findByInputMLHtmlCode(String htmlCode);
 	
 }

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Controller;
 
 
 
-import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
 
 import edu.stanford.nlp.classify.Classifier;
 import edu.stanford.nlp.classify.ColumnDataClassifier;
@@ -74,7 +74,7 @@ public class UserInputsTrainer {
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public List<UserInputTrainingRecord> train() throws ClassNotFoundException, IOException {
+	public List<WebElementTrainingRecord> train() throws ClassNotFoundException, IOException {
 		//ColumnDataClassifier cdc = new ColumnDataClassifier(
 		//		 PROPERTYFILE);
 		//Classifier<String, String> cl = cdc.makeClassifier(cdc //NOPMD
@@ -97,7 +97,7 @@ public class UserInputsTrainer {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public List<UserInputTrainingRecord> demonstrateSerialization() throws IOException,
+	public List<WebElementTrainingRecord> demonstrateSerialization() throws IOException,
 			ClassNotFoundException {
 		//System.out
 		//		.println("Demonstrating working with a serialized classifier");
@@ -131,7 +131,7 @@ public class UserInputsTrainer {
 		// original one cl
 		// For both we use a ColumnDataClassifier to convert text lines to
 		// examples
-		List<UserInputTrainingRecord> retVal = new ArrayList<UserInputTrainingRecord>();
+		List<WebElementTrainingRecord> retVal = new ArrayList<WebElementTrainingRecord>();
 		for (String line : ObjectBank.getLineIterator(
 				 TESTFILE, "utf-8")) {
 			Datum<String, String> datum1 = cdc.makeDatumFromLine(line);
@@ -140,7 +140,7 @@ public class UserInputsTrainer {
 			
 			if (null != line && null != temp && TrainingFileDB.parseLine(line) != null) {
 				
-				retVal.add(new UserInputTrainingRecord(temp,TrainingFileDB.parseLine(line).getInputMLHtmlCode(), UserInputTrainingRecord.UserInputType.INPUT));
+				retVal.add(new WebElementTrainingRecord(temp,TrainingFileDB.parseLine(line).getInputMLHtmlCode(), WebElementTrainingRecord.UserInputType.INPUT));
 			}
 //			System.out.println(classifier.classOf(datum1) + "  =origi=>  " + line );
 //			System.out.println(cl2.classOf(datum1)+ "  =test origi=> " + line);

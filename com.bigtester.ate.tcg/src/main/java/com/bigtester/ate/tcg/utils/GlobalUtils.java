@@ -18,6 +18,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
@@ -136,5 +137,16 @@ public final class GlobalUtils {
 		return retVal;
 
 	}
-
+	
+	/**
+	 * Null to non null handling.
+	 *
+	 * @param obj the obj
+	 * @param exceptionMsg the exception msg
+	 * @return the object
+	 */
+	public static Object nullToNonNullHandling(@Nullable Object obj, String exceptionMsg) {
+		if (null == obj) throw new IllegalStateException(exceptionMsg);
+		return obj;
+	}
 }

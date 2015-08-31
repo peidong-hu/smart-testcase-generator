@@ -29,7 +29,10 @@ package com.bigtester.ate.tcg.model.relationship;
 public final class Relations {
 	
 	/** The Constant STEP_INTO. */
-	final public static String STEP_FROM = "STEP_FROM";
+	final public static String STEP_IN = "STEP_IN";
+	
+	/** The Constant STEP_OUT. */
+	final public static String STEP_OUT = "STEP_OUT";
 	
 	/** The Constant CONTAINS_SUB_INDUSTRY_CATEGORY. */
 	final public static String CONTAINS_SUB_INDUSTRY_CATEGORY = "CONTAINS_SUB_INDUSTRY_CATEGORY";
@@ -50,7 +53,10 @@ public final class Relations {
 	final public static String SOURCING_DOMS = "SOURCING_DOMS";
 	
 	/** The Constant PREDICTED_INTO. */
-	final public static String PREDICTED_RESULTS = "PREDICTED_RESULTS";
+	final public static String PREDICTED_USER_INPUT_RESULTS = "PREDICTED_USER_INPUT_RESULTS";
+	
+	/** The Constant PREDICTED_USER_ACTIONELEMENT_RESULTS. */
+	final public static String PREDICTED_USER_ACTIONELEMENT_RESULTS = "PREDICTED_USER_ACTIONELEMENT_RESULTS";
 	
 	/** The Constant USER_VALUES. */
 	final public static String USER_VALUES = "USER_VALUES";

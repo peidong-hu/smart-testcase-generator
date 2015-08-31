@@ -31,9 +31,10 @@ import org.neo4j.ogm.annotation.Relationship;
 
 import com.bigtester.ate.tcg.model.ATENeo4jNodeComparision;
 import com.bigtester.ate.tcg.model.IntermediateResult;
-import com.bigtester.ate.tcg.model.RelationshipHashSet;
+import com.bigtester.ate.tcg.model.RelationshipHashSetComparator;
 import com.bigtester.ate.tcg.model.relationship.Relations;
-import com.bigtester.ate.tcg.model.relationship.StepFrom;
+import com.bigtester.ate.tcg.model.relationship.StepIn;
+import com.bigtester.ate.tcg.model.relationship.StepOut;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -43,78 +44,67 @@ import com.bigtester.ate.tcg.model.relationship.StepFrom;
  *
  */
 @NodeEntity
-public class Neo4jScreenNode implements ATENeo4jNodeComparision{
+public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 
 	/** The id. */
 	@GraphId
 	@Nullable
-	private Long id; //NOPMD
+	private Long id; // NOPMD
 
 	/** The name. */
 	private String name = "";
-	
-	/** The url. */
-	private String url="";
-		
-	/** The sourcing doms. */
-	@Relationship(type=Relations.SOURCING_DOMS)
-	private Set<HTMLSource> sourcingDoms = new HashSet<HTMLSource>();
-	
-	/** The predicted user input results. */
-	@Relationship(type=Relations.PREDICTED_RESULTS)
-	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
 
-	/** The Steps. */
-	@Relationship(type = Relations.STEP_FROM, direction = Relationship.INCOMING)
-	private Collection<StepFrom> steps = new RelationshipHashSet<StepFrom>();
+	/** The url. */
+	private String url = "";
+
+	/** The sourcing doms. */
+	@Relationship(type = Relations.SOURCING_DOMS)
+	private Set<HTMLSource> sourcingDoms = new HashSet<HTMLSource>();
+
+	/** The predicted user input results. */
+	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
+	private Set<ScreenUserInputTrainingRecord> uitrs = new HashSet<ScreenUserInputTrainingRecord>();
 	
+	/** The action uitrs. */
+	@Relationship(type = Relations.PREDICTED_USER_ACTIONELEMENT_RESULTS)
+	private Set<ScreenActionElementTrainingRecord> actionUitrs = new HashSet<ScreenActionElementTrainingRecord>();
+
+//	/** The Steps. */
+//	@Relationship(type = Relations.STEP_IN, direction = Relationship.INCOMING)
+//	private Set<StepIn> stepIns = new HashSet<StepIn>();
+
+
 	/** The testcases. */
 	@Relationship(type = Relations.IN_TESTCASE)
 	private Collection<TestCase> testcases = new HashSet<TestCase>();
-	
 
+	
 	/**
-	 * Stepped into.
-	 *
-	 * @param endNode the end node
-	 * @param uitrId the uitr id
-	 * @return the step into
-	 */
-	public StepFrom steppedFrom(Neo4jScreenNode startNode, long uitrId) {
-		StepFrom tmp = new StepFrom(this, startNode, uitrId);
-		if (!steps.contains(tmp))
-			steps.add(tmp);
-		else {
-			Object tmp1 = ((RelationshipHashSet<StepFrom>)steps).getSameNode();
-			if (null != tmp1)
-				//TODO update the stepfrom relationship with new weight value
-				//start and end node will be updated by themselves
-			((StepFrom) tmp1).setStepWeight(0);
-		}
-		return tmp;
-	}
-	/**
-	 * Instantiates a new neo4j screen node.
-	 * no-arg constructor for restful call.
+	 * Instantiates a new neo4j screen node. no-arg constructor for restful
+	 * call.
 	 */
 	public Neo4jScreenNode() {
 		super();
 	}
-	
+
 	/**
 	 * Instantiates a new neo4j screen node.
 	 *
-	 * @param name the name
-	 * @param url the url
-	 * @param iResult the i result
+	 * @param name
+	 *            the name
+	 * @param url
+	 *            the url
+	 * @param iResult
+	 *            the i result
 	 */
 	public Neo4jScreenNode(String name, String url, IntermediateResult iResult) {
 		this.name = name;
 		this.url = url;
 		this.sourcingDoms = iResult.getDomStrings();
 		this.uitrs = iResult.getUitrs();
+		this.actionUitrs = iResult.getActionUitrs();
 	}
-	
+
 	/**
 	 * @return the id
 	 */
@@ -127,7 +117,7 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision{
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {//NOPMD
+	public void setId(Long id) {// NOPMD
 		this.id = id;
 	}
 
@@ -161,10 +151,6 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision{
 		this.url = url;
 	}
 
-	
-
-	
-
 	/**
 	 * @return the sourcingDoms
 	 */
@@ -173,65 +159,74 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision{
 	}
 
 	/**
-	 * @param sourcingDoms the sourcingDoms to set
+	 * @param sourcingDoms
+	 *            the sourcingDoms to set
 	 */
 	public void setSourcingDoms(Set<HTMLSource> sourcingDoms) {
 		this.sourcingDoms = sourcingDoms;
 	}
 
-	/**
-	 * @return the uitrs
-	 */
-	public Set<UserInputTrainingRecord> getUitrs() {
-		return uitrs;
-	}
 
-	/**
-	 * @param uitrs the uitrs to set
-	 */
-	public void setUitrs(Set<UserInputTrainingRecord> uitrs) {
-		this.uitrs = uitrs;
-	}
 
-	/**
-	 * @return the steps
-	 */
-	public Iterable<StepFrom> getSteps() {
-		return steps;
-	}
 
-	/**
-	 * @param steps the steps to set
-	 */
-	public void setSteps(Collection<StepFrom> steps) {
-		this.steps = steps;
-	}
+
 	/**
 	 * @return the testcases
 	 */
 	public Collection<TestCase> getTestcases() {
 		return testcases;
 	}
+
 	/**
-	 * @param testcases the testcases to set
+	 * @param testcases
+	 *            the testcases to set
 	 */
 	public void setTestcases(Collection<TestCase> testcases) {
 		this.testcases = testcases;
 	}
+
 	/**
 	 * {@inheritDoc}
-	*/
+	 */
 	@Override
 	public boolean sameNode(@Nullable Object obj) {
 		boolean retVal = false;
 		if (obj instanceof Neo4jScreenNode) {
 			retVal = ((Neo4jScreenNode) obj).getName() == this.getName()
-					&& ((Neo4jScreenNode) obj).getUrl() == this.getUrl(); 
+					&& ((Neo4jScreenNode) obj).getUrl() == this.getUrl();
 		}
 		return retVal;
 	}
-	
-	
+
+
+	/**
+	 * @return the actionUitrs
+	 */
+	public Set<ScreenActionElementTrainingRecord> getActionUitrs() {
+		return actionUitrs;
+	}
+
+	/**
+	 * @param actionUitrs the actionUitrs to set
+	 */
+	public void setActionUitrs(Set<ScreenActionElementTrainingRecord> actionUitrs) {
+		this.actionUitrs = actionUitrs;
+	}
+
+	/**
+	 * @return the uitrs
+	 */
+	public Set<ScreenUserInputTrainingRecord> getUitrs() {
+		return uitrs;
+	}
+
+	/**
+	 * @param uitrs the uitrs to set
+	 */
+	public void setUitrs(Set<ScreenUserInputTrainingRecord> uitrs) {
+		this.uitrs = uitrs;
+	}
+
 	// @RelatedToVia(type = "RATED")
 	// Iterable<Rating> ratings;
 	//

@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
-import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 
@@ -74,7 +74,7 @@ final public class PredictionIOTrainer {
 	 * @throws InterruptedException the interrupted exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static String sentTrainingEntity(UserInputTrainingRecord record)
+	public static String sentTrainingEntity(WebElementTrainingRecord record)
 			throws ExecutionException, InterruptedException, IOException {
 		EventClient client = new EventClient(SAMPLETEXTCLASSIFIERACCESSKEY,
 				EVENTSERVERURL);
@@ -181,8 +181,8 @@ final public class PredictionIOTrainer {
 	 * @throws InterruptedException the interrupted exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static UserInputTrainingRecord queryEntity(
-			UserInputTrainingRecord record) throws ExecutionException,
+	public static WebElementTrainingRecord queryEntity(
+			WebElementTrainingRecord record) throws ExecutionException,
 			InterruptedException, IOException {
 		EngineClient client = new EngineClient(ENGINESERVERURL);
 

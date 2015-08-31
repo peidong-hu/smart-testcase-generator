@@ -3,6 +3,7 @@ package com.bigtester.ate.tcg.model.domain;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 
 // TODO: Auto-generated Javadoc
@@ -24,6 +25,7 @@ public class HTMLSource {
 	private Long timestamp=System.currentTimeMillis(); 
 	
 	/** The xpath of frame. */
+	@Index
 	private String xpathOfFrame;
 	/** The content. */
 	private String domDoc;

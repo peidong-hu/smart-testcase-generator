@@ -18,6 +18,7 @@ package com.bigtester.ate.tcg.config;
 
 import javax.servlet.ServletRegistration.Dynamic;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -31,8 +32,8 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 	 * {@inheritDoc}
 	*/
 	@Override
-	@Nullable
-	protected Class<?>[] getRootConfigClasses() {//NOPMD
+	
+	protected @Nullable Class<?>[] getRootConfigClasses() {//NOPMD
 		return null;
 	}
 

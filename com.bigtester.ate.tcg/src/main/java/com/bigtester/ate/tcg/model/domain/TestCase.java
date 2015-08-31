@@ -108,7 +108,8 @@ public class TestCase {
 		
 		final TestSuite hostingTestSuite2 = hostingTestSuite;
 		if (hostingTestSuite2 == null) {
-			throw new IllegalStateException();
+			//throw new IllegalStateException();
+			return new TestSuite(); //TODO will change to illegal state once we finish the recruitment code.
 			
 		} else {
 			return hostingTestSuite2;

@@ -23,6 +23,7 @@ package com.bigtester.ate.tcg.model.relationship;
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.EndNode;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.RelationshipEntity;
 import org.neo4j.ogm.annotation.StartNode;
 
@@ -36,13 +37,12 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
  * @author Peidong Hu
  *
  */
-@RelationshipEntity (type=Relations.STEP_FROM)
-public class StepFrom implements ATENeo4jNodeComparision{
+//@RelationshipEntity (type=Relations.STEP_IN)
+public class StepIn implements ATENeo4jNodeComparision{
 	
 	/** The node id. */
 	@Nullable 
 	@GraphId
-	@XStreamOmitField
 	private Long nodeId;
 	
 	/** The start node. */
@@ -56,6 +56,7 @@ public class StepFrom implements ATENeo4jNodeComparision{
 	private Neo4jScreenNode endNode;
 	
 	/** The trigger uitr. */
+	@Property
 	private long triggerUitrId;
 	
 	/** The step weight. 
@@ -63,6 +64,7 @@ public class StepFrom implements ATENeo4jNodeComparision{
 	 *  ML will predict weight value according several factors including, 
 	 *  current execution test case, test suite
 	 * */
+	@Property
 	private long stepWeight;
 
 	/**
@@ -72,7 +74,7 @@ public class StepFrom implements ATENeo4jNodeComparision{
 	 * @param endNode the end node
 	 * @param uitrId the uitr id
 	 */
-	public StepFrom(Neo4jScreenNode startNode, Neo4jScreenNode endNode, long uitrId) {
+	public StepIn(Neo4jScreenNode startNode, Neo4jScreenNode endNode, long uitrId) {
 		this.startNode = startNode;
 		this.endNode = endNode;
 		this.triggerUitrId = uitrId;
@@ -81,7 +83,7 @@ public class StepFrom implements ATENeo4jNodeComparision{
 	/**
 	 * Instantiates a new step into.
 	 */
-	public StepFrom() {//NOPMD
+	public StepIn() {//NOPMD
 		super();
 	}
 	/**
@@ -164,16 +166,16 @@ public class StepFrom implements ATENeo4jNodeComparision{
 	@Override
 	public boolean sameNode(Object obj) {
 		boolean retVal = false;
-		if (obj instanceof StepFrom) {
-			Neo4jScreenNode startNodeObj = ((StepFrom) obj).getStartNode();
-			Neo4jScreenNode endNodeObj = ((StepFrom) obj).getEndNode();
+		if (obj instanceof StepIn) {
+			Neo4jScreenNode startNodeObj = ((StepIn) obj).getStartNode();
+			Neo4jScreenNode endNodeObj = ((StepIn) obj).getEndNode();
 			if (startNodeObj == null && this.startNode == null && endNodeObj == null && this.endNode == null) retVal = true;
 			else if (startNodeObj != null && this.startNode != null 
 					&& endNodeObj != null && this.endNode != null)
 			{
 			retVal = startNodeObj.sameNode(this.startNode)
 					&& endNodeObj.sameNode(this.endNode)
-					&& ((StepFrom) obj).getTriggerUitrId()==this.getTriggerUitrId();
+					&& ((StepIn) obj).getTriggerUitrId()==this.getTriggerUitrId();
 			}
 		}
 		return retVal;

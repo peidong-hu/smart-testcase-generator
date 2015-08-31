@@ -39,7 +39,9 @@ import com.bigtester.ate.tcg.model.domain.PredictedFieldName;
 import com.bigtester.ate.tcg.model.domain.TestCase;
 import com.bigtester.ate.tcg.model.domain.UserInputValue;
 import com.bigtester.ate.tcg.model.domain.WebDomain;
-import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord.UserInputType;
+import com.bigtester.ate.tcg.model.repository.ActionElementTrainingRecordRepo;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
 import com.bigtester.ate.tcg.model.repository.TestCaseRepo;
@@ -47,6 +49,8 @@ import com.bigtester.ate.tcg.model.repository.TestSuiteRepo;
 import com.bigtester.ate.tcg.model.repository.UserInputTrainingRecordRepo;
 import com.bigtester.ate.tcg.model.repository.UserInputValueRepo;
 import com.bigtester.ate.tcg.model.repository.WebDomainRepo;
+import com.bigtester.ate.tcg.service.ScreenNodeCrud;
+import com.bigtester.ate.tcg.service.WebDomainCrud;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 import com.bigtester.ate.tcg.utils.exception.Html2DomException;
 import com.bigtester.ate.tcg.ws.entity.WsPredictedFieldNames;
@@ -83,7 +87,11 @@ public class GreetingController {
 	/** The user input training record repo. */
 	@Autowired
 	@Nullable
-	UserInputTrainingRecordRepo userInputTrainingRecordRepo;
+	private UserInputTrainingRecordRepo userInputTrainingRecordRepo;
+	@Autowired
+	@Nullable
+	/** The action element training record repo. */
+	private ActionElementTrainingRecordRepo actionElementTrainingRecordRepo;
 
 	/** The web domain repo. */
 	@Autowired
@@ -95,11 +103,22 @@ public class GreetingController {
 	@Nullable
 	private TestCaseRepo testCaseRepo;
 
+	/** The screen node crud. */
+	@Autowired
+	@Nullable
+	private ScreenNodeCrud screenNodeCrud;
+
+	/** The web domain crud. */
+	@Autowired
+	@Nullable
+	private WebDomainCrud webDomainCrud;
+	
 	/** The test suite repo. */
 	@Autowired
 	@Nullable
 	private TestSuiteRepo testSuiteRepo;
 
+	/** The neo4j session. */
 	@Autowired
 	@Nullable
 	private Session neo4jSession;
@@ -115,7 +134,7 @@ public class GreetingController {
 	 */
 	@CrossOrigin
 	@RequestMapping("/predict")
-	public List<UserInputTrainingRecord> predict() throws IOException,
+	public List<WebElementTrainingRecord> predict() throws IOException,
 			ClassNotFoundException {
 
 		// traverseFrameTraining(firefox, null);
@@ -124,7 +143,7 @@ public class GreetingController {
 		// + TEST_HTML_FILES[j] + "****=========\n");
 
 		com.bigtester.ate.tcg.controller.UserInputsTrainer trainer = new com.bigtester.ate.tcg.controller.UserInputsTrainer();
-		List<UserInputTrainingRecord> trainedRecords = trainer.train();
+		List<WebElementTrainingRecord> trainedRecords = trainer.train();
 
 		com.bigtester.ate.tcg.controller.TrainingFileDB.writeCacheCsvFile(
 				com.bigtester.ate.tcg.controller.UserInputsTrainer.CACHEPATH
@@ -150,18 +169,24 @@ public class GreetingController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/pioPredict", method = RequestMethod.POST)
-	public List<UserInputTrainingRecord> pioPredict(
-			@RequestBody List<UserInputTrainingRecord> records)
+	public List<WebElementTrainingRecord> pioPredict(
+			@RequestBody List<WebElementTrainingRecord> records)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
 
 		for (int i = 0; i < records.size(); i++) {
-			UserInputTrainingRecord record = records.get(i);
+			WebElementTrainingRecord record = records.get(i);
 			if (null != record) {
 				PredictionIOTrainer.queryEntity(record);
 				String tmpMLHtmlCode = record.getInputMLHtmlCode();
-				Iterable<UserInputTrainingRecord> existingRecord = getUserInputTrainingRecordRepo()
+				Iterable<? extends WebElementTrainingRecord> existingRecord;
+				if (record.getUserInputType().equals(UserInputType.INPUT)) {
+					existingRecord = getUserInputTrainingRecordRepo()
 						.findByInputMLHtmlCode(tmpMLHtmlCode);
+				} else {
+					existingRecord = getUserInputTrainingRecordRepo()
+							.findByInputMLHtmlCode(tmpMLHtmlCode);
+				}
 				String tmpLabel = record.getPioPredictLabelResult().getValue();
 				Double confidencetmp = record.getPioPredictConfidence();
 				if (existingRecord.iterator().hasNext()) {
@@ -171,9 +196,9 @@ public class GreetingController {
 							.setValue(tmpLabel);
 				} else {
 
-					Iterable<UserInputTrainingRecord> allSameFieldUitrs = getUserInputTrainingRecordRepo()
+					Iterable<? extends WebElementTrainingRecord> allSameFieldUitrs = getUserInputTrainingRecordRepo()
 							.findByPioPredictLabelResultValue(tmpLabel);
-					for (java.util.Iterator<UserInputTrainingRecord> itr = allSameFieldUitrs
+					for (java.util.Iterator<? extends WebElementTrainingRecord> itr = allSameFieldUitrs
 							.iterator(); itr.hasNext();) {
 						record.getUserValues().addAll(
 								itr.next().getUserValues());
@@ -339,15 +364,17 @@ public class GreetingController {
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
 		boolean trainedAlready = false;
-		for (UserInputTrainingRecord uitr : intermediateResult.getUitrs()) {
+		for (WebElementTrainingRecord uitr : intermediateResult.getUitrs()) {
 			// uitr.setPioPredictConfidence(1.0);
 			if (!StringUtils.isEmpty(uitr.getTrainedResult())) {
 				trainedAlready = true;
 			}
 		}
 
-		if (!trainedAlready)
+		if (!trainedAlready){
 			trainInputPIO(intermediateResult.getUitrs());
+			trainInputPIO(intermediateResult.getActionUitrs());
+		}
 
 		PredictionIOTrainer.sentTrainingEntity(
 				intermediateResult.getDomStrings(),
@@ -373,97 +400,27 @@ public class GreetingController {
 		// }
 		//
 
-		// save test case
-		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(
-				intermediateResult.getTestCaseName());
 
-		if (null == testcaseNode) {
-			testcaseNode = new TestCase(intermediateResult.getTestCaseName());// NOPMD
 
-		} else {
-			testcaseNode.setName(intermediateResult.getTestCaseName());
-		}
-
+		Neo4jScreenNode currentNode = getScreenNodeCrud().createOrUpdate(intermediateResult);
+		
 		// save industry categories map, similar with save test suite
 
-		// save screen node
-		Neo4jScreenNode prevousScreenNode = null;//NOPMD
-		IntermediateResult previousIntermediateResult = intermediateResult.getLastScreenNodeIntermediateResult();
-		if (null != previousIntermediateResult && !previousIntermediateResult.getScreenName().equals("") ) {
-			prevousScreenNode = getScreenNodeRepo()
-					.getNeo4jScreenNodeByUrlAndName(
-							previousIntermediateResult 
-									.getScreenUrl(),
-									previousIntermediateResult 
-									.getScreenName());
-			if (null == prevousScreenNode) {
-				throw new IllegalStateException("previousScreenNode");
-			}
+		
+		currentNode = getScreenNodeCrud().updateTestCaseRelationships(currentNode, intermediateResult);
 
-			if (!prevousScreenNode.getTestcases().contains(testcaseNode))
-				prevousScreenNode.getTestcases().add(testcaseNode);
-		}
-		Neo4jScreenNode currentNode = getScreenNodeRepo()
-				.getNeo4jScreenNodeByUrlAndName(
-						intermediateResult.getScreenUrl(),
-						intermediateResult.getScreenName());
-		if (null == currentNode) {
-			currentNode = new Neo4jScreenNode(
-					intermediateResult.getScreenName(),
-					intermediateResult.getScreenUrl(), intermediateResult);
-			
-		} else {
-			currentNode.setName(intermediateResult.getScreenName());
-			currentNode.setSourcingDoms(intermediateResult.getDomStrings());
-			currentNode.setUitrs(intermediateResult.getUitrs());
-			currentNode.setUrl(intermediateResult.getScreenUrl());
-		}
-		if (null != prevousScreenNode)
-			currentNode.steppedFrom(prevousScreenNode, 1);
 
-		if (!currentNode.getTestcases().contains(testcaseNode))
-			currentNode.getTestcases().add(testcaseNode);
-
-		// save web domain
-		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(
-				intermediateResult.getDomainName());
-
-		if (null == domainNode) {
-			domainNode = new WebDomain(intermediateResult.getDomainName());// NOPMD
-		} else {
-			domainNode.setDomainName(intermediateResult.getDomainName());
-		}
-
-		if (null != prevousScreenNode && !domainNode.getScreens().contains(prevousScreenNode))
-			domainNode.getScreens().add(prevousScreenNode);
+		WebDomain domainNode = getWebDomainCrud().createOrUpdate(intermediateResult);
 		if (!domainNode.getScreens().contains(currentNode))
 			domainNode.getScreens().add(currentNode);
-
-		Transaction trx = getNeo4jSession().beginTransaction();
-		try {
-			domainNode = getWebDomainRepo().save(domainNode);
-			trx.commit();
-		} finally {
-			trx.close();
-		}
+		domainNode = getWebDomainCrud().update(domainNode);
+		
 		Long tmp = currentNode.getId();
 		if (null == tmp)
 			throw new IllegalStateException("node id");
 		intermediateResult.setScreenNodeNeo4jId(tmp);
 		return intermediateResult;
 	}
-
-	// @CrossOrigin
-	// @RequestMapping(value = "/saveResult", method = RequestMethod.POST)
-	// public List<UserInputTrainingRecord> saveResult(@RequestBody
-	// List<UserInputTrainingRecord> records) throws IOException,
-	// ClassNotFoundException, ExecutionException, InterruptedException {
-	//
-	// for (UserInputTrainingRecord record : records) {
-	// PredictionIOTrainer.quertEntity(record);
-	// }
-	// return records;
-	// }
 
 	/**
 	 * Train input pio.
@@ -480,11 +437,11 @@ public class GreetingController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/trainIntoPIO", method = RequestMethod.POST)
-	public Set<UserInputTrainingRecord> trainInputPIO(
-			@RequestBody Set<UserInputTrainingRecord> records)
+	public Set<? extends WebElementTrainingRecord> trainInputPIO(
+			@RequestBody Set<? extends WebElementTrainingRecord> records)
 			throws ExecutionException, InterruptedException, IOException {
 		// List<Greeting> greetings = new ArrayList<Greeting>();
-		for (UserInputTrainingRecord record : records) {
+		for (WebElementTrainingRecord record : records) {
 			if (null != record) {
 				String eventId = PredictionIOTrainer.sentTrainingEntity(record);
 				record.setTrainedResult(eventId);
@@ -509,7 +466,7 @@ public class GreetingController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/preprocessing", method = RequestMethod.POST)
-	public List<UserInputTrainingRecord> preprocessing(
+	public List<WebElementTrainingRecord> preprocessing(
 			@RequestBody List<HTMLSource> dom) throws IOException,
 			ParserConfigurationException, TransformerException,
 			Html2DomException {
@@ -565,9 +522,9 @@ public class GreetingController {
 		com.bigtester.ate.tcg.controller.TrainingFileDB.writeTestCsvFile(
 				csvStrings, true);
 
-		List<UserInputTrainingRecord> retVal = new ArrayList<UserInputTrainingRecord>();
+		List<WebElementTrainingRecord> retVal = new ArrayList<WebElementTrainingRecord>();
 		for (int i = 0; i < csvStrings.size(); i++) {
-			UserInputTrainingRecord uitr = new UserInputTrainingRecord();
+			WebElementTrainingRecord uitr = new WebElementTrainingRecord();
 			StringBuffer temp = new StringBuffer(csvStrings.get(i));
 			String temp2 = temp.toString();
 			if (null == temp2)
@@ -785,6 +742,64 @@ public class GreetingController {
 	public void setUserInputTrainingRecordRepo(
 			UserInputTrainingRecordRepo userInputTrainingRecordRepo) {
 		this.userInputTrainingRecordRepo = userInputTrainingRecordRepo;
+	}
+
+	/**
+	 * @return the screenNodeCrud
+	 */
+	public ScreenNodeCrud getScreenNodeCrud() {
+		final ScreenNodeCrud screenNodeCrud2 = screenNodeCrud;
+		if (screenNodeCrud2 != null) {
+			return screenNodeCrud2;
+		} else {
+			throw new IllegalStateException("screenNodeCrud");
+		}
+	}
+
+	/**
+	 * @param screenNodeCrud the screenNodeCrud to set
+	 */
+	public void setScreenNodeCrud(ScreenNodeCrud screenNodeCrud) {
+		this.screenNodeCrud = screenNodeCrud;
+	}
+
+	/**
+	 * @return the webDomainCrud
+	 */
+	public WebDomainCrud getWebDomainCrud() {
+		final WebDomainCrud webDomainCrud2 = webDomainCrud;
+		if (webDomainCrud2 != null) {
+			return webDomainCrud2;
+		} else {
+			throw new IllegalStateException("webdomaincrud");
+		}
+	}
+
+	/**
+	 * @param webDomainCrud the webDomainCrud to set
+	 */
+	public void setWebDomainCrud(WebDomainCrud webDomainCrud) {
+		this.webDomainCrud = webDomainCrud;
+	}
+
+	/**
+	 * @return the actionElementTrainingRecordRepo
+	 */
+	public ActionElementTrainingRecordRepo getActionElementTrainingRecordRepo() {
+		final ActionElementTrainingRecordRepo actionElementTrainingRecordRepo2 = actionElementTrainingRecordRepo;
+		if (actionElementTrainingRecordRepo2 != null) {
+			return actionElementTrainingRecordRepo2;
+		} else {
+			throw new IllegalStateException("actionelementtrainingrecordrepo");
+		}	
+	}
+
+	/**
+	 * @param actionElementTrainingRecordRepo the actionElementTrainingRecordRepo to set
+	 */
+	public void setActionElementTrainingRecordRepo(
+			ActionElementTrainingRecordRepo actionElementTrainingRecordRepo) {
+		this.actionElementTrainingRecordRepo = actionElementTrainingRecordRepo;
 	}
 
 }

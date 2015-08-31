@@ -29,8 +29,10 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.IndustryCategory;
+import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestSuite;
-import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -46,7 +48,10 @@ public class IntermediateResult {
 	private Set<HTMLSource> domStrings = new HashSet<HTMLSource>();
 	
 	/** The uitrs. */
-	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
+	private Set<ScreenUserInputTrainingRecord> uitrs = new HashSet<ScreenUserInputTrainingRecord>();
+	
+	/** The action uitrs. */
+	private Set<ScreenActionElementTrainingRecord> actionUitrs = new HashSet<ScreenActionElementTrainingRecord>();
 	
 	/** The test suites map. */
 	private Set<TestSuite> testSuitesMap = new HashSet<TestSuite>();
@@ -97,13 +102,13 @@ public class IntermediateResult {
 	/**
 	 * @return the uitrs
 	 */
-	public Set<UserInputTrainingRecord> getUitrs() {
+	public Set<ScreenUserInputTrainingRecord> getUitrs() {
 		return uitrs;
 	}
 	/**
 	 * @param uitrs the uitrs to set
 	 */
-	public void setUitrs(Set<UserInputTrainingRecord> uitrs) {
+	public void setUitrs(Set<ScreenUserInputTrainingRecord> uitrs) {
 		this.uitrs = uitrs;
 	}
 	/**
@@ -206,6 +211,18 @@ public class IntermediateResult {
 	 */
 	public void setScreenNodeNeo4jId(@Nullable Long screenNodeNeo4jId) {
 		this.screenNodeNeo4jId = screenNodeNeo4jId;
+	}
+	/**
+	 * @return the actionUitrs
+	 */
+	public Set<ScreenActionElementTrainingRecord> getActionUitrs() {
+		return actionUitrs;
+	}
+	/**
+	 * @param actionUitrs the actionUitrs to set
+	 */
+	public void setActionUitrs(Set<ScreenActionElementTrainingRecord> actionUitrs) {
+		this.actionUitrs = actionUitrs;
 	}
 	
 	

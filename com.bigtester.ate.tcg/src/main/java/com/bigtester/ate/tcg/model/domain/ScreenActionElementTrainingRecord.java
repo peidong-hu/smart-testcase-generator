@@ -18,38 +18,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.model.repository;
+package com.bigtester.ate.tcg.model.domain;
 
-import org.springframework.data.neo4j.repository.GraphRepository;
-import org.springframework.stereotype.Repository;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
+import org.eclipse.jdt.annotation.Nullable;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
+import com.bigtester.ate.tcg.model.relationship.Relations;
+import com.bigtester.ate.tcg.model.relationship.StepOut;
 
 // TODO: Auto-generated Javadoc
 /**
- * This class ScreenNodeRepo defines ....
+ * This class TrainingRecord defines ....
  * @author Peidong Hu
  *
  */
-@Repository
-public interface UserInputTrainingRecordRepo extends GraphRepository<ScreenUserInputTrainingRecord> {
-	
+
+/**
+ * @author ashraf
+ *
+ */
+@NodeEntity
+public class ScreenActionElementTrainingRecord extends WebElementTrainingRecord{
+	/** The step outs. */
+	@Relationship(type = Relations.STEP_OUT, direction = Relationship.OUTGOING)
+	private Set<Neo4jScreenNode> stepOuts = new HashSet<Neo4jScreenNode>();
+
 	/**
-	 * Find by pio predict label result value.
-	 *
-	 * @param value the value
-	 * @return the iterable
+	 * @return the stepOuts
 	 */
-	Iterable<ScreenUserInputTrainingRecord> findByPioPredictLabelResultValue(String value);
-	
+	public Set<Neo4jScreenNode> getStepOuts() {
+		return stepOuts;
+	}
+
 	/**
-	 * Find by input ml html code.
-	 *
-	 * @param htmlCode the html code
-	 * @return the iterable
+	 * @param stepOuts the stepOuts to set
 	 */
-	Iterable<ScreenUserInputTrainingRecord> findByInputMLHtmlCode(String htmlCode);
-	
+	public void setStepOuts(Set<Neo4jScreenNode> stepOuts) {
+		this.stepOuts = stepOuts;
+	}
+
 }
