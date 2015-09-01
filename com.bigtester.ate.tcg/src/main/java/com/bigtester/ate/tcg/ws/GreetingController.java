@@ -36,6 +36,7 @@ import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.PredictedFieldName;
+import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestCase;
 import com.bigtester.ate.tcg.model.domain.UserInputValue;
 import com.bigtester.ate.tcg.model.domain.WebDomain;
@@ -184,8 +185,16 @@ public class GreetingController {
 					existingRecord = getUserInputTrainingRecordRepo()
 						.findByInputMLHtmlCode(tmpMLHtmlCode);
 				} else {
-					existingRecord = getUserInputTrainingRecordRepo()
+					existingRecord = getActionElementTrainingRecordRepo()
 							.findByInputMLHtmlCode(tmpMLHtmlCode);
+//					for (java.util.Iterator<Neo4jScreenNode> itr = ((ScreenActionElementTrainingRecord) existingRecord.iterator().next()).getStepOuts().iterator(); itr.hasNext();) {
+//						for (java.util.Iterator<ScreenActionElementTrainingRecord> itr2 = itr.next().getActionUitrs().iterator(); itr2.hasNext();) {
+//							if (itr2.next().getId() == existingRecord.iterator().next().getId()) {
+//								//loop stepOut, so we will need delete this record temporarily for the bug in the spring ws reponse (not handling loop object) 
+//							}
+//						}
+//					}
+					
 				}
 				String tmpLabel = record.getPioPredictLabelResult().getValue();
 				Double confidencetmp = record.getPioPredictConfidence();
@@ -194,6 +203,8 @@ public class GreetingController {
 					records.get(i).setPioPredictConfidence(confidencetmp);
 					records.get(i).getPioPredictLabelResult()
 							.setValue(tmpLabel);
+					
+					
 				} else {
 
 					Iterable<? extends WebElementTrainingRecord> allSameFieldUitrs = getUserInputTrainingRecordRepo()
@@ -203,6 +214,15 @@ public class GreetingController {
 						record.getUserValues().addAll(
 								itr.next().getUserValues());
 					}
+					
+					Iterable<? extends WebElementTrainingRecord> allSameFieldActionUitrs = this.getActionElementTrainingRecordRepo()
+							.findByPioPredictLabelResultValue(tmpLabel);
+					for (java.util.Iterator<? extends WebElementTrainingRecord> itr = allSameFieldActionUitrs
+							.iterator(); itr.hasNext();) {
+						record.getUserValues().addAll(
+								itr.next().getUserValues());
+					}
+					
 				}
 			}
 		}
@@ -402,18 +422,18 @@ public class GreetingController {
 
 
 
-		Neo4jScreenNode currentNode = getScreenNodeCrud().createOrUpdate(intermediateResult);
+		Neo4jScreenNode currentNode = getScreenNodeCrud().createOrUpdate(intermediateResult, false);
 		
 		// save industry categories map, similar with save test suite
 
 		
-		currentNode = getScreenNodeCrud().updateTestCaseRelationships(currentNode, intermediateResult);
+		currentNode = getScreenNodeCrud().updateTestCaseRelationships(currentNode, intermediateResult, false);
+//
 
-
-		WebDomain domainNode = getWebDomainCrud().createOrUpdate(intermediateResult);
-		if (!domainNode.getScreens().contains(currentNode))
-			domainNode.getScreens().add(currentNode);
-		domainNode = getWebDomainCrud().update(domainNode);
+		WebDomain domainNode = getWebDomainCrud().createOrUpdate(intermediateResult, false);
+//		if (!domainNode.getScreens().contains(currentNode))
+//			domainNode.getScreens().add(currentNode);
+		domainNode = getWebDomainCrud().updateScreenNodes(domainNode, currentNode, true);
 		
 		Long tmp = currentNode.getId();
 		if (null == tmp)

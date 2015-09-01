@@ -254,7 +254,7 @@ public class WebDomainCrud {
 	 * @param intermediateResult the intermediate result
 	 * @return the neo4j screen node
 	 */
-	public WebDomain createOrUpdate(IntermediateResult intermediateResult) {
+	public WebDomain createOrUpdate(IntermediateResult intermediateResult, boolean commit) {
 		// save web domain
 		WebDomain domainNode = getWebDomainRepo().getWebDomainByDomainName(
 				intermediateResult.getDomainName());
@@ -264,17 +264,19 @@ public class WebDomainCrud {
 		} else {
 			domainNode.setDomainName(intermediateResult.getDomainName());
 		}
+		if (commit) {
+			Transaction trx = getNeo4jSession().beginTransaction();
+			try {
+				domainNode = getWebDomainRepo().save(domainNode);
+				trx.commit();
+				if (null == domainNode)
+					throw new IllegalStateException("domainNode save");
 
-		Transaction trx = getNeo4jSession().beginTransaction();
-		try {
-			domainNode = getWebDomainRepo().save(domainNode);
-			trx.commit();
-			if (null == domainNode) throw new IllegalStateException("domainNode save");
-			return domainNode;
-		} finally {
-			trx.close();
+			} finally {
+				trx.close();
+			}
 		}
-		
+		return domainNode;
 	}
 	
 	/**
@@ -284,12 +286,29 @@ public class WebDomainCrud {
 	 * @return the web domain
 	 */
 	public WebDomain update(WebDomain domainNode) {
+
+			WebDomain domainRet;
+			Transaction trx = getNeo4jSession().beginTransaction();
+			try {
+				domainRet = getWebDomainRepo().save(domainNode);
+				trx.commit();
+				if (null == domainRet)
+					throw new IllegalStateException("domainNode save");
+
+			} finally {
+				trx.close();
+			}
 		
-		WebDomain domainNodeRet = getWebDomainRepo().save(domainNode);
-		if (null == domainNodeRet) throw new IllegalStateException("neo4j db save");
-		return domainNodeRet;
+		return domainRet;
 		
 	}
 
+	public WebDomain updateScreenNodes(WebDomain domainNode, Neo4jScreenNode screenNode, boolean commit) {
+		if (!domainNode.getScreens().contains(screenNode))
+			domainNode.getScreens().add(screenNode);
+		if (commit)
+			domainNode = update(domainNode);
+		return domainNode;
+	}
 	
 }

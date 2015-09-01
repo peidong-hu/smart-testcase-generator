@@ -30,6 +30,7 @@ import org.neo4j.ogm.annotation.Relationship;
 
 import com.bigtester.ate.tcg.model.relationship.Relations;
 import com.bigtester.ate.tcg.model.relationship.StepOut;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -45,6 +46,7 @@ import com.bigtester.ate.tcg.model.relationship.StepOut;
 @NodeEntity
 public class ScreenActionElementTrainingRecord extends WebElementTrainingRecord{
 	/** The step outs. */
+	@JsonIgnore
 	@Relationship(type = Relations.STEP_OUT, direction = Relationship.OUTGOING)
 	private Set<Neo4jScreenNode> stepOuts = new HashSet<Neo4jScreenNode>();
 

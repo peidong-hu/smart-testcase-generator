@@ -264,7 +264,7 @@ public class ScreenNodeCrud {
 	 *            the intermediate result
 	 * @return the neo4j screen node
 	 */
-	public Neo4jScreenNode createOrUpdate(IntermediateResult intermediateResult) {
+	public Neo4jScreenNode createOrUpdate(IntermediateResult intermediateResult, boolean commit) {
 		// save screen node
 		Neo4jScreenNode prevousScreenNode = null;// NOPMD
 		IntermediateResult previousIntermediateResult = intermediateResult
@@ -285,40 +285,40 @@ public class ScreenNodeCrud {
 						intermediateResult.getScreenUrl(),
 						intermediateResult.getScreenName());
 		// fix the bug of spring neo4j 4 rc2
-//		if (currentNode != null && prevousScreenNode != null) {
-//			for (java.util.Iterator<StepIn> itr = currentNode.getStepIns()
-//					.iterator(); itr.hasNext();) {
-//				StepIn temp = itr.next();
-//				Neo4jScreenNode tempNode = temp.getEndNode();
-//				if (tempNode != null && !tempNode.sameNode(currentNode))
-//					itr.remove();
-//
-//			}
-//			for (java.util.Iterator<StepOut> itr = currentNode.getStepOuts()
-//					.iterator(); itr.hasNext();) {
-//				StepOut temp = itr.next();
-//				Neo4jScreenNode tempNode = temp.getStartNode();
-//				if (tempNode != null && !tempNode.sameNode(currentNode))
-//					itr.remove();
-//			}
-//
-//			for (java.util.Iterator<StepIn> itr = prevousScreenNode
-//					.getStepIns().iterator(); itr.hasNext();) {
-//				StepIn temp = itr.next();
-//				Neo4jScreenNode tempNode = temp.getEndNode();
-//				if (tempNode != null && !tempNode.sameNode(prevousScreenNode))
-//					itr.remove();
-//
-//			}
-//			for (java.util.Iterator<StepOut> itr = prevousScreenNode
-//					.getStepOuts().iterator(); itr.hasNext();) {
-//				StepOut temp = itr.next();
-//				Neo4jScreenNode tempNode = temp.getStartNode();
-//				if (tempNode != null && !tempNode.sameNode(prevousScreenNode))
-//					itr.remove();
-//			}
-//
-//		}
+		// if (currentNode != null && prevousScreenNode != null) {
+		// for (java.util.Iterator<StepIn> itr = currentNode.getStepIns()
+		// .iterator(); itr.hasNext();) {
+		// StepIn temp = itr.next();
+		// Neo4jScreenNode tempNode = temp.getEndNode();
+		// if (tempNode != null && !tempNode.sameNode(currentNode))
+		// itr.remove();
+		//
+		// }
+		// for (java.util.Iterator<StepOut> itr = currentNode.getStepOuts()
+		// .iterator(); itr.hasNext();) {
+		// StepOut temp = itr.next();
+		// Neo4jScreenNode tempNode = temp.getStartNode();
+		// if (tempNode != null && !tempNode.sameNode(currentNode))
+		// itr.remove();
+		// }
+		//
+		// for (java.util.Iterator<StepIn> itr = prevousScreenNode
+		// .getStepIns().iterator(); itr.hasNext();) {
+		// StepIn temp = itr.next();
+		// Neo4jScreenNode tempNode = temp.getEndNode();
+		// if (tempNode != null && !tempNode.sameNode(prevousScreenNode))
+		// itr.remove();
+		//
+		// }
+		// for (java.util.Iterator<StepOut> itr = prevousScreenNode
+		// .getStepOuts().iterator(); itr.hasNext();) {
+		// StepOut temp = itr.next();
+		// Neo4jScreenNode tempNode = temp.getStartNode();
+		// if (tempNode != null && !tempNode.sameNode(prevousScreenNode))
+		// itr.remove();
+		// }
+		//
+		// }
 		if (null == currentNode) {
 			currentNode = new Neo4jScreenNode(
 					intermediateResult.getScreenName(),
@@ -331,18 +331,21 @@ public class ScreenNodeCrud {
 			currentNode.setActionUitrs(intermediateResult.getActionUitrs());
 			currentNode.setUrl(intermediateResult.getScreenUrl());
 		}
-//		Transaction trx1 = getNeo4jSession().beginTransaction();
-//		try {
-//			currentNode = getScreenNodeRepo().save(currentNode);
-//
-//			trx1.commit();
-//			if (null == currentNode || currentNode.getId() == null)
-//				throw new IllegalStateException("neo4j db access");
-//		} finally {
-//			trx1.close();
-//		}
+		if (commit) {
+			Transaction trx1 = getNeo4jSession().beginTransaction();
+			try {
+				currentNode = getScreenNodeRepo().save(currentNode);
+
+				trx1.commit();
+				if (null == currentNode || currentNode.getId() == null)
+					throw new IllegalStateException("neo4j db access");
+			} finally {
+				trx1.close();
+			}
+		}
 		if (null != prevousScreenNode) {
-			createOrUpdateStepout(prevousScreenNode, currentNode, intermediateResult);
+			createOrUpdateStepout(prevousScreenNode, currentNode,
+					intermediateResult);
 			Transaction trx = getNeo4jSession().beginTransaction();
 			try {
 
@@ -352,18 +355,29 @@ public class ScreenNodeCrud {
 				trx.close();
 			}
 		}
-		
+
 		return currentNode;
 	}
 
 	public Neo4jScreenNode update(Neo4jScreenNode screenNode) {
-		Neo4jScreenNode tmp = getScreenNodeRepo().save(screenNode);
-		if (tmp == null)
-			throw new IllegalStateException("screenNode updat");
+		Neo4jScreenNode tmp;
+		Transaction trx = getNeo4jSession().beginTransaction();
+		try {
+
+			tmp = getScreenNodeRepo().save(screenNode);
+			if (null == tmp)
+				throw new IllegalStateException("screenNode update");
+			trx.commit();
+		} finally {
+			trx.close();
+		}
+
 		return tmp;
 	}
-	
-	public Neo4jScreenNode updateTestCaseRelationships(Neo4jScreenNode screenNode, IntermediateResult intermediateResult) {
+
+	public Neo4jScreenNode updateTestCaseRelationships(
+			Neo4jScreenNode screenNode, IntermediateResult intermediateResult,
+			boolean commit) {
 		// save test case
 		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(
 				intermediateResult.getTestCaseName());
@@ -377,22 +391,27 @@ public class ScreenNodeCrud {
 		if (!screenNode.getTestcases().contains(testcaseNode))
 			screenNode.getTestcases().add(testcaseNode);
 		Set<ScreenUserInputTrainingRecord> uitrs = screenNode.getUitrs();
-		for (java.util.Iterator<ScreenUserInputTrainingRecord> itr = uitrs.iterator(); itr.hasNext();) {
+		for (java.util.Iterator<ScreenUserInputTrainingRecord> itr = uitrs
+				.iterator(); itr.hasNext();) {
 			ScreenUserInputTrainingRecord uitr = itr.next();
 			if (!uitr.getTestcases().contains(testcaseNode)) {
 				uitr.getTestcases().add(testcaseNode);
 			}
 		}
-		
-		Set<ScreenActionElementTrainingRecord> actionUitrs = screenNode.getActionUitrs();
-		for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = actionUitrs.iterator(); itr.hasNext();) {
+
+		Set<ScreenActionElementTrainingRecord> actionUitrs = screenNode
+				.getActionUitrs();
+		for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = actionUitrs
+				.iterator(); itr.hasNext();) {
 			ScreenActionElementTrainingRecord uitr = itr.next();
 			if (!uitr.getTestcases().contains(testcaseNode)) {
 				uitr.getTestcases().add(testcaseNode);
 			}
 		}
-		
-		return update(screenNode);
+		if (!commit)
+			return screenNode;
+		else
+			return update(screenNode);
 	}
 
 	/**
@@ -404,24 +423,28 @@ public class ScreenNodeCrud {
 	 *            the uitr id
 	 * @return the step into
 	 */
-	public void createOrUpdateStepout(Neo4jScreenNode startNode, Neo4jScreenNode endNode, IntermediateResult iResult) {
-		//TODO, add test case filter after finish job application code
-		
-		Set<ScreenActionElementTrainingRecord> startActionUitrs = startNode.getActionUitrs();
-		
-		if (startActionUitrs.isEmpty() || startActionUitrs.size() > 1) throw new IllegalStateException("start action uitrs");
+	public void createOrUpdateStepout(Neo4jScreenNode startNode,
+			Neo4jScreenNode endNode, IntermediateResult iResult) {
+		// TODO, add test case filter after finish job application code
+
+		Set<ScreenActionElementTrainingRecord> startActionUitrs = startNode
+				.getActionUitrs();
+
+		if (startActionUitrs.isEmpty() || startActionUitrs.size() > 1)
+			throw new IllegalStateException("start action uitrs");
 		else {
-			for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = startActionUitrs.iterator(); itr.hasNext();) {
+			for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = startActionUitrs
+					.iterator(); itr.hasNext();) {
 				ScreenActionElementTrainingRecord first = itr.next();
-				if (first.getStepOuts().isEmpty() || !first.getStepOuts().contains(endNode)) {
-					//create
+				if (first.getStepOuts().isEmpty()
+						|| !first.getStepOuts().contains(endNode)) {
+					// create
 					first.getStepOuts().add(endNode);
-				
+
 				}
-				break;//NOPMD
+				break;// NOPMD
 			}
 		}
 	}
 
-	
 }
