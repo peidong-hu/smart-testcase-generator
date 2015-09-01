@@ -25,10 +25,12 @@ import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
 import com.bigtester.ate.tcg.model.relationship.Relations;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -45,17 +47,18 @@ public class TestSuite {
 	private Long gid; //NOPMD
 	
 	/** The name. */
+	@Index
 	private String name;
 	
+	@JsonIgnore
 	/** The industry categories. */
 	@Relationship(type=Relations.CONTAINS_SUB_TEST_SUITE)
-	@Nullable
 	private Set<TestSuite> subTestSuites= new HashSet<TestSuite>();
 
-	/** The parent industry category. */
-	@Relationship(type=Relations.PARENT_TEST_SUITE)
-	@Nullable //if null, it's the root industry node
-	private TestSuite parentTestSuite;
+//	/** The parent industry category. */
+//	@Relationship(type=Relations.PARENT_TEST_SUITE)
+//	@Nullable 
+//	private TestSuite parentTestSuite;
 
 	/**
 	 * Instantiates a new test suite. Constructor for web service call
@@ -107,27 +110,26 @@ public class TestSuite {
 
 
 
-	/**
-	 * @return the parentTestSuite
-	 */
-	@Nullable
-	public TestSuite getParentTestSuite() {
-		return parentTestSuite;
-	}
-
-
-	/**
-	 * @param parentTestSuite the parentTestSuite to set
-	 */
-	public void setParentTestSuite(TestSuite parentTestSuite) {
-		this.parentTestSuite = parentTestSuite;
-	}
+//	/**
+//	 * @return the parentTestSuite
+//	 */
+//	@Nullable
+//	public TestSuite getParentTestSuite() {
+//		return parentTestSuite;
+//	}
+//
+//
+//	/**
+//	 * @param parentTestSuite the parentTestSuite to set
+//	 */
+//	public void setParentTestSuite(TestSuite parentTestSuite) {
+//		this.parentTestSuite = parentTestSuite;
+//	}
 
 
 	/**
 	 * @return the subTestSuites
 	 */
-	@Nullable
 	public Set<TestSuite> getSubTestSuites() {
 		return subTestSuites;
 	}

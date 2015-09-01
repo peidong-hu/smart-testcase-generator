@@ -51,6 +51,8 @@ import com.bigtester.ate.tcg.model.repository.UserInputTrainingRecordRepo;
 import com.bigtester.ate.tcg.model.repository.UserInputValueRepo;
 import com.bigtester.ate.tcg.model.repository.WebDomainRepo;
 import com.bigtester.ate.tcg.service.ScreenNodeCrud;
+import com.bigtester.ate.tcg.service.TestCaseNodeCrud;
+import com.bigtester.ate.tcg.service.TestSuiteNodeCrud;
 import com.bigtester.ate.tcg.service.WebDomainCrud;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 import com.bigtester.ate.tcg.utils.exception.Html2DomException;
@@ -113,11 +115,18 @@ public class GreetingController {
 	@Autowired
 	@Nullable
 	private WebDomainCrud webDomainCrud;
-	
+
+	@Autowired
+	@Nullable
+	private TestCaseNodeCrud testCaseCrud;
 	/** The test suite repo. */
 	@Autowired
 	@Nullable
 	private TestSuiteRepo testSuiteRepo;
+	
+	@Autowired
+	@Nullable
+	private TestSuiteNodeCrud testSuiteCrud;
 
 	/** The neo4j session. */
 	@Autowired
@@ -420,12 +429,12 @@ public class GreetingController {
 		// }
 		//
 
-
+		getTestSuiteCrud().createOrUpdate(intermediateResult, true);
 
 		Neo4jScreenNode currentNode = getScreenNodeCrud().createOrUpdate(intermediateResult, false);
 		
 		// save industry categories map, similar with save test suite
-
+		getTestCaseCrud().createOrUpdate(intermediateResult, true);
 		
 		currentNode = getScreenNodeCrud().updateTestCaseRelationships(currentNode, intermediateResult, false);
 //
@@ -820,6 +829,44 @@ public class GreetingController {
 	public void setActionElementTrainingRecordRepo(
 			ActionElementTrainingRecordRepo actionElementTrainingRecordRepo) {
 		this.actionElementTrainingRecordRepo = actionElementTrainingRecordRepo;
+	}
+
+	/**
+	 * @return the testSuiteCrud
+	 */
+	public TestSuiteNodeCrud getTestSuiteCrud() {
+		final TestSuiteNodeCrud testSuiteCrud2 = testSuiteCrud;
+		if (testSuiteCrud2 != null) {
+			return testSuiteCrud2;
+		} else {
+			throw new IllegalStateException("test suite crud");
+		}
+	}
+
+	/**
+	 * @param testSuiteCrud the testSuiteCrud to set
+	 */
+	public void setTestSuiteCrud(TestSuiteNodeCrud testSuiteCrud) {
+		this.testSuiteCrud = testSuiteCrud;
+	}
+
+	/**
+	 * @return the testCaseCrud
+	 */
+	public TestCaseNodeCrud getTestCaseCrud() {
+		final TestCaseNodeCrud testCaseCrud2 = testCaseCrud;
+		if (testCaseCrud2 != null) {
+			return testCaseCrud2;
+		} else {
+			throw new IllegalStateException("test case crud");
+		}
+	}
+
+	/**
+	 * @param testCaseCrud the testCaseCrud to set
+	 */
+	public void setTestCaseCrud(TestCaseNodeCrud testCaseCrud) {
+		this.testCaseCrud = testCaseCrud;
 	}
 
 }

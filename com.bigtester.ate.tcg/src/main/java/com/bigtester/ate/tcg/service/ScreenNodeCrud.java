@@ -36,6 +36,7 @@ import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestCase;
+import com.bigtester.ate.tcg.model.domain.TestSuite;
 import com.bigtester.ate.tcg.model.relationship.StepIn;
 import com.bigtester.ate.tcg.model.relationship.StepOut;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
@@ -346,14 +347,17 @@ public class ScreenNodeCrud {
 		if (null != prevousScreenNode) {
 			createOrUpdateStepout(prevousScreenNode, currentNode,
 					intermediateResult);
-			Transaction trx = getNeo4jSession().beginTransaction();
-			try {
-
-				prevousScreenNode = getScreenNodeRepo().save(prevousScreenNode);
-				trx.commit();
-			} finally {
-				trx.close();
-			}
+//			Transaction trx = getNeo4jSession().beginTransaction();
+//			try {
+//
+//				prevousScreenNode = getScreenNodeRepo().save(prevousScreenNode);
+//				trx.commit();
+//			} finally {
+//				trx.close();
+//			}
+			updateTestCaseRelationships(prevousScreenNode, intermediateResult, false);
+			update(prevousScreenNode);
+			
 		}
 
 		return currentNode;
@@ -379,15 +383,29 @@ public class ScreenNodeCrud {
 			Neo4jScreenNode screenNode, IntermediateResult intermediateResult,
 			boolean commit) {
 		// save test case
+		
+//		TestSuite tmpSuite = intermediateResult.getTestSuitesMap().get(intermediateResult.getTestSuitesMap().size() - 1);
+//		TestSuite existingSuite = getTestSuiteRepo().getTestSuiteByName(tmpSuite.getName());
+//		
+//		if (null != existingSuite) {
+//			tmpSuite = existingSuite;
+//		}
+//		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(
+//				intermediateResult.getTestCaseName());
+//
+//		
+//		if (null == testcaseNode) {
+//			
+//			testcaseNode = new TestCase(intermediateResult.getTestCaseName(), tmpSuite);// NOPMD
+//
+//		} else {
+//			testcaseNode.setName(intermediateResult.getTestCaseName());
+//			if (!testcaseNode.getHostingTestSuites().contains(tmpSuite))
+//				testcaseNode.getHostingTestSuites().add(tmpSuite);
+//		}
 		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(
 				intermediateResult.getTestCaseName());
-
-		if (null == testcaseNode) {
-			testcaseNode = new TestCase(intermediateResult.getTestCaseName());// NOPMD
-
-		} else {
-			testcaseNode.setName(intermediateResult.getTestCaseName());
-		}
+		if (null == testcaseNode) throw new IllegalStateException("please update/create test case node first");
 		if (!screenNode.getTestcases().contains(testcaseNode))
 			screenNode.getTestcases().add(testcaseNode);
 		Set<ScreenUserInputTrainingRecord> uitrs = screenNode.getUitrs();

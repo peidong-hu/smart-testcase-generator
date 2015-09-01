@@ -20,7 +20,10 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
+import java.util.Set;
+
 import org.eclipse.jdt.annotation.Nullable;
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
@@ -46,8 +49,7 @@ public class TestCase {
 	
 	/** The parent industry category. */
 	@Relationship(type=Relations.HOSTING_TEST_SUITE)
-	@Nullable //if null, it's the root industry node
-	private TestSuite hostingTestSuite;
+	private Set<TestSuite> hostingTestSuites = new ConcurrentHashSet<TestSuite>();
 
 	/**
 	 * Instantiates a new test case.
@@ -63,8 +65,9 @@ public class TestCase {
 	 * @param code the code
 	 * @param name the name
 	 */
-	public TestCase(String name) {
+	public TestCase(String name, TestSuite parentSuite) {
 		this.name = name;
+		this.hostingTestSuites.add(parentSuite);
 	}
 
 
@@ -104,12 +107,12 @@ public class TestCase {
 	/**
 	 * @return the hostingTestSuite
 	 */
-	public TestSuite getHostingTestSuite() {
+	public Set<TestSuite> getHostingTestSuites() {
 		
-		final TestSuite hostingTestSuite2 = hostingTestSuite;
+		final Set<TestSuite> hostingTestSuite2 = hostingTestSuites;
 		if (hostingTestSuite2 == null) {
-			//throw new IllegalStateException();
-			return new TestSuite(); //TODO will change to illegal state once we finish the recruitment code.
+			throw new IllegalStateException();
+			//return new TestSuite(); //TODO will change to illegal state once we finish the recruitment code.
 			
 		} else {
 			return hostingTestSuite2;
@@ -120,7 +123,7 @@ public class TestCase {
 	/**
 	 * @param hostingTestSuite the hostingTestSuite to set
 	 */
-	public void setHostingTestSuite(TestSuite hostingTestSuite) {
-		this.hostingTestSuite = hostingTestSuite;
+	public void setHostingTestSuite(Set<TestSuite> hostingTestSuites) {
+		this.hostingTestSuites = hostingTestSuites;
 	}
 }

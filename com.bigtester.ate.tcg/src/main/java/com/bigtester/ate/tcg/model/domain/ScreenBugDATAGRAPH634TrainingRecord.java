@@ -18,30 +18,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.model.repository;
+package com.bigtester.ate.tcg.model.domain;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
-import org.springframework.data.neo4j.repository.GraphRepository;
-import org.springframework.stereotype.Repository;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
-import com.bigtester.ate.tcg.model.domain.TestCase;
-import com.bigtester.ate.tcg.model.domain.TestSuite;
+import com.bigtester.ate.tcg.model.relationship.Relations;
+import com.bigtester.ate.tcg.model.relationship.StepOut;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-// TODO: We will need to add query to get test case by industry, test suites and test case name
+// TODO: Auto-generated Javadoc
 /**
- * This class ScreenNodeRepo defines ....
+ * This class TrainingRecord defines ....
  * @author Peidong Hu
  *
  */
-@Repository
-public interface TestSuiteRepo extends GraphRepository<TestSuite> {
-	
+
+/**
+ * @author ashraf
+ *
+ */
+@NodeEntity
+public class ScreenBugDATAGRAPH634TrainingRecord extends WebElementTrainingRecord{
+	/** The step outs. */
+	@JsonIgnore
+	@Relationship(type = Relations.STEP_OUT, direction = Relationship.OUTGOING)
+	private Set<Neo4jScreenNode> stepOuts = new HashSet<Neo4jScreenNode>();
+
 	/**
-	 * Gets the web domain by domain name.
-	 *
-	 * @param domainName the domain name
-	 * @return the web domain by domain name
+	 * @return the stepOuts
 	 */
-	@Nullable
-	TestSuite getTestSuiteByName(String testSuiteName);
+	public Set<Neo4jScreenNode> getStepOuts() {
+		return stepOuts;
+	}
+
+	/**
+	 * @param stepOuts the stepOuts to set
+	 */
+	public void setStepOuts(Set<Neo4jScreenNode> stepOuts) {
+		this.stepOuts = stepOuts;
+	}
+
 }

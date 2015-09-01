@@ -54,10 +54,10 @@ public class IntermediateResult {
 	private Set<ScreenActionElementTrainingRecord> actionUitrs = new HashSet<ScreenActionElementTrainingRecord>();
 	
 	/** The test suites map. */
-	private Set<TestSuite> testSuitesMap = new HashSet<TestSuite>();
+	private List<TestSuite> testSuitesMap = new ArrayList<TestSuite>();
 	
 	/** The industry categories map. */
-	private Set<IndustryCategory> industryCategoriesMap = new HashSet<IndustryCategory>();
+	private List<IndustryCategory> industryCategoriesMap = new ArrayList<IndustryCategory>();
 	
 	/** The test case name. */
 	private String testCaseName="";
@@ -114,26 +114,26 @@ public class IntermediateResult {
 	/**
 	 * @return the testSuitesMap
 	 */
-	public Set<TestSuite> getTestSuitesMap() {
+	public List<TestSuite> getTestSuitesMap() {
 		return testSuitesMap;
 	}
 	/**
 	 * @param testSuitesMap the testSuitesMap to set
 	 */
-	public void setTestSuitesMap(Set<TestSuite> testSuitesMap) {
+	public void setTestSuitesMap(List<TestSuite> testSuitesMap) {
 		this.testSuitesMap = testSuitesMap;
 	}
 	/**
 	 * @return the industryCategoriesMap
 	 */
-	public Set<IndustryCategory> getIndustryCategoriesMap() {
+	public List<IndustryCategory> getIndustryCategoriesMap() {
 		return industryCategoriesMap;
 	}
 	/**
 	 * @param industryCategoriesMap the industryCategoriesMap to set
 	 */
 	public void setIndustryCategoriesMap(
-			Set<IndustryCategory> industryCategoriesMap) {
+			List<IndustryCategory> industryCategoriesMap) {
 		this.industryCategoriesMap = industryCategoriesMap;
 	}
 	/**
