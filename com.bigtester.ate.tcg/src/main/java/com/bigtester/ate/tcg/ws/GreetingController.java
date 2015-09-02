@@ -123,7 +123,7 @@ public class GreetingController {
 	@Autowired
 	@Nullable
 	private TestSuiteRepo testSuiteRepo;
-	
+
 	@Autowired
 	@Nullable
 	private TestSuiteNodeCrud testSuiteCrud;
@@ -192,29 +192,37 @@ public class GreetingController {
 				Iterable<? extends WebElementTrainingRecord> existingRecord;
 				if (record.getUserInputType().equals(UserInputType.INPUT)) {
 					existingRecord = getUserInputTrainingRecordRepo()
-						.findByInputMLHtmlCode(tmpMLHtmlCode);
+							.findByInputMLHtmlCode(tmpMLHtmlCode);
 				} else {
 					existingRecord = getActionElementTrainingRecordRepo()
 							.findByInputMLHtmlCode(tmpMLHtmlCode);
-//					for (java.util.Iterator<Neo4jScreenNode> itr = ((ScreenActionElementTrainingRecord) existingRecord.iterator().next()).getStepOuts().iterator(); itr.hasNext();) {
-//						for (java.util.Iterator<ScreenActionElementTrainingRecord> itr2 = itr.next().getActionUitrs().iterator(); itr2.hasNext();) {
-//							if (itr2.next().getId() == existingRecord.iterator().next().getId()) {
-//								//loop stepOut, so we will need delete this record temporarily for the bug in the spring ws reponse (not handling loop object) 
-//							}
-//						}
-//					}
-					
+					// for (java.util.Iterator<Neo4jScreenNode> itr =
+					// ((ScreenActionElementTrainingRecord)
+					// existingRecord.iterator().next()).getStepOuts().iterator();
+					// itr.hasNext();) {
+					// for
+					// (java.util.Iterator<ScreenActionElementTrainingRecord>
+					// itr2 = itr.next().getActionUitrs().iterator();
+					// itr2.hasNext();) {
+					// if (itr2.next().getId() ==
+					// existingRecord.iterator().next().getId()) {
+					// //loop stepOut, so we will need delete this record
+					// temporarily for the bug in the spring ws reponse (not
+					// handling loop object)
+					// }
+					// }
+					// }
+
 				}
-				String tmpLabel = record.getPioPredictLabelResult().getValue();
-				Double confidencetmp = record.getPioPredictConfidence();
+				// Double confidencetmp = record.getPioPredictConfidence();
 				if (existingRecord.iterator().hasNext()) {
 					records.set(i, existingRecord.iterator().next());
-					records.get(i).setPioPredictConfidence(confidencetmp);
-					records.get(i).getPioPredictLabelResult()
-							.setValue(tmpLabel);
-					
-					
+					// records.get(i).setPioPredictConfidence(confidencetmp);
+					// records.get(i).getPioPredictLabelResult()
+					// .setValue(tmpLabel);
 				} else {
+					String tmpLabel = record.getPioPredictLabelResult()
+							.getValue();
 
 					Iterable<? extends WebElementTrainingRecord> allSameFieldUitrs = getUserInputTrainingRecordRepo()
 							.findByPioPredictLabelResultValue(tmpLabel);
@@ -223,15 +231,15 @@ public class GreetingController {
 						record.getUserValues().addAll(
 								itr.next().getUserValues());
 					}
-					
-					Iterable<? extends WebElementTrainingRecord> allSameFieldActionUitrs = this.getActionElementTrainingRecordRepo()
+
+					Iterable<? extends WebElementTrainingRecord> allSameFieldActionUitrs = this
+							.getActionElementTrainingRecordRepo()
 							.findByPioPredictLabelResultValue(tmpLabel);
 					for (java.util.Iterator<? extends WebElementTrainingRecord> itr = allSameFieldActionUitrs
 							.iterator(); itr.hasNext();) {
 						record.getUserValues().addAll(
 								itr.next().getUserValues());
 					}
-					
 				}
 			}
 		}
@@ -400,7 +408,7 @@ public class GreetingController {
 			}
 		}
 
-		if (!trainedAlready){
+		if (!trainedAlready) {
 			trainInputPIO(intermediateResult.getUitrs());
 			trainInputPIO(intermediateResult.getActionUitrs());
 		}
@@ -431,19 +439,23 @@ public class GreetingController {
 
 		getTestSuiteCrud().createOrUpdate(intermediateResult, true);
 
-		Neo4jScreenNode currentNode = getScreenNodeCrud().createOrUpdate(intermediateResult, false);
-		
+		Neo4jScreenNode currentNode = getScreenNodeCrud().createOrUpdate(
+				intermediateResult, false);
+
 		// save industry categories map, similar with save test suite
 		getTestCaseCrud().createOrUpdate(intermediateResult, true);
-		
-		currentNode = getScreenNodeCrud().updateTestCaseRelationships(currentNode, intermediateResult, false);
-//
 
-		WebDomain domainNode = getWebDomainCrud().createOrUpdate(intermediateResult, false);
-//		if (!domainNode.getScreens().contains(currentNode))
-//			domainNode.getScreens().add(currentNode);
-		domainNode = getWebDomainCrud().updateScreenNodes(domainNode, currentNode, true);
-		
+		currentNode = getScreenNodeCrud().updateTestCaseRelationships(
+				currentNode, intermediateResult, false);
+		//
+
+		WebDomain domainNode = getWebDomainCrud().createOrUpdate(
+				intermediateResult, false);
+		// if (!domainNode.getScreens().contains(currentNode))
+		// domainNode.getScreens().add(currentNode);
+		domainNode = getWebDomainCrud().updateScreenNodes(domainNode,
+				currentNode, true);
+
 		Long tmp = currentNode.getId();
 		if (null == tmp)
 			throw new IllegalStateException("node id");
@@ -786,7 +798,8 @@ public class GreetingController {
 	}
 
 	/**
-	 * @param screenNodeCrud the screenNodeCrud to set
+	 * @param screenNodeCrud
+	 *            the screenNodeCrud to set
 	 */
 	public void setScreenNodeCrud(ScreenNodeCrud screenNodeCrud) {
 		this.screenNodeCrud = screenNodeCrud;
@@ -805,7 +818,8 @@ public class GreetingController {
 	}
 
 	/**
-	 * @param webDomainCrud the webDomainCrud to set
+	 * @param webDomainCrud
+	 *            the webDomainCrud to set
 	 */
 	public void setWebDomainCrud(WebDomainCrud webDomainCrud) {
 		this.webDomainCrud = webDomainCrud;
@@ -820,11 +834,12 @@ public class GreetingController {
 			return actionElementTrainingRecordRepo2;
 		} else {
 			throw new IllegalStateException("actionelementtrainingrecordrepo");
-		}	
+		}
 	}
 
 	/**
-	 * @param actionElementTrainingRecordRepo the actionElementTrainingRecordRepo to set
+	 * @param actionElementTrainingRecordRepo
+	 *            the actionElementTrainingRecordRepo to set
 	 */
 	public void setActionElementTrainingRecordRepo(
 			ActionElementTrainingRecordRepo actionElementTrainingRecordRepo) {
@@ -844,7 +859,8 @@ public class GreetingController {
 	}
 
 	/**
-	 * @param testSuiteCrud the testSuiteCrud to set
+	 * @param testSuiteCrud
+	 *            the testSuiteCrud to set
 	 */
 	public void setTestSuiteCrud(TestSuiteNodeCrud testSuiteCrud) {
 		this.testSuiteCrud = testSuiteCrud;
@@ -863,7 +879,8 @@ public class GreetingController {
 	}
 
 	/**
-	 * @param testCaseCrud the testCaseCrud to set
+	 * @param testCaseCrud
+	 *            the testCaseCrud to set
 	 */
 	public void setTestCaseCrud(TestCaseNodeCrud testCaseCrud) {
 		this.testCaseCrud = testCaseCrud;
