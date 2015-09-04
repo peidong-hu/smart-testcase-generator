@@ -440,17 +440,17 @@ public class GreetingController {
 		getTestSuiteCrud().createOrUpdate(intermediateResult, true);
 
 		Neo4jScreenNode currentNode = getScreenNodeCrud().createOrUpdate(
-				intermediateResult, false);
+				intermediateResult, false); //false
 
 		// save industry categories map, similar with save test suite
 		getTestCaseCrud().createOrUpdate(intermediateResult, true);
 
 		currentNode = getScreenNodeCrud().updateTestCaseRelationships(
-				currentNode, intermediateResult, false);
+				currentNode, intermediateResult, false);//false
 		//
 
 		WebDomain domainNode = getWebDomainCrud().createOrUpdate(
-				intermediateResult, false);
+				intermediateResult, false);//false
 		// if (!domainNode.getScreens().contains(currentNode))
 		// domainNode.getScreens().add(currentNode);
 		domainNode = getWebDomainCrud().updateScreenNodes(domainNode,
