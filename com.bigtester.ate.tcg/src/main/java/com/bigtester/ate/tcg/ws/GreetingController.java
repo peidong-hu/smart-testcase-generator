@@ -216,7 +216,9 @@ public class GreetingController {
 				}
 				// Double confidencetmp = record.getPioPredictConfidence();
 				if (existingRecord.iterator().hasNext()) {
-					records.set(i, existingRecord.iterator().next());
+					WebElementTrainingRecord tmpWetr = existingRecord.iterator().next();
+					if (records.get(i).getUserInputType() ==tmpWetr.getUserInputType())
+						records.set(i, tmpWetr);
 					// records.get(i).setPioPredictConfidence(confidencetmp);
 					// records.get(i).getPioPredictLabelResult()
 					// .setValue(tmpLabel);

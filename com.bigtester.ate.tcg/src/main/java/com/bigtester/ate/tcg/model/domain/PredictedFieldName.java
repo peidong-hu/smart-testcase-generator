@@ -39,6 +39,8 @@ public class PredictedFieldName {
 	/** The value. */
 	private String value = "";
 	
+	/** The name, a workaround to fix the bug in angucompletalt that name has to be used for title-field and search-fields. */
+	private String name = "";
 	/** The desc. */
 	private String desc = "";
 	
@@ -57,6 +59,7 @@ public class PredictedFieldName {
 	 */
 	public PredictedFieldName(String value) {
 		this.setValue(value);
+		this.setName(value);
 		
 	}
 	
@@ -69,6 +72,7 @@ public class PredictedFieldName {
 	public PredictedFieldName(String value, String desc) {
 		this.setValue(value);
 		this.setDesc(desc);
+		this.setName(value);
 	}
 
 	/**
@@ -112,6 +116,20 @@ public class PredictedFieldName {
 	 */
 	public void setValueId(Long valueId) {
 		this.valueId = valueId;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

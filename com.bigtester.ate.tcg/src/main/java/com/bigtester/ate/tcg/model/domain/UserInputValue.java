@@ -39,6 +39,9 @@ public class UserInputValue {
 	/** The value. */
 	private String value = "";
 	
+	/** The name, this is a workaround for angucompletealt bug to display title correctly in loop after click on create new value. */
+	private String name = "";
+	
 	/** The desc. */
 	private String desc = "";
 	
@@ -56,6 +59,7 @@ public class UserInputValue {
 	 */
 	public UserInputValue(String value) {
 		this.setValue(value);
+		this.setName(value);
 	}
 	
 	/**
@@ -66,6 +70,7 @@ public class UserInputValue {
 	 */
 	public UserInputValue(String value, String desc) {
 		this.setValue(value);
+		this.setName(value);
 		this.setDesc(desc);
 	}
 
@@ -110,5 +115,19 @@ public class UserInputValue {
 	 */
 	public void setValueId(Long valueId) {
 		this.valueId = valueId;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 }
