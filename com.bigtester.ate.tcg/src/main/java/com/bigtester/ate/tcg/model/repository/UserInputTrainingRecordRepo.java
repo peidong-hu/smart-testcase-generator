@@ -24,7 +24,6 @@ import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.stereotype.Repository;
 
 import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
 
 
 // TODO: Auto-generated Javadoc

@@ -17,8 +17,6 @@
 package com.bigtester.ate.tcg.config;
 
 import javax.servlet.ServletRegistration.Dynamic;
-
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 

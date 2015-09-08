@@ -24,12 +24,10 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.EndNode;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.Property;
-import org.neo4j.ogm.annotation.RelationshipEntity;
 import org.neo4j.ogm.annotation.StartNode;
 
 import com.bigtester.ate.tcg.model.ATENeo4jNodeComparision;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -165,7 +163,7 @@ public class StepOut implements ATENeo4jNodeComparision{
 	*/
 	@Override
 	public boolean sameNode(Object obj) {
-		boolean retVal = false;
+		boolean retVal = false;//NOPMD
 		if (obj instanceof StepOut) {
 			Neo4jScreenNode startNodeObj = ((StepOut) obj).getStartNode();
 			Neo4jScreenNode endNodeObj = ((StepOut) obj).getEndNode();

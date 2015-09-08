@@ -18,11 +18,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.service;
+package com.bigtester.ate.tcg.service;//NOPMD
 
 import java.util.Set;
-
-import javassist.bytecode.Descriptor.Iterator;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.session.Session;
@@ -31,14 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
-import com.bigtester.ate.tcg.model.RelationshipHashSetComparator;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.ScreenUserClickInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestCase;
-import com.bigtester.ate.tcg.model.domain.TestSuite;
-import com.bigtester.ate.tcg.model.relationship.StepIn;
-import com.bigtester.ate.tcg.model.relationship.StepOut;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
 import com.bigtester.ate.tcg.model.repository.TestCaseRepo;
@@ -266,6 +261,8 @@ public class ScreenNodeCrud {
 	 * @return the neo4j screen node
 	 */
 	public Neo4jScreenNode createOrUpdate(IntermediateResult intermediateResult, boolean commit) {
+		
+		
 		// save screen node
 		Neo4jScreenNode prevousScreenNode = null;// NOPMD
 		IntermediateResult previousIntermediateResult = intermediateResult
@@ -321,14 +318,16 @@ public class ScreenNodeCrud {
 		//
 		// }
 		if (null == currentNode) {
-			currentNode = new Neo4jScreenNode(
+			currentNode = new Neo4jScreenNode(//NOPMD
 					intermediateResult.getScreenName(),
 					intermediateResult.getScreenUrl(), intermediateResult);
 
 		} else {
 			currentNode.setName(intermediateResult.getScreenName());
-			currentNode.setSourcingDoms(intermediateResult.getDomStrings());
+			//currentNode.setSourcingDoms(intermediateResult.getDomStrings());
+			currentNode.getSourcingDoms().addAll(intermediateResult.getDomStrings());
 			currentNode.setUitrs(intermediateResult.getUitrs());
+			currentNode.setClickUitrs(intermediateResult.getClickUitrs());
 			currentNode.setActionUitrs(intermediateResult.getActionUitrs());
 			currentNode.setUrl(intermediateResult.getScreenUrl());
 		}
@@ -363,9 +362,15 @@ public class ScreenNodeCrud {
 		return currentNode;
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param screenNode the screen node
+	 * @return the neo4j screen node
+	 */
 	public Neo4jScreenNode update(Neo4jScreenNode screenNode) {
 		Neo4jScreenNode tmp;
-		Transaction trx = getNeo4jSession().beginTransaction();
+		Transaction trx = getNeo4jSession().beginTransaction();//NOPMD
 		try {
 
 			tmp = getScreenNodeRepo().save(screenNode);
@@ -379,6 +384,14 @@ public class ScreenNodeCrud {
 		return tmp;
 	}
 
+	/**
+	 * Update test case relationships.
+	 *
+	 * @param screenNode the screen node
+	 * @param intermediateResult the intermediate result
+	 * @param commit the commit
+	 * @return the neo4j screen node
+	 */
 	public Neo4jScreenNode updateTestCaseRelationships(
 			Neo4jScreenNode screenNode, IntermediateResult intermediateResult,
 			boolean commit) {
@@ -408,8 +421,9 @@ public class ScreenNodeCrud {
 		if (null == testcaseNode) throw new IllegalStateException("please update/create test case node first");
 		if (!screenNode.getTestcases().contains(testcaseNode))
 			screenNode.getTestcases().add(testcaseNode);
+		
 		Set<ScreenUserInputTrainingRecord> uitrs = screenNode.getUitrs();
-		for (java.util.Iterator<ScreenUserInputTrainingRecord> itr = uitrs
+		for (java.util.Iterator<? extends ScreenUserInputTrainingRecord> itr = uitrs
 				.iterator(); itr.hasNext();) {
 			ScreenUserInputTrainingRecord uitr = itr.next();
 			if (!uitr.getTestcases().contains(testcaseNode)) {
@@ -417,6 +431,15 @@ public class ScreenNodeCrud {
 			}
 		}
 
+		Set<ScreenUserClickInputTrainingRecord> clickUitrs = screenNode.getClickUitrs();
+		for (java.util.Iterator<ScreenUserClickInputTrainingRecord> itr = clickUitrs
+				.iterator(); itr.hasNext();) {
+			ScreenUserClickInputTrainingRecord uitr = itr.next();
+			if (!uitr.getTestcases().contains(testcaseNode)) {
+				uitr.getTestcases().add(testcaseNode);
+			}
+		}
+		
 		Set<ScreenActionElementTrainingRecord> actionUitrs = screenNode
 				.getActionUitrs();
 		for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = actionUitrs
@@ -427,7 +450,7 @@ public class ScreenNodeCrud {
 			}
 		}
 		if (!commit)
-			return screenNode;
+			return screenNode;//NOPMD
 		else
 			return update(screenNode);
 	}
@@ -463,6 +486,13 @@ public class ScreenNodeCrud {
 				break;// NOPMD
 			}
 		}
+	}
+
+	/**
+	 * @param neo4jSession the neo4jSession to set
+	 */
+	public void setNeo4jSession(Session neo4jSession) {
+		this.neo4jSession = neo4jSession;
 	}
 
 }

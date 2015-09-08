@@ -91,6 +91,12 @@ public class GreetingController {
 	@Autowired
 	@Nullable
 	private UserInputTrainingRecordRepo userInputTrainingRecordRepo;
+	
+	/** The user click input training record repo. */
+	@Autowired
+	@Nullable
+	private UserInputTrainingRecordRepo userClickInputTrainingRecordRepo;
+	
 	@Autowired
 	@Nullable
 	/** The action element training record repo. */
@@ -193,7 +199,11 @@ public class GreetingController {
 				if (record.getUserInputType().equals(UserInputType.INPUT)) {
 					existingRecord = getUserInputTrainingRecordRepo()
 							.findByInputMLHtmlCode(tmpMLHtmlCode);
-				} else {
+				} else if (record.getUserInputType().equals(UserInputType.CLICKINPUT)) {
+					existingRecord = getUserClickInputTrainingRecordRepo()
+							.findByInputMLHtmlCode(tmpMLHtmlCode);
+				}
+				else {
 					existingRecord = getActionElementTrainingRecordRepo()
 							.findByInputMLHtmlCode(tmpMLHtmlCode);
 					// for (java.util.Iterator<Neo4jScreenNode> itr =
@@ -402,6 +412,7 @@ public class GreetingController {
 			@RequestBody IntermediateResult intermediateResult)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
+		//intermediateResult.processUitr();
 		boolean trainedAlready = false;
 		for (WebElementTrainingRecord uitr : intermediateResult.getUitrs()) {
 			// uitr.setPioPredictConfidence(1.0);
@@ -886,6 +897,26 @@ public class GreetingController {
 	 */
 	public void setTestCaseCrud(TestCaseNodeCrud testCaseCrud) {
 		this.testCaseCrud = testCaseCrud;
+	}
+
+	/**
+	 * @return the userClickInputTrainingRecordRepo
+	 */
+	public UserInputTrainingRecordRepo getUserClickInputTrainingRecordRepo() {
+		final UserInputTrainingRecordRepo userClickInputTrainingRecordRepo2 = userClickInputTrainingRecordRepo;
+		if (userClickInputTrainingRecordRepo2 != null) {
+			return userClickInputTrainingRecordRepo2;
+		} else {
+			throw new IllegalStateException("userclickinputtrainingrecordrepo");
+		}
+	}
+
+	/**
+	 * @param userClickInputTrainingRecordRepo the userClickInputTrainingRecordRepo to set
+	 */
+	public void setUserClickInputTrainingRecordRepo(
+			UserInputTrainingRecordRepo userClickInputTrainingRecordRepo) {
+		this.userClickInputTrainingRecordRepo = userClickInputTrainingRecordRepo;
 	}
 
 }

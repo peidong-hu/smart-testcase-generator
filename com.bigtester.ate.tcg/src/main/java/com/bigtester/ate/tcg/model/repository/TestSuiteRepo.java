@@ -23,8 +23,6 @@ package com.bigtester.ate.tcg.model.repository;
 import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.stereotype.Repository;
-
-import com.bigtester.ate.tcg.model.domain.TestCase;
 import com.bigtester.ate.tcg.model.domain.TestSuite;
 
 // TODO: We will need to add query to get test case by industry, test suites and test case name

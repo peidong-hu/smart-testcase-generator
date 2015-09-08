@@ -31,10 +31,7 @@ import org.neo4j.ogm.annotation.Relationship;
 
 import com.bigtester.ate.tcg.model.ATENeo4jNodeComparision;
 import com.bigtester.ate.tcg.model.IntermediateResult;
-import com.bigtester.ate.tcg.model.RelationshipHashSetComparator;
 import com.bigtester.ate.tcg.model.relationship.Relations;
-import com.bigtester.ate.tcg.model.relationship.StepIn;
-import com.bigtester.ate.tcg.model.relationship.StepOut;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -64,6 +61,10 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 	/** The predicted user input results. */
 	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
 	private Set<ScreenUserInputTrainingRecord> uitrs = new HashSet<ScreenUserInputTrainingRecord>();
+	
+	/** The click uitrs. */
+	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
+	private Set<ScreenUserClickInputTrainingRecord> clickUitrs = new HashSet<ScreenUserClickInputTrainingRecord>();
 	
 	/** The action uitrs. */
 	@Relationship(type = Relations.PREDICTED_USER_ACTIONELEMENT_RESULTS)
@@ -102,6 +103,7 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 		this.url = url;
 		this.sourcingDoms = iResult.getDomStrings();
 		this.uitrs = iResult.getUitrs();
+		this.clickUitrs = iResult.getClickUitrs();
 		this.actionUitrs = iResult.getActionUitrs();
 	}
 
@@ -190,7 +192,7 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 	 */
 	@Override
 	public boolean sameNode(@Nullable Object obj) {
-		boolean retVal = false;
+		boolean retVal = false;//NOPMD
 		if (obj instanceof Neo4jScreenNode) {
 			retVal = ((Neo4jScreenNode) obj).getName() == this.getName()
 					&& ((Neo4jScreenNode) obj).getUrl() == this.getUrl();
@@ -225,6 +227,20 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 	 */
 	public void setUitrs(Set<ScreenUserInputTrainingRecord> uitrs) {
 		this.uitrs = uitrs;
+	}
+
+	/**
+	 * @return the clickUitrs
+	 */
+	public Set<ScreenUserClickInputTrainingRecord> getClickUitrs() {
+		return clickUitrs;
+	}
+
+	/**
+	 * @param clickUitrs the clickUitrs to set
+	 */
+	public void setClickUitrs(Set<ScreenUserClickInputTrainingRecord> clickUitrs) {
+		this.clickUitrs = clickUitrs;
 	}
 
 	// @RelatedToVia(type = "RATED")

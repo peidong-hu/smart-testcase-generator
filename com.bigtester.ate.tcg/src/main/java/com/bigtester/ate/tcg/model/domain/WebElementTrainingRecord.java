@@ -62,7 +62,7 @@ public class WebElementTrainingRecord {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Long id) {//NOPMD required by neo4j
+	public void setId(@Nullable Long id) {//NOPMD required by neo4j
 		this.id = id;
 	}
 
@@ -106,7 +106,7 @@ public class WebElementTrainingRecord {
 	 * The Enum UserInputType.
 	 */
 	public enum UserInputType {
-		INPUT, CLICKABLE
+		INPUT, CLICKINPUT, CLICKABLE
 	}
 
 	// @Nullable

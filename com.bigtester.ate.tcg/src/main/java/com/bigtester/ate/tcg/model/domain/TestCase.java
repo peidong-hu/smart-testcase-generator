@@ -126,4 +126,11 @@ public class TestCase {
 	public void setHostingTestSuite(Set<TestSuite> hostingTestSuites) {
 		this.hostingTestSuites = hostingTestSuites;
 	}
+
+	/**
+	 * @param hostingTestSuites the hostingTestSuites to set
+	 */
+	public void setHostingTestSuites(Set<TestSuite> hostingTestSuites) {
+		this.hostingTestSuites = hostingTestSuites;
+	}
 }

@@ -20,10 +20,7 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.service;
 
-import java.util.List;
 import java.util.Set;
-
-import javassist.bytecode.Descriptor.Iterator;
 
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.session.Session;
@@ -32,21 +29,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
-import com.bigtester.ate.tcg.model.RelationshipHashSetComparator;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestCase;
 import com.bigtester.ate.tcg.model.domain.TestSuite;
-import com.bigtester.ate.tcg.model.relationship.StepIn;
-import com.bigtester.ate.tcg.model.relationship.StepOut;
-import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
-import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
 import com.bigtester.ate.tcg.model.repository.TestCaseRepo;
 import com.bigtester.ate.tcg.model.repository.TestSuiteRepo;
-import com.bigtester.ate.tcg.model.repository.UserInputTrainingRecordRepo;
-import com.bigtester.ate.tcg.model.repository.UserInputValueRepo;
-import com.bigtester.ate.tcg.model.repository.WebDomainRepo;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -209,6 +197,13 @@ public class TestCaseNodeCrud {
 				break;// NOPMD
 			}
 		}
+	}
+
+	/**
+	 * @param neo4jSession the neo4jSession to set
+	 */
+	public void setNeo4jSession(Session neo4jSession) {
+		this.neo4jSession = neo4jSession;
 	}
 
 }

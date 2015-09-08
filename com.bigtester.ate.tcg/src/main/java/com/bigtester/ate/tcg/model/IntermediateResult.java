@@ -31,8 +31,9 @@ import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.IndustryCategory;
 import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.ScreenUserClickInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestSuite;
-import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord.UserInputType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -49,6 +50,10 @@ public class IntermediateResult {
 	
 	/** The uitrs. */
 	private Set<ScreenUserInputTrainingRecord> uitrs = new HashSet<ScreenUserInputTrainingRecord>();
+	
+	/** The click uitrs. */
+	private Set<ScreenUserClickInputTrainingRecord> clickUitrs = new HashSet<ScreenUserClickInputTrainingRecord>();
+	
 	
 	/** The action uitrs. */
 	private Set<ScreenActionElementTrainingRecord> actionUitrs = new HashSet<ScreenActionElementTrainingRecord>();
@@ -87,6 +92,18 @@ public class IntermediateResult {
 		//For spring web services, an empty constructor has to be placed in models receiving web request.
 		super();
 	}
+	
+	/**
+	 * Process uitr.
+	 */
+	public void processUitr() {
+		for (ScreenUserInputTrainingRecord uitr: getUitrs()) {
+			if (uitr.getUserInputType().equals(UserInputType.CLICKINPUT)) {
+				uitr = new ScreenUserClickInputTrainingRecord(uitr);
+			}
+		}
+	}
+	
 	/**
 	 * @return the domStrings
 	 */
@@ -223,6 +240,20 @@ public class IntermediateResult {
 	 */
 	public void setActionUitrs(Set<ScreenActionElementTrainingRecord> actionUitrs) {
 		this.actionUitrs = actionUitrs;
+	}
+
+	/**
+	 * @return the clickUitrs
+	 */
+	public Set<ScreenUserClickInputTrainingRecord> getClickUitrs() {
+		return clickUitrs;
+	}
+
+	/**
+	 * @param clickUitrs the clickUitrs to set
+	 */
+	public void setClickUitrs(Set<ScreenUserClickInputTrainingRecord> clickUitrs) {
+		this.clickUitrs = clickUitrs;
 	}
 	
 	

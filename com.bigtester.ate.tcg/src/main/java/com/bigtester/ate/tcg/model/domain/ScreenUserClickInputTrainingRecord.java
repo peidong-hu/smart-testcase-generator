@@ -18,37 +18,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.model.repository;
+package com.bigtester.ate.tcg.model.domain;
 
-import org.springframework.data.neo4j.repository.GraphRepository;
-import org.springframework.stereotype.Repository;
-
-import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
-
+import org.neo4j.ogm.annotation.NodeEntity;
 
 // TODO: Auto-generated Javadoc
 /**
- * This class ScreenNodeRepo defines ....
+ * This class TrainingRecord defines ....
  * @author Peidong Hu
  *
  */
-@Repository
-public interface ActionElementTrainingRecordRepo extends GraphRepository<ScreenActionElementTrainingRecord> {
-	
-	/**
-	 * Find by pio predict label result value.
-	 *
-	 * @param value the value
-	 * @return the iterable
-	 */
-	Iterable<ScreenActionElementTrainingRecord> findByPioPredictLabelResultValue(String value);
-	
-	/**
-	 * Find by input ml html code.
-	 *
-	 * @param htmlCode the html code
-	 * @return the iterable
-	 */
-	Iterable<ScreenActionElementTrainingRecord> findByInputMLHtmlCode(String htmlCode);
-	
+
+/**
+ * @author ashraf
+ *
+ */
+@NodeEntity
+public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingRecord{
+	public ScreenUserClickInputTrainingRecord() {
+		super();
+	}
+	public ScreenUserClickInputTrainingRecord(ScreenUserInputTrainingRecord uitr) {
+		this.setId(uitr.getId());
+		this.setInputLabelName(uitr.getInputLabelName());
+		this.setInputMLHtmlCode(uitr.getInputMLHtmlCode());
+		this.setPioPredictConfidence(uitr.getPioPredictConfidence());
+		this.setTestcases(uitr.getTestcases());
+		this.setTrainedResult(uitr.getTrainedResult());
+		this.setUserInputType(uitr.getUserInputType());
+		this.setUserValues(uitr.getUserValues());
+		this.setPioPredictLabelResult(uitr.getPioPredictLabelResult());
+	}
 }
