@@ -41,27 +41,23 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  *
  */
 @NodeEntity
-public class Neo4jScreenNode implements ATENeo4jNodeComparision {
+public class Neo4jScreenNode extends AbstractScreenNode  implements ATENeo4jNodeComparision {
 
-	/** The id. */
-	@GraphId
-	@Nullable
-	private Long id; // NOPMD
-
-	/** The name. */
-	private String name = "";
-
-	/** The url. */
-	private String url = "";
+//	/** The id. */
+//	@GraphId
+//	@Nullable
+//	private Long id; // NOPMD
+//
+//	/** The name. */
+//	private String name = "";
+//
+//	/** The url. */
+//	private String url = "";
 
 	/** The sourcing doms. */
 	@Relationship(type = Relations.SOURCING_DOMS)
 	private Set<HTMLSource> sourcingDoms = new HashSet<HTMLSource>();
 
-	/** The predicted user input results. */
-	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
-	private Set<ScreenUserInputTrainingRecord> uitrs = new HashSet<ScreenUserInputTrainingRecord>();
-	
 	/** The click uitrs. */
 	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
 	private Set<ScreenUserClickInputTrainingRecord> clickUitrs = new HashSet<ScreenUserClickInputTrainingRecord>();
@@ -70,14 +66,9 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 	@Relationship(type = Relations.PREDICTED_USER_ACTIONELEMENT_RESULTS)
 	private Set<ScreenActionElementTrainingRecord> actionUitrs = new HashSet<ScreenActionElementTrainingRecord>();
 
-//	/** The Steps. */
-//	@Relationship(type = Relations.STEP_IN, direction = Relationship.INCOMING)
-//	private Set<StepIn> stepIns = new HashSet<StepIn>();
-
-
-	/** The testcases. */
-	@Relationship(type = Relations.IN_TESTCASE)
-	private Collection<TestCase> testcases = new HashSet<TestCase>();
+//	/** The testcases. */
+//	@Relationship(type = Relations.IN_TESTCASE)
+//	private Collection<TestCase> testcases = new HashSet<TestCase>();
 
 	
 	/**
@@ -99,59 +90,60 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 	 *            the i result
 	 */
 	public Neo4jScreenNode(String name, String url, IntermediateResult iResult) {
-		this.name = name;
-		this.url = url;
+//		this.name = name;
+//		this.url = url;
+		super(name, url);
 		this.sourcingDoms = iResult.getDomStrings();
-		this.uitrs = iResult.getUitrs();
+		setUitrs(iResult.getUitrs());
 		this.clickUitrs = iResult.getClickUitrs();
 		this.actionUitrs = iResult.getActionUitrs();
 	}
 
-	/**
-	 * @return the id
-	 */
-	@Nullable
-	public Long getId() {
-		return id;
-	}
+//	/**
+//	 * @return the id
+//	 */
+//	@Nullable
+//	public Long getId() {
+//		return id;
+//	}
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Long id) {// NOPMD
-		this.id = id;
-	}
+//	/**
+//	 * @param id
+//	 *            the id to set
+//	 */
+//	public void setId(Long id) {// NOPMD
+//		this.id = id;
+//	}
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+//	/**
+//	 * @return the name
+//	 */
+//	public String getName() {
+//		return name;
+//	}
+//
+//	/**
+//	 * @param name
+//	 *            the name to set
+//	 */
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * @param url
-	 *            the url to set
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+//	/**
+//	 * @return the url
+//	 */
+//	public String getUrl() {
+//		return url;
+//	}
+//
+//	/**
+//	 * @param url
+//	 *            the url to set
+//	 */
+//	public void setUrl(String url) {
+//		this.url = url;
+//	}
 
 	/**
 	 * @return the sourcingDoms
@@ -168,24 +160,20 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 		this.sourcingDoms = sourcingDoms;
 	}
 
-
-
-
-
-	/**
-	 * @return the testcases
-	 */
-	public Collection<TestCase> getTestcases() {
-		return testcases;
-	}
-
-	/**
-	 * @param testcases
-	 *            the testcases to set
-	 */
-	public void setTestcases(Collection<TestCase> testcases) {
-		this.testcases = testcases;
-	}
+//	/**
+//	 * @return the testcases
+//	 */
+//	public Collection<TestCase> getTestcases() {
+//		return testcases;
+//	}
+//
+//	/**
+//	 * @param testcases
+//	 *            the testcases to set
+//	 */
+//	public void setTestcases(Collection<TestCase> testcases) {
+//		this.testcases = testcases;
+//	}
 
 	/**
 	 * {@inheritDoc}
@@ -215,19 +203,7 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 		this.actionUitrs = actionUitrs;
 	}
 
-	/**
-	 * @return the uitrs
-	 */
-	public Set<ScreenUserInputTrainingRecord> getUitrs() {
-		return uitrs;
-	}
 
-	/**
-	 * @param uitrs the uitrs to set
-	 */
-	public void setUitrs(Set<ScreenUserInputTrainingRecord> uitrs) {
-		this.uitrs = uitrs;
-	}
 
 	/**
 	 * @return the clickUitrs
@@ -243,10 +219,4 @@ public class Neo4jScreenNode implements ATENeo4jNodeComparision {
 		this.clickUitrs = clickUitrs;
 	}
 
-	// @RelatedToVia(type = "RATED")
-	// Iterable<Rating> ratings;
-	//
-	// @Query("start movie=node({self}) match
-	// movie-->genre<--similar return similar")
-	// Iterable<Movie> similarMovies;
 }

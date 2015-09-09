@@ -43,7 +43,15 @@ import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord.UserInputType
  */
 public class IntermediateResult {
 	
+	/**
+	 * The Enum NonHtmlScreen.
+	 */
+	public enum ScreenType {
+		HTML, WINDOWFILEPICKER
+	}
 	
+	/** The screen type. */
+	private ScreenType screenType = ScreenType.HTML; 
 	
 	/** The dom strings. */
 	private Set<HTMLSource> domStrings = new HashSet<HTMLSource>();
@@ -53,6 +61,10 @@ public class IntermediateResult {
 	
 	/** The click uitrs. */
 	private Set<ScreenUserClickInputTrainingRecord> clickUitrs = new HashSet<ScreenUserClickInputTrainingRecord>();
+	
+	/** The previous screen trigger uitrs. */
+	@Nullable
+	private ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr;
 	
 	
 	/** The action uitrs. */
@@ -255,6 +267,36 @@ public class IntermediateResult {
 	public void setClickUitrs(Set<ScreenUserClickInputTrainingRecord> clickUitrs) {
 		this.clickUitrs = clickUitrs;
 	}
-	
+
+	/**
+	 * @return the screenType
+	 */
+	public ScreenType getScreenType() {
+		return this.screenType;
+	}
+
+	/**
+	 * @param screenType the screenType to set
+	 */
+	public void setScreenType(ScreenType screenType) {
+		this.screenType = screenType;
+	}
+
+	/**
+	 * @return the previousScreenTriggerClickUitr
+	 */
+	@Nullable
+	public ScreenUserClickInputTrainingRecord getPreviousScreenTriggerClickUitr() {
+		return previousScreenTriggerClickUitr;
+	}
+
+	/**
+	 * @param previousScreenTriggerClickUitr the previousScreenTriggerClickUitr to set
+	 */
+	public void setPreviousScreenTriggerClickUitr(
+			ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr) {
+		this.previousScreenTriggerClickUitr = previousScreenTriggerClickUitr;
+	}
+
 	
 }
