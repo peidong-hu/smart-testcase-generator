@@ -42,6 +42,7 @@ import com.bigtester.ate.tcg.model.domain.UserInputValue;
 import com.bigtester.ate.tcg.model.domain.WebDomain;
 import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord.UserInputType;
+import com.bigtester.ate.tcg.model.domain.WindowsSystemFilePickerScreenNode;
 import com.bigtester.ate.tcg.model.repository.ActionElementTrainingRecordRepo;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
@@ -54,6 +55,7 @@ import com.bigtester.ate.tcg.service.ScreenNodeCrud;
 import com.bigtester.ate.tcg.service.TestCaseNodeCrud;
 import com.bigtester.ate.tcg.service.TestSuiteNodeCrud;
 import com.bigtester.ate.tcg.service.WebDomainCrud;
+import com.bigtester.ate.tcg.service.WindowsSystemFilePickerScreenNodeCrud;
 import com.bigtester.ate.tcg.utils.GlobalUtils;
 import com.bigtester.ate.tcg.utils.exception.Html2DomException;
 import com.bigtester.ate.tcg.ws.entity.WsPredictedFieldNames;
@@ -116,6 +118,11 @@ public class GreetingController {
 	@Autowired
 	@Nullable
 	private ScreenNodeCrud screenNodeCrud;
+	
+	@Autowired
+	@Nullable
+	private WindowsSystemFilePickerScreenNodeCrud windowsSystemFilePickerScreenNodeCrud;
+
 
 	/** The web domain crud. */
 	@Autowired
@@ -476,6 +483,47 @@ public class GreetingController {
 		return intermediateResult;
 	}
 
+	/**
+	 * Save intermediate result for windows file picker.
+	 *
+	 * @param intermediateResult the intermediate result
+	 * @return the intermediate result
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws ExecutionException the execution exception
+	 * @throws InterruptedException the interrupted exception
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/saveIntermediateResultForWindowsFilePicker", method = RequestMethod.POST)
+	public IntermediateResult saveIntermediateResultForWindowsFilePicker(
+			@RequestBody IntermediateResult intermediateResult)
+			throws IOException, ClassNotFoundException, ExecutionException,
+			InterruptedException {
+		
+		getTestSuiteCrud().createOrUpdate(intermediateResult, true);
+
+		WindowsSystemFilePickerScreenNode currentNode = getWindowsSystemFilePickerScreenNodeCrud().createOrUpdate(
+				intermediateResult, false); //false
+
+		getTestCaseCrud().createOrUpdate(intermediateResult, true);
+
+		currentNode = getWindowsSystemFilePickerScreenNodeCrud().updateTestCaseRelationships(
+				currentNode, intermediateResult, false);//false
+		
+		WebDomain domainNode = getWebDomainCrud().createOrUpdate(
+				intermediateResult, false);//false
+		
+		domainNode = getWebDomainCrud().updateScreenNodes(domainNode,
+				currentNode, true);
+
+		Long tmp = currentNode.getId();
+		if (null == tmp)
+			throw new IllegalStateException("node id");
+		intermediateResult.setScreenNodeNeo4jId(tmp);
+		return intermediateResult;
+	}
+
+	
 	/**
 	 * Train input pio.
 	 *
@@ -917,6 +965,26 @@ public class GreetingController {
 	public void setUserClickInputTrainingRecordRepo(
 			UserInputTrainingRecordRepo userClickInputTrainingRecordRepo) {
 		this.userClickInputTrainingRecordRepo = userClickInputTrainingRecordRepo;
+	}
+
+	/**
+	 * @return the windowsSystemFilePickerScreenNodeCrud
+	 */
+	public WindowsSystemFilePickerScreenNodeCrud getWindowsSystemFilePickerScreenNodeCrud() {
+		final WindowsSystemFilePickerScreenNodeCrud windowsSystemFilePickerScreenNodeCrud2 = windowsSystemFilePickerScreenNodeCrud;
+		if (windowsSystemFilePickerScreenNodeCrud2 != null) {
+			return windowsSystemFilePickerScreenNodeCrud2;
+		} else {
+			throw new IllegalStateException("windowssystemfilepickerScreenNodeCrud");
+		}
+	}
+
+	/**
+	 * @param windowsSystemFilePickerScreenNodeCrud the windowsSystemFilePickerScreenNodeCrud to set
+	 */
+	public void setWindowsSystemFilePickerScreenNodeCrud(
+			WindowsSystemFilePickerScreenNodeCrud windowsSystemFilePickerScreenNodeCrud) {
+		this.windowsSystemFilePickerScreenNodeCrud = windowsSystemFilePickerScreenNodeCrud;
 	}
 
 }

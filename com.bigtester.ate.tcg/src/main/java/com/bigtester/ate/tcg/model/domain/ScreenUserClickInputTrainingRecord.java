@@ -20,7 +20,15 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
+
+import com.bigtester.ate.tcg.model.relationship.Relations;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,6 +43,12 @@ import org.neo4j.ogm.annotation.NodeEntity;
  */
 @NodeEntity
 public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingRecord{
+	/** The step outs. */
+	@JsonIgnore
+	@Relationship(type = Relations.STEP_OUT, direction = Relationship.OUTGOING)
+	@Nullable
+	private AbstractScreenNode stepOut;
+
 	public ScreenUserClickInputTrainingRecord() {
 		super();
 	}
@@ -48,5 +62,18 @@ public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingR
 		this.setUserInputType(uitr.getUserInputType());
 		this.setUserValues(uitr.getUserValues());
 		this.setPioPredictLabelResult(uitr.getPioPredictLabelResult());
+	}
+	/**
+	 * @return the stepOut
+	 */
+	@Nullable
+	public AbstractScreenNode getStepOut() {
+		return stepOut;
+	}
+	/**
+	 * @param stepOut the stepOut to set
+	 */
+	public void setStepOut(AbstractScreenNode stepOut) {
+		this.stepOut = stepOut;
 	}
 }

@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
+import com.bigtester.ate.tcg.model.domain.AbstractScreenNode;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.ScreenUserClickInputTrainingRecord;
@@ -68,6 +69,10 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 	@Autowired
 	@Nullable
 	private transient ScreenNodeRepo screenNodeRepo;
+	
+	@Autowired
+	@Nullable
+	private ScreenNodeCrud screenNodeCrud;
 	
 	/** The user input value repo. */
 	@Autowired
@@ -245,7 +250,7 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 	 *            the intermediate result
 	 * @return the neo4j screen node
 	 */
-	public Neo4jScreenNode createOrUpdate(IntermediateResult intermediateResult, boolean commit) {
+	public WindowsSystemFilePickerScreenNode createOrUpdate(IntermediateResult intermediateResult, boolean commit) {
 		
 		
 		// save screen node
@@ -267,18 +272,28 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 				.getWindowsSystemFilePickerScreenNodeByUrlAndName(
 						intermediateResult.getScreenUrl(),
 						intermediateResult.getScreenName());
+		ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr = intermediateResult.getPreviousScreenTriggerClickUitr();
+		String filePathName = "";
+		if (null != previousScreenTriggerClickUitr && previousScreenTriggerClickUitr.getUserValues().iterator().hasNext()) {
+			
+			filePathName = previousScreenTriggerClickUitr.getUserValues().iterator().next().getValue();
+		} else {
+			throw new IllegalStateException("previousScreenTriggerClickUitr");
+		}
 		if (null == currentNode) {
-			String filePathName = "";
-			if (intermediateResult.getUitrs().iterator().hasNext()) {
-				intermediateResult.getUitrs().iterator().next().getUserValues().iterator().next().getValue();
-			}
 			currentNode = new WindowsSystemFilePickerScreenNode(//NOPMD
-					intermediateResult.getScreenName(),
-					intermediateResult.getScreenUrl(), filePathName);
-
+				intermediateResult.getScreenName(),
+				intermediateResult.getScreenUrl(), filePathName);
+			currentNode.setPreviousScreenTriggerClickUitr(previousScreenTriggerClickUitr);
 		} else {
 			currentNode.setName(intermediateResult.getScreenName());
-			currentNode.setUitrs(intermediateResult.getUitrs());
+			currentNode.setFilePathName(filePathName);
+			ScreenUserClickInputTrainingRecord existingClickUitr = currentNode.getPreviousScreenTriggerClickUitr();
+			if (null != existingClickUitr ) {
+				Long gid = existingClickUitr.getId();
+				if (null != gid&& !gid.equals(previousScreenTriggerClickUitr.getId()))
+					currentNode.setPreviousScreenTriggerClickUitr(previousScreenTriggerClickUitr);
+			}
 		}
 		if (commit) {
 			Transaction trx1 = getNeo4jSession().beginTransaction();
@@ -295,9 +310,11 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		if (null != prevousScreenNode) {
 			createOrUpdateStepout(prevousScreenNode, currentNode,
 					intermediateResult);
-			updateTestCaseRelationships(prevousScreenNode, intermediateResult, false);
-			update(prevousScreenNode);
+			getScreenNodeCrud().updateTestCaseRelationships(prevousScreenNode, intermediateResult, false);
+			getScreenNodeCrud().update(prevousScreenNode);
 			
+		} else {
+			throw new IllegalStateException("Previous Screen Node should exist.");
 		}
 
 		return currentNode;
@@ -309,14 +326,14 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 	 * @param screenNode the screen node
 	 * @return the neo4j screen node
 	 */
-	public Neo4jScreenNode update(Neo4jScreenNode screenNode) {
-		Neo4jScreenNode tmp;
+	public WindowsSystemFilePickerScreenNode update(WindowsSystemFilePickerScreenNode screenNode) {
+		WindowsSystemFilePickerScreenNode tmp;
 		Transaction trx = getNeo4jSession().beginTransaction();//NOPMD
 		try {
 
-			tmp = getScreenNodeRepo().save(screenNode);
+			tmp = getWindowsFilePickerScreenNodeRepo().save(screenNode);
 			if (null == tmp)
-				throw new IllegalStateException("screenNode update");
+				throw new IllegalStateException("windowsfilepickerscreenNode update");
 			trx.commit();
 		} finally {
 			trx.close();
@@ -333,8 +350,8 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 	 * @param commit the commit
 	 * @return the neo4j screen node
 	 */
-	public Neo4jScreenNode updateTestCaseRelationships(
-			Neo4jScreenNode screenNode, IntermediateResult intermediateResult,
+	public WindowsSystemFilePickerScreenNode updateTestCaseRelationships(
+			WindowsSystemFilePickerScreenNode screenNode, IntermediateResult intermediateResult,
 			boolean commit) {
 		TestCase testcaseNode = getTestCaseRepo().getTestCaseByName(
 				intermediateResult.getTestCaseName());
@@ -342,33 +359,6 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		if (!screenNode.getTestcases().contains(testcaseNode))
 			screenNode.getTestcases().add(testcaseNode);
 		
-		Set<ScreenUserInputTrainingRecord> uitrs = screenNode.getUitrs();
-		for (java.util.Iterator<? extends ScreenUserInputTrainingRecord> itr = uitrs
-				.iterator(); itr.hasNext();) {
-			ScreenUserInputTrainingRecord uitr = itr.next();
-			if (!uitr.getTestcases().contains(testcaseNode)) {
-				uitr.getTestcases().add(testcaseNode);
-			}
-		}
-
-		Set<ScreenUserClickInputTrainingRecord> clickUitrs = screenNode.getClickUitrs();
-		for (java.util.Iterator<ScreenUserClickInputTrainingRecord> itr = clickUitrs
-				.iterator(); itr.hasNext();) {
-			ScreenUserClickInputTrainingRecord uitr = itr.next();
-			if (!uitr.getTestcases().contains(testcaseNode)) {
-				uitr.getTestcases().add(testcaseNode);
-			}
-		}
-		
-		Set<ScreenActionElementTrainingRecord> actionUitrs = screenNode
-				.getActionUitrs();
-		for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = actionUitrs
-				.iterator(); itr.hasNext();) {
-			ScreenActionElementTrainingRecord uitr = itr.next();
-			if (!uitr.getTestcases().contains(testcaseNode)) {
-				uitr.getTestcases().add(testcaseNode);
-			}
-		}
 		if (!commit)
 			return screenNode;//NOPMD
 		else
@@ -388,23 +378,28 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 			WindowsSystemFilePickerScreenNode endNode, IntermediateResult iResult) {
 		// TODO, add test case filter after finish job application code
 
-		Set<ScreenUserClickInputTrainingRecord> startActionUitrs = startNode
-				.getClickUitrs();
+		ScreenUserClickInputTrainingRecord startClickUitr = endNode.getPreviousScreenTriggerClickUitr();
+				
 
-		if (startActionUitrs.isEmpty() || startActionUitrs.size() > 1)
-			throw new IllegalStateException("start action uitrs");
+		if (null == startClickUitr) 
+			throw new IllegalStateException("start click uitr");
 		else {
-			for (java.util.Iterator<ScreenUserClickInputTrainingRecord> itr = startActionUitrs
-					.iterator(); itr.hasNext();) {
-				ScreenActionElementTrainingRecord first = itr.next();
-				if (first.getStepOuts().isEmpty()
-						|| !first.getStepOuts().contains(endNode)) {
-					// create
-					first.getStepOuts().add(endNode);
+			
+				AbstractScreenNode oldStepOut = startClickUitr.getStepOut();
+				if (oldStepOut != null) {
+					Transaction trx1 = getNeo4jSession().beginTransaction();
+					try {
+						getNeo4jSession().delete(oldStepOut);
 
+						trx1.commit();
+						
+					} finally {
+						trx1.close();
+					}
+					
 				}
-				break;// NOPMD
-			}
+				startClickUitr.setStepOut(endNode);
+			
 		}
 	}
 
@@ -452,6 +447,25 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 	 */
 	public void setScreenNodeRepo(ScreenNodeRepo screenNodeRepo) {
 		this.screenNodeRepo = screenNodeRepo;
+	}
+
+	/**
+	 * @return the screenNodeCrud
+	 */
+	public ScreenNodeCrud getScreenNodeCrud() {
+		final ScreenNodeCrud screenNodeCrud2 = screenNodeCrud;
+		if (screenNodeCrud2 != null) {
+			return screenNodeCrud2;
+		} else {
+			throw new IllegalStateException("screenNodeCrud");
+		}
+	}
+
+	/**
+	 * @param screenNodeCrud the screenNodeCrud to set
+	 */
+	public void setScreenNodeCrud(ScreenNodeCrud screenNodeCrud) {
+		this.screenNodeCrud = screenNodeCrud;
 	}
 
 }

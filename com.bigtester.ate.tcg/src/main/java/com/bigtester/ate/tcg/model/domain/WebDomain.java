@@ -49,7 +49,7 @@ public class WebDomain {
 	
 	/** The testcases. */
 	@Relationship(type = Relations.CONTAINS_SCREEN)
-	private Collection<Neo4jScreenNode> screens = new HashSet<Neo4jScreenNode>();
+	private Collection<AbstractScreenNode> screens = new HashSet<AbstractScreenNode>();
 	
 	/**
 	 * Instantiates a new web domain.
@@ -98,14 +98,14 @@ public class WebDomain {
 	/**
 	 * @return the screens
 	 */
-	public Collection<Neo4jScreenNode> getScreens() {
+	public Collection<AbstractScreenNode> getScreens() {
 		return screens;
 	}
 
 	/**
 	 * @param screens the screens to set
 	 */
-	public void setScreens(Collection<Neo4jScreenNode> screens) {
+	public void setScreens(Collection<AbstractScreenNode> screens) {
 		this.screens = screens;
 	}
 

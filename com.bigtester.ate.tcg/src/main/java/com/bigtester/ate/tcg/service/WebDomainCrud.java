@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
+import com.bigtester.ate.tcg.model.domain.AbstractScreenNode;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.WebDomain;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
@@ -303,7 +304,7 @@ public class WebDomainCrud {
 		
 	}
 
-	public WebDomain updateScreenNodes(WebDomain domainNode, Neo4jScreenNode screenNode, boolean commit) {
+	public WebDomain updateScreenNodes(WebDomain domainNode, AbstractScreenNode screenNode, boolean commit) {
 		if (!domainNode.getScreens().contains(screenNode))
 			domainNode.getScreens().add(screenNode);
 		if (commit)
