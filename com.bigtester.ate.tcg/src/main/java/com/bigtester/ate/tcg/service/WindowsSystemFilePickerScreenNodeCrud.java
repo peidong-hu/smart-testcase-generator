@@ -275,7 +275,6 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr = intermediateResult.getPreviousScreenTriggerClickUitr();
 		String filePathName = "";
 		if (null != previousScreenTriggerClickUitr && previousScreenTriggerClickUitr.getUserValues().iterator().hasNext()) {
-			
 			filePathName = previousScreenTriggerClickUitr.getUserValues().iterator().next().getValue();
 		} else {
 			throw new IllegalStateException("previousScreenTriggerClickUitr");
