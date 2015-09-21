@@ -20,8 +20,6 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.service;//NOPMD
 
-import java.util.Set;
-
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.transaction.Transaction;
@@ -31,9 +29,7 @@ import org.springframework.stereotype.Service;
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.AbstractScreenNode;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
-import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.ScreenUserClickInputTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestCase;
 import com.bigtester.ate.tcg.model.domain.WindowsSystemFilePickerScreenNode;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
@@ -70,6 +66,7 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 	@Nullable
 	private transient ScreenNodeRepo screenNodeRepo;
 	
+	/** The screen node crud. */
 	@Autowired
 	@Nullable
 	private ScreenNodeCrud screenNodeCrud;
@@ -132,7 +129,6 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		if (predictedFieldNameRepo2 != null) {
 			return predictedFieldNameRepo2;
 		} else {
-			// TODO handle null value
 			throw new IllegalStateException("predictedFieldNameRepo");
 		}
 	}
@@ -154,7 +150,6 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		if (userInputTrainingRecordRepo2 != null) {
 			return userInputTrainingRecordRepo2;
 		} else {
-			// TODO handle null value
 			throw new IllegalStateException("userInputTrainingRecordRepo");
 		}
 	}
@@ -176,7 +171,6 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		if (webDomainRepo2 != null) {
 			return webDomainRepo2;
 		} else {
-			// TODO handle null value
 			throw new IllegalStateException("webDomainRepo");
 		}
 	}
@@ -197,7 +191,6 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		if (testCaseRepo2 != null) {
 			return testCaseRepo2;
 		} else {
-			// TODO handle null value
 			throw new IllegalStateException("testCaseRepo");
 		}
 	}
@@ -218,7 +211,6 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		if (testSuiteRepo2 != null) {
 			return testSuiteRepo2;
 		} else {
-			// TODO handle null value
 			throw new IllegalStateException("testSuiteRepo");
 		}
 	}

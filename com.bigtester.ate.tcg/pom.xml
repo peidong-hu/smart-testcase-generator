@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-neo4j-rest</artifactId>
-			<version>3.3.2.RELEASE</version>
+			<version>3.4.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-neo4j</artifactId>
-			<version>4.0.0.RC2</version>
+			<version>4.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.neo4j</groupId>

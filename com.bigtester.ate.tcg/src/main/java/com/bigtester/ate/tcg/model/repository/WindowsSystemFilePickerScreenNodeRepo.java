@@ -24,7 +24,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.WindowsSystemFilePickerScreenNode;
 
 // TODO: Auto-generated Javadoc

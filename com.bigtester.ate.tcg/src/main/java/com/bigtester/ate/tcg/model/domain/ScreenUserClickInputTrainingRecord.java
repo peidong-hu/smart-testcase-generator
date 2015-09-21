@@ -20,13 +20,9 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.jdt.annotation.Nullable;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
-
 import com.bigtester.ate.tcg.model.relationship.Relations;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -49,10 +45,20 @@ public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingR
 	@Nullable
 	private AbstractScreenNode stepOut;
 
+	/**
+	 * Instantiates a new screen user click input training record.
+	 */
 	public ScreenUserClickInputTrainingRecord() {
 		super();
 	}
+	
+	/**
+	 * Instantiates a new screen user click input training record.
+	 *
+	 * @param uitr the uitr
+	 */
 	public ScreenUserClickInputTrainingRecord(ScreenUserInputTrainingRecord uitr) {
+		super();
 		this.setId(uitr.getId());
 		this.setInputLabelName(uitr.getInputLabelName());
 		this.setInputMLHtmlCode(uitr.getInputMLHtmlCode());

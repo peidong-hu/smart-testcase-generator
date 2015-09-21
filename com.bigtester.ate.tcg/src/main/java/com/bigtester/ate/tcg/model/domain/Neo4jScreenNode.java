@@ -20,15 +20,11 @@
  *******************************************************************************/
 package com.bigtester.ate.tcg.model.domain;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.jdt.annotation.Nullable;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
-
 import com.bigtester.ate.tcg.model.ATENeo4jNodeComparision;
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.relationship.Relations;
