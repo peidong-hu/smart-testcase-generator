@@ -48,14 +48,16 @@ import io.prediction.EventClient;
 final public class PredictionIOTrainer {
 	
 	/** The Constant SAMPLETEXTCLASSIFIERACCESSKEY. */
-	//public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "qdQkFtusKxikK8n3L7fjorqbTeNIeRa7z2NbXwvsd4m95WSC6kVPuKNrw4baiJTl";
-	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "KoKbS9tPyzLxZpaRunfoCUWNxd4o7YOK4h29nPTnMPKHykBDyDZuaS74CFd3AX1o";
+	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "bPkjUBBUYM7yrGHDzuBLvw6F7go2vPqbqferF6MzGx7PHygsQn1elM8hRIhF3DUY";
+	//public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "KoKbS9tPyzLxZpaRunfoCUWNxd4o7YOK4h29nPTnMPKHykBDyDZuaS74CFd3AX1o";
 	  
 	/** The Constant EVENTSERVERURL. */
-	public static final String EVENTSERVERURL = "http://172.16.173.50:7070";
+	//public static final String EVENTSERVERURL = "http://172.16.173.50:7070";
+	public static final String EVENTSERVERURL = "http://localhost:7070";
 	
 	/** The Constant ENGINESERVERURL. */
-	public static final String ENGINESERVERURL = "http://172.16.173.50:8000";
+	//public static final String ENGINESERVERURL = "http://172.16.173.50:8000";
+	public static final String ENGINESERVERURL = "http://localhost:8000";
 	
 	/** The categories. */
 	public static List<String> categories = new ArrayList<String>();

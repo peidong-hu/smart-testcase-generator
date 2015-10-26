@@ -43,12 +43,16 @@ import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord.UserInputType
  */
 public class IntermediateResult {
 	
+	
 	/**
 	 * The Enum NonHtmlScreen.
 	 */
 	public enum ScreenType {
 		HTML, WINDOWFILEPICKER
 	}
+	
+	/** The same page update. */
+	private boolean samePageUpdate;
 	
 	/** The screen type. */
 	private ScreenType screenType = ScreenType.HTML; 
@@ -296,6 +300,20 @@ public class IntermediateResult {
 	public void setPreviousScreenTriggerClickUitr(
 			ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr) {
 		this.previousScreenTriggerClickUitr = previousScreenTriggerClickUitr;
+	}
+
+	/**
+	 * @return the samePageUpdate
+	 */
+	public boolean isSamePageUpdate() {
+		return samePageUpdate;
+	}
+
+	/**
+	 * @param samePageUpdate the samePageUpdate to set
+	 */
+	public void setSamePageUpdate(boolean samePageUpdate) {
+		this.samePageUpdate = samePageUpdate;
 	}
 
 	

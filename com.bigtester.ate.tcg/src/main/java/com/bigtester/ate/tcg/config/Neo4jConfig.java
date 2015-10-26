@@ -44,6 +44,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableNeo4jRepositories(basePackages = "com.bigtester.ate.tcg")
 @EnableTransactionManagement
 public class Neo4jConfig extends Neo4jConfiguration {
+	
+	/** The Constant NEO4JSERVER. */
+	public static final String NEO4JSERVER = "http://localhost:7474";
 
     
     /**
@@ -69,7 +72,7 @@ public class Neo4jConfig extends Neo4jConfiguration {
 	*/
 	@Override
 	public Neo4jServer neo4jServer() {
-		return new RemoteServer("http://172.16.173.50:7474");
+		return new RemoteServer(NEO4JSERVER);
 	}
 	
 	/**

@@ -343,7 +343,7 @@ public class ScreenNodeCrud {
 				trx1.close();
 			}
 		}
-		if (null != prevousScreenNode) {
+		if (null != prevousScreenNode && !intermediateResult.isSamePageUpdate()) {
 			createOrUpdateStepout(prevousScreenNode, currentNode,
 					intermediateResult);
 //			Transaction trx = getNeo4jSession().beginTransaction();
