@@ -1,4 +1,4 @@
-package com.bigtester.ate.tcg.ws;
+package com.bigtester.ate.tcg.ws;//NOPMD
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

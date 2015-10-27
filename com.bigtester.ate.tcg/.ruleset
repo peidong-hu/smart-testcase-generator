@@ -100,11 +100,11 @@
    <rule ref="rulesets/java/controversial.xml/AvoidUsingVolatile"/>
    <rule ref="rulesets/java/controversial.xml/BooleanInversion"/>
    <rule ref="rulesets/java/controversial.xml/CallSuperInConstructor"/>
-   <rule ref="rulesets/java/controversial.xml/DataflowAnomalyAnalysis">
+   <!--<rule ref="rulesets/java/controversial.xml/DataflowAnomalyAnalysis">
       <properties>
          <property name="violationSuppressRegex" value="^Found 'UR'-anomaly.*"/>
       </properties>
-   </rule>
+   </rule> -->
    <rule ref="rulesets/java/controversial.xml/DefaultPackage"/>
    <rule ref="rulesets/java/controversial.xml/DoNotCallGarbageCollectionExplicitly"/>
    <rule ref="rulesets/java/controversial.xml/DontImportSun"/>

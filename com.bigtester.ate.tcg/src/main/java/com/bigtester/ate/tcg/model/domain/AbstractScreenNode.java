@@ -37,7 +37,7 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  * @author Peidong Hu
  *
  */
-public abstract class AbstractScreenNode{
+public abstract class AbstractScreenNode{//NOPMD
 
 	/** The id. */
 	@GraphId

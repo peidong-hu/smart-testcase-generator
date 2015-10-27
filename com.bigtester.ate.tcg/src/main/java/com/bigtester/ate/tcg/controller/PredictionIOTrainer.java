@@ -228,7 +228,7 @@ final public class PredictionIOTrainer {
 		Double con = jObj.get("confidence").getAsDouble();
 		if (null == con) con = 0.0;
 		//Double con = 0.0;
-		Map<String, Double> retVal = new ConcurrentHashMap<String, Double>();
+		Map<String, Double> retVal = new ConcurrentHashMap<String, Double>();//NOPMD
 		retVal.put(cat, con);
 		return retVal;
 	}

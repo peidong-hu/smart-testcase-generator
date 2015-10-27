@@ -110,13 +110,7 @@ public class TestCase {
 	public Set<TestSuite> getHostingTestSuites() {
 		
 		final Set<TestSuite> hostingTestSuite2 = hostingTestSuites;
-		if (hostingTestSuite2 == null) {
-			throw new IllegalStateException();
-			//return new TestSuite(); //TODO will change to illegal state once we finish the recruitment code.
-			
-		} else {
-			return hostingTestSuite2;
-		}
+		return hostingTestSuite2;
 	}
 
 

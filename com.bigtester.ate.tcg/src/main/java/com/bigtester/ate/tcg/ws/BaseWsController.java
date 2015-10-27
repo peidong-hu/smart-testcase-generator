@@ -427,7 +427,7 @@ public class BaseWsController {
 	 * @return the windowsSystemFilePickerScreenNodeCrud
 	 */
 	public WindowsSystemFilePickerScreenNodeCrud getWindowsSystemFilePickerScreenNodeCrud() {
-		final WindowsSystemFilePickerScreenNodeCrud windowsSystemFilePickerScreenNodeCrud2 = windowsSystemFilePickerScreenNodeCrud;
+		final WindowsSystemFilePickerScreenNodeCrud windowsSystemFilePickerScreenNodeCrud2 = windowsSystemFilePickerScreenNodeCrud;//NOPMD
 		if (windowsSystemFilePickerScreenNodeCrud2 != null) {
 			return windowsSystemFilePickerScreenNodeCrud2;
 		} else {
@@ -439,7 +439,7 @@ public class BaseWsController {
 	 * @param windowsSystemFilePickerScreenNodeCrud the windowsSystemFilePickerScreenNodeCrud to set
 	 */
 	public void setWindowsSystemFilePickerScreenNodeCrud(
-			WindowsSystemFilePickerScreenNodeCrud windowsSystemFilePickerScreenNodeCrud) {
+			WindowsSystemFilePickerScreenNodeCrud windowsSystemFilePickerScreenNodeCrud) {//NOPMD
 		this.windowsSystemFilePickerScreenNodeCrud = windowsSystemFilePickerScreenNodeCrud;
 	}
 

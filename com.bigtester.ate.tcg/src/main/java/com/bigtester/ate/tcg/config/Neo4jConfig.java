@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class Neo4jConfig extends Neo4jConfiguration {
 	
 	/** The Constant NEO4JSERVER. */
-	public static final String NEO4JSERVER = "http://localhost:7474";
+	public static final String NEO4JSERVER_URL = "http://localhost:7474";
 
     
     /**
@@ -72,7 +72,7 @@ public class Neo4jConfig extends Neo4jConfiguration {
 	*/
 	@Override
 	public Neo4jServer neo4jServer() {
-		return new RemoteServer(NEO4JSERVER);
+		return new RemoteServer(NEO4JSERVER_URL);
 	}
 	
 	/**
