@@ -1,0 +1,1 @@
+sudo docker run --volumes-from neo4j-ate-timetree-v-ate-tcg-neo4j-dbdata -v $(pwd):/backup ubuntu sh -c 'cd / && tar xvf /backup/backup_2015-11-02.tar'

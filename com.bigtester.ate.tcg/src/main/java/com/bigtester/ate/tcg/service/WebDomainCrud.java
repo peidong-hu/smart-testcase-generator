@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.AbstractScreenNode;
-import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.WebDomain;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
@@ -51,7 +50,7 @@ public class WebDomainCrud {
 	/** The neo4j session. */
 	@Autowired
 	@Nullable
-	private Session neo4jSession;
+	private transient Session neo4jSession;
 
 	/** The screen node repo. */
 	@Autowired
@@ -304,6 +303,14 @@ public class WebDomainCrud {
 		
 	}
 
+	/**
+	 * Update screen nodes.
+	 *
+	 * @param domainNode the domain node
+	 * @param screenNode the screen node
+	 * @param commit the commit
+	 * @return the web domain
+	 */
 	public WebDomain updateScreenNodes(WebDomain domainNode, AbstractScreenNode screenNode, boolean commit) {
 		if (!domainNode.getScreens().contains(screenNode))
 			domainNode.getScreens().add(screenNode);

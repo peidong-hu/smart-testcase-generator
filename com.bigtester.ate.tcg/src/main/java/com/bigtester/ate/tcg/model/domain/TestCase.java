@@ -109,8 +109,8 @@ public class TestCase {
 	 */
 	public Set<TestSuite> getHostingTestSuites() {
 		
-		final Set<TestSuite> hostingTestSuite2 = hostingTestSuites;
-		return hostingTestSuite2;
+		return hostingTestSuites;
+		
 	}
 
 

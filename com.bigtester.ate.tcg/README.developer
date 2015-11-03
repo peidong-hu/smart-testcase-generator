@@ -40,4 +40,7 @@ Note8) Remove the warning 'Plugin execNo grammar constraints (DTD or XML Schema)
 
 Note9) Remove the warning 'Plugin execution not covered by lifecycle configuration' in XML file.
  	   https://www.eclipse.org/m2e/documentation/m2e-execution-not-covered.html 
+ 	   
+Note10) How to backup and restore neo4j database server and db data volume (/opt/data)
+	a) for data backup and restore, refer to file, retoreData and backupData, and page https://docs.docker.com/userguide/dockervolumes/#backup-restore-or-migrate-data-volumes
 

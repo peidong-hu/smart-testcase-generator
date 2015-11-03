@@ -1,0 +1,4 @@
+cd ~/tmp
+rm backup.tar
+docker run --volumes-from ate-tcg-neo4j-dbdata -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /opt/data
+mv backup.tar backup_$(date +%F).tar
