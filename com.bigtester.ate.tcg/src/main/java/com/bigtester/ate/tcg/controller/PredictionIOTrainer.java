@@ -48,8 +48,8 @@ import io.prediction.EventClient;
 final public class PredictionIOTrainer {
 	
 	/** The Constant SAMPLETEXTCLASSIFIERACCESSKEY. */
-	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "bPkjUBBUYM7yrGHDzuBLvw6F7go2vPqbqferF6MzGx7PHygsQn1elM8hRIhF3DUY";
-	//public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "KoKbS9tPyzLxZpaRunfoCUWNxd4o7YOK4h29nPTnMPKHykBDyDZuaS74CFd3AX1o";
+	//public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "bPkjUBBUYM7yrGHDzuBLvw6F7go2vPqbqferF6MzGx7PHygsQn1elM8hRIhF3DUY";
+	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "JPEaFI2xyLqpz0TGmMc156wqDl2tJ21PK6yHtMvCyev4aI5ATVnUoKTqmg3kCUBs";
 	  
 	/** The Constant EVENTSERVERURL. */
 	//public static final String EVENTSERVERURL = "http://172.16.173.50:7070";
