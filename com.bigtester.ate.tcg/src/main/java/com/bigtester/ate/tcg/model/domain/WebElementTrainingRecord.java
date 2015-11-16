@@ -106,7 +106,8 @@ public class WebElementTrainingRecord {
 	 * The Enum UserInputType.
 	 */
 	public enum UserInputType {
-		INPUT, CLICKINPUT, CLICKABLE
+		//CLICKINPUT will be deleted
+		INPUTBOX, CLICKINPUT, PAGEJUMPER, DROPDOWN, RADIOBUTTON, LINK, CHECKBOX
 	}
 
 	// @Nullable
@@ -121,7 +122,7 @@ public class WebElementTrainingRecord {
 		inputLabelName = ""; // htmlLabelContent
 		inputMLHtmlCode = "";
 		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
-		userInputType = UserInputType.INPUT;
+		userInputType = UserInputType.INPUTBOX;
 	}
 
 	/**

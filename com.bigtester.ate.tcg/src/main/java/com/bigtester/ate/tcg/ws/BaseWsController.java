@@ -27,7 +27,7 @@ public class BaseWsController {
 	/** The template. */
 	@Autowired
 	@Nullable
-	private Neo4jOperations template;
+	private transient Neo4jOperations template;
 
 	/** The screen node repo. */
 	@Autowired
@@ -102,7 +102,7 @@ public class BaseWsController {
 	/** The neo4j session. */
 	@Autowired
 	@Nullable
-	private Session neo4jSession;
+	private transient Session neo4jSession;
 
 
 

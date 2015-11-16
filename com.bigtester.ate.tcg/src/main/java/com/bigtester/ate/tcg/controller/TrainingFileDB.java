@@ -87,7 +87,7 @@ public class TrainingFileDB implements ServletContextAware {
 				if (null == temp2)
 					temp2 = "";
 				retVal = new WebElementTrainingRecord(temp, // NOPMD
-						temp2, UserInputType.INPUT);
+						temp2, UserInputType.INPUTBOX);
 			}
 		}
 		if (null == retVal)
@@ -150,7 +150,7 @@ public class TrainingFileDB implements ServletContextAware {
 		for (int index = 0; index < mlInputs.size(); index++) {
 			String temp = mlInputs.get(index);
 			if (null != temp) {
-				trainings.add(new WebElementTrainingRecord(" ", temp, WebElementTrainingRecord.UserInputType.INPUT));
+				trainings.add(new WebElementTrainingRecord(" ", temp, WebElementTrainingRecord.UserInputType.INPUTBOX));
 			}
 		}
 
