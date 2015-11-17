@@ -37,7 +37,7 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  *
  */
 @NodeEntity
-public class TestCase {
+public class TestCase extends BaseAteNode{
 	
 	/** The gid. */
 	@GraphId
@@ -55,7 +55,7 @@ public class TestCase {
 	 * Instantiates a new test case.
 	 */
 	public TestCase() {
-		super();
+		super("TestCase");
 		this.name = "";
 	}
 	
@@ -66,6 +66,7 @@ public class TestCase {
 	 * @param name the name
 	 */
 	public TestCase(String name, TestSuite parentSuite) {
+		super("TestCase");
 		this.name = name;
 		this.hostingTestSuites.add(parentSuite);
 	}

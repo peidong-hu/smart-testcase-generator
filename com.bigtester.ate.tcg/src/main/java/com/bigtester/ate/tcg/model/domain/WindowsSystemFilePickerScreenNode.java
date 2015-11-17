@@ -40,7 +40,7 @@ public class WindowsSystemFilePickerScreenNode extends FilePickerScreenNode  imp
 	 * call.
 	 */
 	public WindowsSystemFilePickerScreenNode() {
-		super();
+		super("WindowsSystemFilePickerScreenNode");
 	}
 
 	/**

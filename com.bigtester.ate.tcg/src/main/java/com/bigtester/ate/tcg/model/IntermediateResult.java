@@ -114,7 +114,7 @@ public class IntermediateResult {
 	 */
 	public void processUitr() {
 		for (ScreenUserInputTrainingRecord uitr: getUitrs()) {
-			if (uitr.getUserInputType().equals(UserInputType.CLICKINPUT)) {
+			if (!uitr.getUserInputType().equals(UserInputType.SCREENJUMPER) || !uitr.getUserInputType().equals(UserInputType.USERINPUT)) {
 				uitr = new ScreenUserClickInputTrainingRecord(uitr);
 			}
 		}

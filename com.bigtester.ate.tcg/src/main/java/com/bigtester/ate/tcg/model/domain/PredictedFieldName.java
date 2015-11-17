@@ -29,7 +29,7 @@ import org.neo4j.ogm.annotation.GraphId;
  * @author Peidong Hu
  *
  */
-public class PredictedFieldName {
+public class PredictedFieldName extends BaseAteNode{
 	
 	/** The value id. */
 	@GraphId
@@ -49,7 +49,7 @@ public class PredictedFieldName {
 	 * Instantiates a new user input value.
 	 */
 	public PredictedFieldName() {
-		super();
+		super("PredictedFieldName");
 	}
 	
 	/**
@@ -58,6 +58,7 @@ public class PredictedFieldName {
 	 * @param value the value
 	 */
 	public PredictedFieldName(String value) {
+		super("PredictedFieldName");
 		this.setValue(value);
 		this.setName(value);
 		
@@ -70,6 +71,7 @@ public class PredictedFieldName {
 	 * @param desc the desc
 	 */
 	public PredictedFieldName(String value, String desc) {
+		super("PredictedFieldName");
 		this.setValue(value);
 		this.setDesc(desc);
 		this.setName(value);

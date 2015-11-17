@@ -37,7 +37,7 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  *
  */
 @NodeEntity
-public class IndustryCategory {
+public class IndustryCategory extends BaseAteNode{
 	
 	/** The gid. */
 	@GraphId
@@ -64,6 +64,7 @@ public class IndustryCategory {
 	 * Instantiates a new industry category.
 	 */
 	public IndustryCategory() {
+		super("IndustryCategory");
 		this.name = "";
 	}
 	
@@ -74,6 +75,7 @@ public class IndustryCategory {
 	 * @param name the name
 	 */
 	public IndustryCategory(String name) {
+		super("IndustryCategory");
 		this.name = name;
 	}
 

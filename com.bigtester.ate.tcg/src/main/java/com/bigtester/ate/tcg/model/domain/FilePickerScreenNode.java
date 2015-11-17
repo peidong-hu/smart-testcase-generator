@@ -43,7 +43,15 @@ public class FilePickerScreenNode extends AbstractScreenNode  implements ATENeo4
 	 * call.
 	 */
 	public FilePickerScreenNode() {
-		super();
+		super("FilePickerScreenNode");
+	}
+	
+	/**
+	 * Instantiates a new neo4j screen node. no-arg constructor for restful
+	 * call.
+	 */
+	public FilePickerScreenNode(String nodeLabelName) {
+		super(nodeLabelName);
 	}
 
 	/**
@@ -57,7 +65,20 @@ public class FilePickerScreenNode extends AbstractScreenNode  implements ATENeo4
 	 *            the i result
 	 */
 	public FilePickerScreenNode(String name, String url, String filePathName) {
-		super(name, url);
+		super(name, url, "FilePickerScreenNode");
+		this.filePathName = filePathName;
+	}
+	
+	/**
+	 * Instantiates a new file picker screen node.
+	 *
+	 * @param name the name
+	 * @param url the url
+	 * @param filePathName the file path name
+	 * @param nodeLabelName the node label name
+	 */
+	public FilePickerScreenNode(String name, String url, String filePathName, String nodeLabelName) {
+		super(name, url, nodeLabelName);
 		this.filePathName = filePathName;
 	}
 

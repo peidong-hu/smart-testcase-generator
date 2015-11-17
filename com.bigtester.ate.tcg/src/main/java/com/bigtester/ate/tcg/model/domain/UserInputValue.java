@@ -29,7 +29,7 @@ import org.neo4j.ogm.annotation.GraphId;
  * @author Peidong Hu
  *
  */
-public class UserInputValue {
+public class UserInputValue extends BaseAteNode{
 	
 	/** The value id. */
 	@GraphId
@@ -49,7 +49,7 @@ public class UserInputValue {
 	 * Instantiates a new user input value.
 	 */
 	public UserInputValue() {
-		super();
+		super("UserInputValue");
 	}
 	
 	/**
@@ -58,6 +58,7 @@ public class UserInputValue {
 	 * @param value the value
 	 */
 	public UserInputValue(String value) {
+		super("UserInputValue");
 		this.setValue(value);
 		this.setName(value);
 	}
@@ -69,6 +70,7 @@ public class UserInputValue {
 	 * @param desc the desc
 	 */
 	public UserInputValue(String value, String desc) {
+		super("UserInputValue");
 		this.setValue(value);
 		this.setName(value);
 		this.setDesc(desc);

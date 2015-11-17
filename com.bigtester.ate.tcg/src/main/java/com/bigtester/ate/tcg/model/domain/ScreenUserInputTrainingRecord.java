@@ -35,5 +35,11 @@ import org.neo4j.ogm.annotation.NodeEntity;
  */
 @NodeEntity
 public class ScreenUserInputTrainingRecord extends WebElementTrainingRecord{
-
+	
+	/**
+	 * Instantiates a new screen user input training record.
+	 */
+	public ScreenUserInputTrainingRecord(String nodeLabelName) {
+		super(nodeLabelName);
+	}
 }

@@ -101,7 +101,7 @@ public class GreetingController extends BaseWsController{
 				PredictionIOTrainer.queryEntity(record);
 				String tmpMLHtmlCode = record.getInputMLHtmlCode();
 				Iterable<? extends WebElementTrainingRecord> existingRecord;
-				if (record.getUserInputType().equals(UserInputType.INPUTBOX)) {
+				if (record.getUserInputType().equals(UserInputType.USERINPUT)) {
 					existingRecord = getUserInputTrainingRecordRepo()
 							.findByInputMLHtmlCode(tmpMLHtmlCode);
 				} else if (record.getUserInputType().equals(UserInputType.CLICKINPUT)) {

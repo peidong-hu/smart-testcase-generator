@@ -48,6 +48,12 @@ public class ScreenBugDATAGRAPH634TrainingRecord extends WebElementTrainingRecor
 	private Set<Neo4jScreenNode> stepOuts = new HashSet<Neo4jScreenNode>();
 
 	/**
+	 * Instantiates a new screen bug datagrap h634 training record.
+	 */
+	public ScreenBugDATAGRAPH634TrainingRecord() {
+		super("ScreenBugDATAGRAPH634TrainingRecord");
+	}
+	/**
 	 * @return the stepOuts
 	 */
 	public Set<Neo4jScreenNode> getStepOuts() {

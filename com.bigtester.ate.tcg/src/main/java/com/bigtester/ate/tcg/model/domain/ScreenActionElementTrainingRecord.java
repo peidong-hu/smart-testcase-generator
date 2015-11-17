@@ -42,11 +42,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @NodeEntity
 public class ScreenActionElementTrainingRecord extends WebElementTrainingRecord{
+	
+	
 	/** The step outs. */
 	@JsonIgnore
 	@Relationship(type = Relations.STEP_OUT, direction = Relationship.OUTGOING)
 	private Set<Neo4jScreenNode> stepOuts = new HashSet<Neo4jScreenNode>();
 
+	/**
+	 * Instantiates a new screen action element training record.
+	 */
+	public ScreenActionElementTrainingRecord() {
+		super("ScreenActionElementTrainingRecord");
+	}
+	
 	/**
 	 * @return the stepOuts
 	 */

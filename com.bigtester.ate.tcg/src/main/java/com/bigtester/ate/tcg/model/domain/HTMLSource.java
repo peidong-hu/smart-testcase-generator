@@ -11,7 +11,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
  * The Class Greeting.
  */
 @NodeEntity
-public class HTMLSource {
+public class HTMLSource extends BaseAteNode{
 	
 	/** The id. */
 	@GraphId
@@ -42,7 +42,7 @@ public class HTMLSource {
 	 * there is no empty constructor
 	 */
 	public HTMLSource() {
-		super();
+		super("HTMLSource");
 		xpathOfFrame = "";
 		domDoc = "";
 		docText = "";

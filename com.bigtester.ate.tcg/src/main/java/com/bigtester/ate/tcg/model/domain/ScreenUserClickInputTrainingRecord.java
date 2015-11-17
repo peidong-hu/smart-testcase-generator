@@ -49,7 +49,7 @@ public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingR
 	 * Instantiates a new screen user click input training record.
 	 */
 	public ScreenUserClickInputTrainingRecord() {
-		super();
+		super("ScreenUserClickInputTrainingRecord");
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingR
 	 * @param uitr the uitr
 	 */
 	public ScreenUserClickInputTrainingRecord(ScreenUserInputTrainingRecord uitr) {
-		super();
+		super("ScreenUserClickInputTrainingRecord");
 		this.setId(uitr.getId());
 		this.setInputLabelName(uitr.getInputLabelName());
 		this.setInputMLHtmlCode(uitr.getInputMLHtmlCode());

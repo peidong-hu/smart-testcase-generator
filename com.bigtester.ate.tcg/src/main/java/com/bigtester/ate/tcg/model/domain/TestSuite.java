@@ -39,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 @NodeEntity
-public class TestSuite {
+public class TestSuite extends BaseAteNode{
 	
 	/** The gid. */
 	@GraphId
@@ -64,7 +64,7 @@ public class TestSuite {
 	 * Instantiates a new test suite. Constructor for web service call
 	 */
 	public TestSuite() {
-		super();
+		super("TestSuite");
 		this.name = "";
 	}
 	/**
@@ -74,6 +74,7 @@ public class TestSuite {
 	 * @param name the name
 	 */
 	public TestSuite(String name) {
+		super("UserInputValue");
 		this.name = name;
 	}
 

@@ -37,7 +37,7 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  * @author Peidong Hu
  *
  */
-public abstract class AbstractScreenNode{//NOPMD
+public abstract class AbstractScreenNode extends BaseAteNode{//NOPMD
 
 	/** The id. */
 	@GraphId
@@ -66,8 +66,8 @@ public abstract class AbstractScreenNode{//NOPMD
 	 * Instantiates a new neo4j screen node. no-arg constructor for restful
 	 * call.
 	 */
-	public AbstractScreenNode() {
-		super();
+	public AbstractScreenNode(String nodeLabelName) {
+		super(nodeLabelName);
 	}
 
 	/**
@@ -80,7 +80,8 @@ public abstract class AbstractScreenNode{//NOPMD
 	 * @param iResult
 	 *            the i result
 	 */
-	public AbstractScreenNode(String name, String url) {
+	public AbstractScreenNode(String name, String url, String nodeLabelName) {
+		super(nodeLabelName);
 		this.name = name;
 		this.url = url;
 	}

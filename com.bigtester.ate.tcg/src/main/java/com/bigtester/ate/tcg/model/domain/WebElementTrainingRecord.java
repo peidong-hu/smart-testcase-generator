@@ -44,7 +44,7 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  *
  */
 @NodeEntity
-public class WebElementTrainingRecord {
+public class WebElementTrainingRecord extends BaseAteNode{
 	/** The id. */
 	@GraphId
 	@Nullable
@@ -103,11 +103,28 @@ public class WebElementTrainingRecord {
 	private UserInputType userInputType;
 	
 	/**
-	 * The Enum UserInputType.
+	 * The Enum UserInputType. USERINPUT is pure user data input which doesn't
+	 * trigger a new element or new page, it could be any type of html input
+	 * element including text input, radio button, check box or selection
+	 * dropdown. SREENJUMPER leads to a new screen InSCREENJUMPER triggers a in
+	 * page elements changes, for example a new element added in this page
+	 * (screen) The difference between screen jumper and inscreen jumper is
+	 * really depends on how pio predicts. The phillosophy is that a minor
+	 * change, not big enough to let pio recognized as a new screen.
+	 * 
+	 * VERY IMPORTANT, pio training and prediction will use the combination of
+	 * field name and userinputtype as the training/predict result. For example,
+	 * a username field and userinput combination is the pio result, which is
+	 * labaled as username_userinput. So the pio always returns result as,
+	 * FieldName_UserInputType. Engine script needs to decouple the result to
+	 * two variables, FieldName and UserInputType. This will improve the
+	 * intelligence of the script to know what is expected after the action on a
+	 * particular element, either a screen jump or in screen jump or nothing
+	 * instead of a input
 	 */
 	public enum UserInputType {
-		//CLICKINPUT will be deleted
-		INPUTBOX, CLICKINPUT, PAGEJUMPER, DROPDOWN, RADIOBUTTON, LINK, CHECKBOX
+		
+		USERINPUT, SCREENJUMPER, INSCREENJUMPER
 	}
 
 	// @Nullable
@@ -117,12 +134,23 @@ public class WebElementTrainingRecord {
 	 * Instantiates a new user input training record.
 	 */
 
-	public WebElementTrainingRecord() {
-		super();
+	public WebElementTrainingRecord(String nodeLabelName) {
+		super(nodeLabelName);
 		inputLabelName = ""; // htmlLabelContent
 		inputMLHtmlCode = "";
 		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
-		userInputType = UserInputType.INPUTBOX;
+		userInputType = UserInputType.USERINPUT;
+	}
+	
+	/**
+	 * Instantiates a new web element training record.
+	 */
+	public WebElementTrainingRecord() {
+		super("WebElementTrainingRecord");
+		inputLabelName = ""; // htmlLabelContent
+		inputMLHtmlCode = "";
+		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
+		userInputType = UserInputType.USERINPUT;
 	}
 
 	/**
@@ -133,7 +161,24 @@ public class WebElementTrainingRecord {
 	 * @param mlHtmlCode
 	 *            the ml html code
 	 */
+	public WebElementTrainingRecord(String labelName, String mlHtmlCode, UserInputType userInputType, String nodeLabelName) {
+		super(nodeLabelName);
+		this.inputLabelName = labelName;
+		this.inputMLHtmlCode = mlHtmlCode;
+		trainedResult = ""; // "__ATE__Error___" or succeed with eventid
+		
+		this.userInputType = userInputType;
+	}
+	
+	/**
+	 * Instantiates a new web element training record.
+	 *
+	 * @param labelName the label name
+	 * @param mlHtmlCode the ml html code
+	 * @param userInputType the user input type
+	 */
 	public WebElementTrainingRecord(String labelName, String mlHtmlCode, UserInputType userInputType) {
+		super("WebElementTrainingRecord");
 		this.inputLabelName = labelName;
 		this.inputMLHtmlCode = mlHtmlCode;
 		trainedResult = ""; // "__ATE__Error___" or succeed with eventid

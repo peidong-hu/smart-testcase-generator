@@ -37,7 +37,7 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  *
  */
 @NodeEntity
-public class WebDomain {
+public class WebDomain extends BaseAteNode{
 	
 	/** The gid. */
 	@GraphId
@@ -55,7 +55,7 @@ public class WebDomain {
 	 * Instantiates a new web domain.
 	 */
 	public WebDomain() {
-		super();
+		super("WebDomain");
 		domainName = "";
 	}
 	
@@ -66,6 +66,7 @@ public class WebDomain {
 	 * @param name the name
 	 */
 	public WebDomain(String domainName) {
+		super("WebDomain");
 		this.domainName = domainName;
 	}
 	/**
