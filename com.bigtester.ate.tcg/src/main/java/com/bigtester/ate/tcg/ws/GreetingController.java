@@ -104,7 +104,7 @@ public class GreetingController extends BaseWsController{
 				if (record.getUserInputType().equals(UserInputType.USERINPUT)) {
 					existingRecord = getUserInputTrainingRecordRepo()
 							.findByInputMLHtmlCode(tmpMLHtmlCode);
-				} else if (record.getUserInputType().equals(UserInputType.CLICKINPUT)) {
+				} else if (record.getUserInputType().equals(UserInputType.INSCREENJUMPER)) {
 					existingRecord = getUserClickInputTrainingRecordRepo()
 							.findByInputMLHtmlCode(tmpMLHtmlCode);
 				}

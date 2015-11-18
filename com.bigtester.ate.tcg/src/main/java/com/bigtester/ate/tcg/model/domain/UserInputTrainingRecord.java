@@ -18,37 +18,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.model.repository;
+package com.bigtester.ate.tcg.model.domain;
 
-import org.springframework.data.neo4j.repository.GraphRepository;
-import org.springframework.stereotype.Repository;
-
-import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
-
+import org.neo4j.ogm.annotation.NodeEntity;
 
 // TODO: Auto-generated Javadoc
 /**
- * This class ScreenNodeRepo defines ....
+ * This class TrainingRecord defines ....
  * @author Peidong Hu
  *
  */
-@Repository
-public interface UserInputTrainingRecordRepo extends GraphRepository<UserInputTrainingRecord> {
+
+/**
+ * @author ashraf
+ *
+ */
+@NodeEntity
+public class UserInputTrainingRecord extends WebElementTrainingRecord{
 	
 	/**
-	 * Find by pio predict label result value.
-	 *
-	 * @param value the value
-	 * @return the iterable
+	 * Instantiates a new screen user input training record.
 	 */
-	Iterable<UserInputTrainingRecord> findByPioPredictLabelResultValue(String value);
-	
-	/**
-	 * Find by input ml html code.
-	 *
-	 * @param htmlCode the html code
-	 * @return the iterable
-	 */
-	Iterable<UserInputTrainingRecord> findByInputMLHtmlCode(String htmlCode);
+	public UserInputTrainingRecord() {
+		super("UserInputTrainingRecord");
+	}
 	
 }

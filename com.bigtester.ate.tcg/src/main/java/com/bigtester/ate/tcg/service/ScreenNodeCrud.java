@@ -30,9 +30,9 @@ import org.springframework.stereotype.Service;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
-import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.ScreenUserClickInputTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.ScreenJumperElementTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.InScreenJumperTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestCase;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
@@ -55,7 +55,7 @@ public class ScreenNodeCrud {
 	/** The neo4j session. */
 	@Autowired
 	@Nullable
-	private Session neo4jSession;
+	private transient Session neo4jSession;
 
 	/** The screen node repo. */
 	@Autowired
@@ -422,29 +422,29 @@ public class ScreenNodeCrud {
 		if (!screenNode.getTestcases().contains(testcaseNode))
 			screenNode.getTestcases().add(testcaseNode);
 		
-		Set<ScreenUserInputTrainingRecord> uitrs = screenNode.getUitrs();
-		for (java.util.Iterator<? extends ScreenUserInputTrainingRecord> itr = uitrs
+		Set<UserInputTrainingRecord> uitrs = screenNode.getUitrs();
+		for (java.util.Iterator<? extends UserInputTrainingRecord> itr = uitrs
 				.iterator(); itr.hasNext();) {
-			ScreenUserInputTrainingRecord uitr = itr.next();
+			UserInputTrainingRecord uitr = itr.next();
 			if (!uitr.getTestcases().contains(testcaseNode)) {
 				uitr.getTestcases().add(testcaseNode);
 			}
 		}
 
-		Set<ScreenUserClickInputTrainingRecord> clickUitrs = screenNode.getClickUitrs();
-		for (java.util.Iterator<ScreenUserClickInputTrainingRecord> itr = clickUitrs
+		Set<InScreenJumperTrainingRecord> clickUitrs = screenNode.getClickUitrs();
+		for (java.util.Iterator<InScreenJumperTrainingRecord> itr = clickUitrs
 				.iterator(); itr.hasNext();) {
-			ScreenUserClickInputTrainingRecord uitr = itr.next();
+			InScreenJumperTrainingRecord uitr = itr.next();
 			if (!uitr.getTestcases().contains(testcaseNode)) {
 				uitr.getTestcases().add(testcaseNode);
 			}
 		}
 		
-		Set<ScreenActionElementTrainingRecord> actionUitrs = screenNode
+		Set<ScreenJumperElementTrainingRecord> actionUitrs = screenNode
 				.getActionUitrs();
-		for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = actionUitrs
+		for (java.util.Iterator<ScreenJumperElementTrainingRecord> itr = actionUitrs
 				.iterator(); itr.hasNext();) {
-			ScreenActionElementTrainingRecord uitr = itr.next();
+			ScreenJumperElementTrainingRecord uitr = itr.next();
 			if (!uitr.getTestcases().contains(testcaseNode)) {
 				uitr.getTestcases().add(testcaseNode);
 			}
@@ -468,15 +468,15 @@ public class ScreenNodeCrud {
 			Neo4jScreenNode endNode, IntermediateResult iResult) {
 		// TODO, add test case filter after finish job application code
 
-		Set<ScreenActionElementTrainingRecord> startActionUitrs = startNode
+		Set<ScreenJumperElementTrainingRecord> startActionUitrs = startNode
 				.getActionUitrs();
 
 		if (startActionUitrs.isEmpty() || startActionUitrs.size() > 1)
 			throw new IllegalStateException("start action uitrs");
 		else {
-			for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = startActionUitrs
+			for (java.util.Iterator<ScreenJumperElementTrainingRecord> itr = startActionUitrs
 					.iterator(); itr.hasNext();) {
-				ScreenActionElementTrainingRecord first = itr.next();
+				ScreenJumperElementTrainingRecord first = itr.next();
 				if (first.getStepOuts().isEmpty()
 						|| !first.getStepOuts().contains(endNode)) {
 					// create

@@ -38,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 @NodeEntity
-public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingRecord{
+public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 	/** The step outs. */
 	@JsonIgnore
 	@Relationship(type = Relations.STEP_OUT, direction = Relationship.OUTGOING)
@@ -48,7 +48,7 @@ public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingR
 	/**
 	 * Instantiates a new screen user click input training record.
 	 */
-	public ScreenUserClickInputTrainingRecord() {
+	public InScreenJumperTrainingRecord() {
 		super("ScreenUserClickInputTrainingRecord");
 	}
 	
@@ -57,7 +57,7 @@ public class ScreenUserClickInputTrainingRecord extends ScreenUserInputTrainingR
 	 *
 	 * @param uitr the uitr
 	 */
-	public ScreenUserClickInputTrainingRecord(ScreenUserInputTrainingRecord uitr) {
+	public InScreenJumperTrainingRecord(UserInputTrainingRecord uitr) {
 		super("ScreenUserClickInputTrainingRecord");
 		this.setId(uitr.getId());
 		this.setInputLabelName(uitr.getInputLabelName());

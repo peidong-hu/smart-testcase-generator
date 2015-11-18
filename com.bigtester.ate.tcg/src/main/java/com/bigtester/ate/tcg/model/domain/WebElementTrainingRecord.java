@@ -45,6 +45,7 @@ import com.bigtester.ate.tcg.model.relationship.Relations;
  */
 @NodeEntity
 public class WebElementTrainingRecord extends BaseAteNode{
+	
 	/** The id. */
 	@GraphId
 	@Nullable

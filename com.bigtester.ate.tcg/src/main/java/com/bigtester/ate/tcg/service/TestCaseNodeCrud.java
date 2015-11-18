@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
-import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.ScreenJumperElementTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestCase;
 import com.bigtester.ate.tcg.model.domain.TestSuite;
 import com.bigtester.ate.tcg.model.repository.TestCaseRepo;
@@ -49,7 +49,7 @@ public class TestCaseNodeCrud {
 	/** The neo4j session. */
 	@Autowired
 	@Nullable
-	private Session neo4jSession;
+	private transient Session neo4jSession;
 
 	/** The test case repo. */
 	@Autowired
@@ -179,15 +179,15 @@ public class TestCaseNodeCrud {
 			Neo4jScreenNode endNode, IntermediateResult iResult) {
 		// TODO, add test case filter after finish job application code
 
-		Set<ScreenActionElementTrainingRecord> startActionUitrs = startNode
+		Set<ScreenJumperElementTrainingRecord> startActionUitrs = startNode
 				.getActionUitrs();
 
 		if (startActionUitrs.isEmpty() || startActionUitrs.size() > 1)
 			throw new IllegalStateException("start action uitrs");
 		else {
-			for (java.util.Iterator<ScreenActionElementTrainingRecord> itr = startActionUitrs
+			for (java.util.Iterator<ScreenJumperElementTrainingRecord> itr = startActionUitrs
 					.iterator(); itr.hasNext();) {
-				ScreenActionElementTrainingRecord first = itr.next();
+				ScreenJumperElementTrainingRecord first = itr.next();
 				if (first.getStepOuts().isEmpty()
 						|| !first.getStepOuts().contains(endNode)) {
 					// create

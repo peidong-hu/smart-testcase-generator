@@ -5,7 +5,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.template.Neo4jOperations;
 import org.springframework.data.neo4j.template.Neo4jTemplate;
-import com.bigtester.ate.tcg.model.repository.ActionElementTrainingRecordRepo;
+import com.bigtester.ate.tcg.model.repository.ScreenJumperTrainingRecordRepo;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
 import com.bigtester.ate.tcg.model.repository.ScreenNodeRepo;
 import com.bigtester.ate.tcg.model.repository.TestCaseRepo;
@@ -57,7 +57,7 @@ public class BaseWsController {
 	@Autowired
 	@Nullable
 	/** The action element training record repo. */
-	private ActionElementTrainingRecordRepo actionElementTrainingRecordRepo;
+	private ScreenJumperTrainingRecordRepo actionElementTrainingRecordRepo;
 
 	/** The web domain repo. */
 	@Autowired
@@ -345,8 +345,8 @@ public class BaseWsController {
 	/**
 	 * @return the actionElementTrainingRecordRepo
 	 */
-	public ActionElementTrainingRecordRepo getActionElementTrainingRecordRepo() {
-		final ActionElementTrainingRecordRepo actionElementTrainingRecordRepo2 = actionElementTrainingRecordRepo;
+	public ScreenJumperTrainingRecordRepo getActionElementTrainingRecordRepo() {
+		final ScreenJumperTrainingRecordRepo actionElementTrainingRecordRepo2 = actionElementTrainingRecordRepo;
 		if (actionElementTrainingRecordRepo2 != null) {
 			return actionElementTrainingRecordRepo2;
 		} else {
@@ -359,7 +359,7 @@ public class BaseWsController {
 	 *            the actionElementTrainingRecordRepo to set
 	 */
 	public void setActionElementTrainingRecordRepo(
-			ActionElementTrainingRecordRepo actionElementTrainingRecordRepo) {
+			ScreenJumperTrainingRecordRepo actionElementTrainingRecordRepo) {
 		this.actionElementTrainingRecordRepo = actionElementTrainingRecordRepo;
 	}
 

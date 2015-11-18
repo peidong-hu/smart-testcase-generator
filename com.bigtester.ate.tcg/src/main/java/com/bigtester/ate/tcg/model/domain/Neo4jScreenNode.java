@@ -56,11 +56,11 @@ public class Neo4jScreenNode extends AbstractScreenNode  implements ATENeo4jNode
 
 	/** The click uitrs. */
 	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
-	private Set<ScreenUserClickInputTrainingRecord> clickUitrs = new HashSet<ScreenUserClickInputTrainingRecord>();
+	private Set<InScreenJumperTrainingRecord> clickUitrs = new HashSet<InScreenJumperTrainingRecord>();
 	
 	/** The action uitrs. */
 	@Relationship(type = Relations.PREDICTED_USER_ACTIONELEMENT_RESULTS)
-	private Set<ScreenActionElementTrainingRecord> actionUitrs = new HashSet<ScreenActionElementTrainingRecord>();
+	private Set<ScreenJumperElementTrainingRecord> actionUitrs = new HashSet<ScreenJumperElementTrainingRecord>();
 
 //	/** The testcases. */
 //	@Relationship(type = Relations.IN_TESTCASE)
@@ -188,14 +188,14 @@ public class Neo4jScreenNode extends AbstractScreenNode  implements ATENeo4jNode
 	/**
 	 * @return the actionUitrs
 	 */
-	public Set<ScreenActionElementTrainingRecord> getActionUitrs() {
+	public Set<ScreenJumperElementTrainingRecord> getActionUitrs() {
 		return actionUitrs;
 	}
 
 	/**
 	 * @param actionUitrs the actionUitrs to set
 	 */
-	public void setActionUitrs(Set<ScreenActionElementTrainingRecord> actionUitrs) {
+	public void setActionUitrs(Set<ScreenJumperElementTrainingRecord> actionUitrs) {
 		this.actionUitrs = actionUitrs;
 	}
 
@@ -204,14 +204,14 @@ public class Neo4jScreenNode extends AbstractScreenNode  implements ATENeo4jNode
 	/**
 	 * @return the clickUitrs
 	 */
-	public Set<ScreenUserClickInputTrainingRecord> getClickUitrs() {
+	public Set<InScreenJumperTrainingRecord> getClickUitrs() {
 		return clickUitrs;
 	}
 
 	/**
 	 * @param clickUitrs the clickUitrs to set
 	 */
-	public void setClickUitrs(Set<ScreenUserClickInputTrainingRecord> clickUitrs) {
+	public void setClickUitrs(Set<InScreenJumperTrainingRecord> clickUitrs) {
 		this.clickUitrs = clickUitrs;
 	}
 

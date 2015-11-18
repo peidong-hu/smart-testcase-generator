@@ -41,7 +41,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 @NodeEntity
-public class ScreenActionElementTrainingRecord extends WebElementTrainingRecord{
+public class ScreenJumperElementTrainingRecord extends WebElementTrainingRecord{
 	
 	
 	/** The step outs. */
@@ -52,7 +52,7 @@ public class ScreenActionElementTrainingRecord extends WebElementTrainingRecord{
 	/**
 	 * Instantiates a new screen action element training record.
 	 */
-	public ScreenActionElementTrainingRecord() {
+	public ScreenJumperElementTrainingRecord() {
 		super("ScreenActionElementTrainingRecord");
 	}
 	

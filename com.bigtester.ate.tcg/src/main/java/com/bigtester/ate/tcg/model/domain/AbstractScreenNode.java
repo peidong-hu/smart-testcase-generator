@@ -56,11 +56,11 @@ public abstract class AbstractScreenNode extends BaseAteNode{//NOPMD
 
 	/** The predicted user input results. */
 	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
-	private Set<ScreenUserInputTrainingRecord> uitrs = new HashSet<ScreenUserInputTrainingRecord>();
+	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
 	
 	/** The previous screen trigger uitrs. */
 	@Nullable
-	private ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr;
+	private InScreenJumperTrainingRecord previousScreenTriggerClickUitr;
 	
 	/**
 	 * Instantiates a new neo4j screen node. no-arg constructor for restful
@@ -149,14 +149,14 @@ public abstract class AbstractScreenNode extends BaseAteNode{//NOPMD
 	/**
 	 * @return the uitrs
 	 */
-	public Set<ScreenUserInputTrainingRecord> getUitrs() {
+	public Set<UserInputTrainingRecord> getUitrs() {
 		return uitrs;
 	}
 
 	/**
 	 * @param uitrs the uitrs to set
 	 */
-	public void setUitrs(Set<ScreenUserInputTrainingRecord> uitrs) {
+	public void setUitrs(Set<UserInputTrainingRecord> uitrs) {
 		this.uitrs = uitrs;
 	}
 
@@ -164,7 +164,7 @@ public abstract class AbstractScreenNode extends BaseAteNode{//NOPMD
 	 * @return the previousScreenTriggerClickUitr
 	 */
 	@Nullable
-	public ScreenUserClickInputTrainingRecord getPreviousScreenTriggerClickUitr() {
+	public InScreenJumperTrainingRecord getPreviousScreenTriggerClickUitr() {
 		return previousScreenTriggerClickUitr;
 	}
 
@@ -172,7 +172,7 @@ public abstract class AbstractScreenNode extends BaseAteNode{//NOPMD
 	 * @param previousScreenTriggerClickUitr the previousScreenTriggerClickUitr to set
 	 */
 	public void setPreviousScreenTriggerClickUitr(
-			ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr) {
+			InScreenJumperTrainingRecord previousScreenTriggerClickUitr) {
 		this.previousScreenTriggerClickUitr = previousScreenTriggerClickUitr;
 	}
 }

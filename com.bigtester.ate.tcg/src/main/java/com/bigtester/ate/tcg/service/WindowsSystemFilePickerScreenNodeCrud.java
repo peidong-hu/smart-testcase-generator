@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.AbstractScreenNode;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
-import com.bigtester.ate.tcg.model.domain.ScreenUserClickInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.InScreenJumperTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestCase;
 import com.bigtester.ate.tcg.model.domain.WindowsSystemFilePickerScreenNode;
 import com.bigtester.ate.tcg.model.repository.PredictedFieldNameRepo;
@@ -54,7 +54,7 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 	/** The neo4j session. */
 	@Autowired
 	@Nullable
-	private Session neo4jSession;
+	private transient Session neo4jSession;
 
 	/** The windows file picker screen node repo. */
 	@Autowired
@@ -260,17 +260,18 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 			}
 		}
 
-		WindowsSystemFilePickerScreenNode currentNode = getWindowsFilePickerScreenNodeRepo()
-				.getWindowsSystemFilePickerScreenNodeByUrlAndName(
-						intermediateResult.getScreenUrl(),
-						intermediateResult.getScreenName());
-		ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr = intermediateResult.getPreviousScreenTriggerClickUitr();
+		
+		InScreenJumperTrainingRecord previousScreenTriggerClickUitr = intermediateResult.getPreviousScreenTriggerClickUitr();
 		String filePathName = "";
 		if (null != previousScreenTriggerClickUitr && previousScreenTriggerClickUitr.getUserValues().iterator().hasNext()) {
 			filePathName = previousScreenTriggerClickUitr.getUserValues().iterator().next().getValue();
 		} else {
 			throw new IllegalStateException("previousScreenTriggerClickUitr");
 		}
+		WindowsSystemFilePickerScreenNode currentNode = getWindowsFilePickerScreenNodeRepo()
+				.getWindowsSystemFilePickerScreenNodeByUrlAndName(
+						intermediateResult.getScreenUrl(),
+						intermediateResult.getScreenName());
 		if (null == currentNode) {
 			currentNode = new WindowsSystemFilePickerScreenNode(//NOPMD
 				intermediateResult.getScreenName(),
@@ -279,7 +280,7 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		} else {
 			currentNode.setName(intermediateResult.getScreenName());
 			currentNode.setFilePathName(filePathName);
-			ScreenUserClickInputTrainingRecord existingClickUitr = currentNode.getPreviousScreenTriggerClickUitr();
+			InScreenJumperTrainingRecord existingClickUitr = currentNode.getPreviousScreenTriggerClickUitr();
 			if (null != existingClickUitr ) {
 				Long gid = existingClickUitr.getId();
 				if (null != gid&& !gid.equals(previousScreenTriggerClickUitr.getId()))
@@ -369,7 +370,7 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 			WindowsSystemFilePickerScreenNode endNode, IntermediateResult iResult) {
 		// TODO, add test case filter after finish job application code
 
-		ScreenUserClickInputTrainingRecord startClickUitr = endNode.getPreviousScreenTriggerClickUitr();
+		InScreenJumperTrainingRecord startClickUitr = endNode.getPreviousScreenTriggerClickUitr();
 				
 
 		if (null == startClickUitr) 

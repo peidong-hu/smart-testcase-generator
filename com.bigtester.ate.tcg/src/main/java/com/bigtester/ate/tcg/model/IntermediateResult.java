@@ -29,11 +29,11 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
 import com.bigtester.ate.tcg.model.domain.IndustryCategory;
-import com.bigtester.ate.tcg.model.domain.ScreenActionElementTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.ScreenUserClickInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.ScreenJumperElementTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.UserInputTrainingRecord;
+import com.bigtester.ate.tcg.model.domain.InScreenJumperTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.TestSuite;
-import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord.UserInputType;
+//import com.bigtester.ate.tcg.model.domain.WebElementTrainingRecord.UserInputType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -61,18 +61,18 @@ public class IntermediateResult {
 	private Set<HTMLSource> domStrings = new HashSet<HTMLSource>();
 	
 	/** The uitrs. */
-	private Set<ScreenUserInputTrainingRecord> uitrs = new HashSet<ScreenUserInputTrainingRecord>();
+	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
 	
 	/** The click uitrs. */
-	private Set<ScreenUserClickInputTrainingRecord> clickUitrs = new HashSet<ScreenUserClickInputTrainingRecord>();
+	private Set<InScreenJumperTrainingRecord> clickUitrs = new HashSet<InScreenJumperTrainingRecord>();
 	
 	/** The previous screen trigger uitrs. */
 	@Nullable
-	private ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr;
+	private InScreenJumperTrainingRecord previousScreenTriggerClickUitr;
 	
 	
 	/** The action uitrs. */
-	private Set<ScreenActionElementTrainingRecord> actionUitrs = new HashSet<ScreenActionElementTrainingRecord>();
+	private Set<ScreenJumperElementTrainingRecord> actionUitrs = new HashSet<ScreenJumperElementTrainingRecord>();
 	
 	/** The test suites map. */
 	private List<TestSuite> testSuitesMap = new ArrayList<TestSuite>();
@@ -109,16 +109,16 @@ public class IntermediateResult {
 		super();
 	}
 	
-	/**
-	 * Process uitr.
-	 */
-	public void processUitr() {
-		for (ScreenUserInputTrainingRecord uitr: getUitrs()) {
-			if (!uitr.getUserInputType().equals(UserInputType.SCREENJUMPER) || !uitr.getUserInputType().equals(UserInputType.USERINPUT)) {
-				uitr = new ScreenUserClickInputTrainingRecord(uitr);
-			}
-		}
-	}
+//	/**
+//	 * Process uitr.
+//	 */
+//	public void processUitr() {
+//		for (UserInputTrainingRecord uitr: getUitrs()) {
+//			if (!uitr.getUserInputType().equals(UserInputType.SCREENJUMPER) || !uitr.getUserInputType().equals(UserInputType.USERINPUT)) {
+//				uitr = new InScreenJumperTrainingRecord(uitr);
+//			}
+//		}
+//	}
 	
 	/**
 	 * @return the domStrings
@@ -135,13 +135,13 @@ public class IntermediateResult {
 	/**
 	 * @return the uitrs
 	 */
-	public Set<ScreenUserInputTrainingRecord> getUitrs() {
+	public Set<UserInputTrainingRecord> getUitrs() {
 		return uitrs;
 	}
 	/**
 	 * @param uitrs the uitrs to set
 	 */
-	public void setUitrs(Set<ScreenUserInputTrainingRecord> uitrs) {
+	public void setUitrs(Set<UserInputTrainingRecord> uitrs) {
 		this.uitrs = uitrs;
 	}
 	/**
@@ -248,27 +248,27 @@ public class IntermediateResult {
 	/**
 	 * @return the actionUitrs
 	 */
-	public Set<ScreenActionElementTrainingRecord> getActionUitrs() {
+	public Set<ScreenJumperElementTrainingRecord> getActionUitrs() {
 		return actionUitrs;
 	}
 	/**
 	 * @param actionUitrs the actionUitrs to set
 	 */
-	public void setActionUitrs(Set<ScreenActionElementTrainingRecord> actionUitrs) {
+	public void setActionUitrs(Set<ScreenJumperElementTrainingRecord> actionUitrs) {
 		this.actionUitrs = actionUitrs;
 	}
 
 	/**
 	 * @return the clickUitrs
 	 */
-	public Set<ScreenUserClickInputTrainingRecord> getClickUitrs() {
+	public Set<InScreenJumperTrainingRecord> getClickUitrs() {
 		return clickUitrs;
 	}
 
 	/**
 	 * @param clickUitrs the clickUitrs to set
 	 */
-	public void setClickUitrs(Set<ScreenUserClickInputTrainingRecord> clickUitrs) {
+	public void setClickUitrs(Set<InScreenJumperTrainingRecord> clickUitrs) {
 		this.clickUitrs = clickUitrs;
 	}
 
@@ -290,7 +290,7 @@ public class IntermediateResult {
 	 * @return the previousScreenTriggerClickUitr
 	 */
 	@Nullable
-	public ScreenUserClickInputTrainingRecord getPreviousScreenTriggerClickUitr() {
+	public InScreenJumperTrainingRecord getPreviousScreenTriggerClickUitr() {
 		return previousScreenTriggerClickUitr;
 	}
 
@@ -298,7 +298,7 @@ public class IntermediateResult {
 	 * @param previousScreenTriggerClickUitr the previousScreenTriggerClickUitr to set
 	 */
 	public void setPreviousScreenTriggerClickUitr(
-			ScreenUserClickInputTrainingRecord previousScreenTriggerClickUitr) {
+			InScreenJumperTrainingRecord previousScreenTriggerClickUitr) {
 		this.previousScreenTriggerClickUitr = previousScreenTriggerClickUitr;
 	}
 

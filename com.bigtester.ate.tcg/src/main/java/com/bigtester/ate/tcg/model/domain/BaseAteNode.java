@@ -18,38 +18,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.bigtester.ate.tcg.model.repository;
-
-import org.springframework.data.neo4j.repository.GraphRepository;
-import org.springframework.stereotype.Repository;
-
-import com.bigtester.ate.tcg.model.domain.ScreenUserClickInputTrainingRecord;
-import com.bigtester.ate.tcg.model.domain.ScreenUserInputTrainingRecord;
+package com.bigtester.ate.tcg.model.domain;
+ 
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 
 
-// TODO: Auto-generated Javadoc
+
+
 /**
- * This class ScreenNodeRepo defines ....
+ * This class AbstractAteNode defines ....
  * @author Peidong Hu
  *
  */
-@Repository
-public interface UserClickInputTrainingRecordRepo extends GraphRepository<ScreenUserClickInputTrainingRecord> {
+@NodeEntity
+public class BaseAteNode {
+	
+	/** The node label name. */
+	@Property
+	private String nodeLabelName;
 	
 	/**
-	 * Find by pio predict label result value.
+	 * Instantiates a new base ate node.
 	 *
-	 * @param value the value
-	 * @return the iterable
+	 * @param nodeLblName the node label name
 	 */
-	Iterable<ScreenUserInputTrainingRecord> findByPioPredictLabelResultValue(String value);
+	public BaseAteNode(String nodeLblName) {
+		nodeLabelName = nodeLblName;
+	}
+	
 	
 	/**
-	 * Find by input ml html code.
-	 *
-	 * @param htmlCode the html code
-	 * @return the iterable
+	 * @return the nodeLabelName
 	 */
-	Iterable<ScreenUserInputTrainingRecord> findByInputMLHtmlCode(String htmlCode);
+	public String getNodeLabelName() {
+		return nodeLabelName;
+	}
+
+	/**
+	 * @param nodeLabelName the nodeLabelName to set
+	 */
+	public void setNodeLabelName(String nodeLabelName) {
+		this.nodeLabelName = nodeLabelName;
+	}
 	
+
 }
