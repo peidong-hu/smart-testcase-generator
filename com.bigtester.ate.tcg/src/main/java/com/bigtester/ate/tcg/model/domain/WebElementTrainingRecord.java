@@ -66,7 +66,8 @@ public class WebElementTrainingRecord extends BaseAteNode{
 	public void setId(@Nullable Long id) {//NOPMD required by neo4j
 		this.id = id;
 	}
-
+	/** The action trigger. */
+	private transient boolean actionTrigger;
 	
 	/** The input label name. */
 	@Property
@@ -316,5 +317,19 @@ public class WebElementTrainingRecord extends BaseAteNode{
 	 */
 	public void setTestcases(Collection<TestCase> testcases) {
 		this.testcases = testcases;
+	}
+
+	/**
+	 * @return the actionTrigger
+	 */
+	public boolean isActionTrigger() {
+		return actionTrigger;
+	}
+
+	/**
+	 * @param actionTrigger the actionTrigger to set
+	 */
+	public void setActionTrigger(boolean actionTrigger) {
+		this.actionTrigger = actionTrigger;
 	}
 }

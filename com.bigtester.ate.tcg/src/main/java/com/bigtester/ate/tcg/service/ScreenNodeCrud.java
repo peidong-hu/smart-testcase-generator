@@ -471,8 +471,13 @@ public class ScreenNodeCrud {
 		Set<ScreenJumperElementTrainingRecord> startActionUitrs = startNode
 				.getActionUitrs();
 
-		if (startActionUitrs.isEmpty() || startActionUitrs.size() > 1)
-			throw new IllegalStateException("start action uitrs");
+	
+
+		if (startActionUitrs.isEmpty()) {
+			throw new IllegalStateException("# of start action uitr is 0");
+		} else if (startActionUitrs.size() > 1) { //NOPMD
+			throw new IllegalStateException("# of start action uitrs greater than 1.");
+		}
 		else {
 			for (java.util.Iterator<ScreenJumperElementTrainingRecord> itr = startActionUitrs
 					.iterator(); itr.hasNext();) {

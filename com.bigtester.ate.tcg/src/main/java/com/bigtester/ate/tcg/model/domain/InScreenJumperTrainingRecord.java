@@ -45,6 +45,12 @@ public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 	@Nullable
 	private AbstractScreenNode stepOut;
 
+	
+
+	
+	/** The click times. */
+	private int clickTimes;
+	
 	/**
 	 * Instantiates a new screen user click input training record.
 	 */
@@ -81,5 +87,19 @@ public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 	 */
 	public void setStepOut(AbstractScreenNode stepOut) {
 		this.stepOut = stepOut;
+	}
+
+	/**
+	 * @return the clickTimes
+	 */
+	public int getClickTimes() {
+		return clickTimes;
+	}
+	
+	/**
+	 * @param clickTimes the clickTimes to set
+	 */
+	public void setClickTimes(int clickTimes) {
+		this.clickTimes = clickTimes;
 	}
 }

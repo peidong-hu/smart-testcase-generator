@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import com.bigtester.ate.tcg.controller.PredictionIOTrainer;
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
+import com.bigtester.ate.tcg.model.domain.InScreenJumperTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.PredictedFieldName;
 import com.bigtester.ate.tcg.model.domain.UserInputValue;
@@ -317,19 +318,38 @@ public class GreetingController extends BaseWsController{
 			@RequestBody IntermediateResult intermediateResult)
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
-		//intermediateResult.processUitr();
-		boolean trainedAlready = false;
+		
 		for (WebElementTrainingRecord uitr : intermediateResult.getUitrs()) {
 			// uitr.setPioPredictConfidence(1.0);
-			if (!StringUtils.isEmpty(uitr.getTrainedResult())) {
-				trainedAlready = true;
+			if (StringUtils.isEmpty(uitr.getTrainedResult())) {
+				trainInputPIO(uitr);
+			}
+			
+		}
+		
+		for (WebElementTrainingRecord uitr : intermediateResult.getActionUitrs()) {
+			// uitr.setPioPredictConfidence(1.0);
+			if (StringUtils.isEmpty(uitr.getTrainedResult())) {
+				trainInputPIO(uitr);
+			}
+			
+		}
+		for (WebElementTrainingRecord uitr : intermediateResult.getClickUitrs()) {
+			// uitr.setPioPredictConfidence(1.0);
+			if (StringUtils.isEmpty(uitr.getTrainedResult())) {
+				trainInputPIO(uitr);
+			}
+			if (uitr instanceof InScreenJumperTrainingRecord && ((InScreenJumperTrainingRecord) uitr).isActionTrigger()) {
+				int clickTimes = ((InScreenJumperTrainingRecord) uitr).getClickTimes() + 1;
+				((InScreenJumperTrainingRecord) uitr).setClickTimes(clickTimes);
+				//((InScreenJumperTrainingRecord) uitr).setActionTrigger(false);
 			}
 		}
 
-		if (!trainedAlready) {
-			trainInputPIO(intermediateResult.getUitrs());
-			trainInputPIO(intermediateResult.getActionUitrs());
-		}
+//		if (!trainedAlready) {
+//			trainInputPIO(intermediateResult.getUitrs());
+//			trainInputPIO(intermediateResult.getActionUitrs());
+//		}
 
 		PredictionIOTrainer.sentTrainingEntity(
 				intermediateResult.getDomStrings(),
@@ -440,14 +460,26 @@ public class GreetingController extends BaseWsController{
 	public Set<? extends WebElementTrainingRecord> trainInputPIO(
 			@RequestBody Set<? extends WebElementTrainingRecord> records)
 			throws ExecutionException, InterruptedException, IOException {
-		// List<Greeting> greetings = new ArrayList<Greeting>();
+		
 		for (WebElementTrainingRecord record : records) {
+			if (null != record) {
+				trainInputPIO(record);
+			}
+		}
+		return records;
+	}
+	
+	private WebElementTrainingRecord trainInputPIO(
+			WebElementTrainingRecord record)
+			throws ExecutionException, InterruptedException, IOException {
+		// List<Greeting> greetings = new ArrayList<Greeting>();
+		
 			if (null != record) {
 				String eventId = PredictionIOTrainer.sentTrainingEntity(record);
 				record.setTrainedResult(eventId);
 			}
-		}
-		return records;
+		
+		return record;
 	}
 
 	/**
