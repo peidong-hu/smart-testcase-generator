@@ -51,6 +51,9 @@ public class IntermediateResult {
 		HTML, WINDOWFILEPICKER
 	}
 	
+	/** The in screen jump. */
+	private boolean inScreenJump;
+	
 	/** The same page update. */
 	private boolean samePageUpdate;
 	
@@ -315,6 +318,21 @@ public class IntermediateResult {
 	public void setSamePageUpdate(boolean samePageUpdate) {
 		this.samePageUpdate = samePageUpdate;
 	}
+
+	/**
+	 * @return the inScreenJump
+	 */
+	public boolean isInScreenJump() {
+		return inScreenJump;
+	}
+
+	/**
+	 * @param inScreenJump the inScreenJump to set
+	 */
+	public void setInScreenJump(boolean inScreenJump) {
+		this.inScreenJump = inScreenJump;
+	}
+
 
 	
 }

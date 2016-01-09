@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import com.bigtester.ate.tcg.controller.PredictionIOTrainer;
 import com.bigtester.ate.tcg.model.IntermediateResult;
 import com.bigtester.ate.tcg.model.domain.HTMLSource;
+import com.bigtester.ate.tcg.model.domain.InScreenJumperTrainingRecord;
 import com.bigtester.ate.tcg.model.domain.Neo4jScreenNode;
 import com.bigtester.ate.tcg.model.domain.PredictedFieldName;
 import com.bigtester.ate.tcg.model.domain.UserInputValue;
@@ -323,6 +324,11 @@ public class GreetingController extends BaseWsController{
 			// uitr.setPioPredictConfidence(1.0);
 			if (!StringUtils.isEmpty(uitr.getTrainedResult())) {
 				trainedAlready = true;
+			}
+			if (uitr instanceof InScreenJumperTrainingRecord && ((InScreenJumperTrainingRecord) uitr).isActionTrigger()) {
+				int clickTimes = ((InScreenJumperTrainingRecord) uitr).getClickTimes() + 1;
+				((InScreenJumperTrainingRecord) uitr).setClickTimes(clickTimes);
+				((InScreenJumperTrainingRecord) uitr).setActionTrigger(false);
 			}
 		}
 

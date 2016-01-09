@@ -174,8 +174,13 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 			// label node;
 			if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
 				return; //NOPMD
-
-			valueHolder.setLabelDomPointer(tempParent2.getPreviousSibling());
+			
+			Node tempPreviousSibling = tempParent2.getPreviousSibling();
+			if (null == tempPreviousSibling) {
+				throw new IllegalStateException("tempPreviousSibling is null");
+			} else {
+				valueHolder.addLabelDomPointer(tempPreviousSibling);
+			}
 		} else {
 			while (tempParent2.getNextSibling() == null
 					&& !tempParent2.equals(searchUpEndingNode)) {
@@ -187,8 +192,12 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 			// label node;
 			if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
 				return;
-
-			valueHolder.setLabelDomPointer(tempParent2.getNextSibling());
+			Node tempNextSibling = tempParent2.getNextSibling();
+			if (null == tempNextSibling) {
+				throw new IllegalStateException("tempNextSibling is null");
+			} else {
+				valueHolder.addLabelDomPointer(tempNextSibling);
+			}
 		}
 
 	}
@@ -235,8 +244,12 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 		// label node;
 		if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
 			return;
-		valueHolder.setPreviousUserViewableHtmlSibling(tempParent2
-				.getPreviousSibling());
+		Node tempPreviousSibling = tempParent2.getPreviousSibling();
+		if (null == tempPreviousSibling) {
+			throw new IllegalStateException("tempPreviousSibling is null");
+		} else {
+			valueHolder.setPreviousUserViewableHtmlSibling(tempPreviousSibling);
+		}
 
 	}
 
@@ -252,8 +265,13 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 		}
 		if (tempParent2.equals(searchUpEndingNode) && !endingNodeInclusive)
 			return;
+		Node tempNextSibling = tempParent2.getNextSibling();
+		if (null == tempNextSibling) {
+			throw new IllegalStateException("tempNextSibling is null");
+		} else {
 		valueHolder
-				.setNextUserViewableHtmlSibling(tempParent2.getNextSibling());
+				.setNextUserViewableHtmlSibling(tempNextSibling);
+		}
 	}
 
 	private Node getMaxInputParentNoOtherChild(Node inputNode) {
@@ -454,9 +472,9 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 			// sibling form
 			List<Node> temp1 = new ArrayList<Node>();
 			temp1.add(maxInputParentNoOtherChild.getChildNodes().item(0));
-			retVal.setMachineLearningDomHtmlPointer(temp1);
+			retVal.setMachineLearningDomHtmlPointers(temp1);
 
-			retVal.setLabelDomPointer(maxInputParentNoOtherChild
+			retVal.addLabelDomPointer(maxInputParentNoOtherChild
 					.getPreviousSibling());
 
 			if (leftLabeled) {
@@ -482,12 +500,12 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 					.getLength(); i++) {
 				temp.add(leastInputsCommonParent.getChildNodes().item(i));
 			}
-			retVal.setMachineLearningDomHtmlPointer(temp);
+			retVal.setMachineLearningDomHtmlPointers(temp);
 
 			List<Element> labels = $(leastInputsCommonParent).find("label")
 					.get();
 			if (!labels.isEmpty()) { //NOPMD
-				retVal.setLabelDomPointer(labels.get(0));
+				retVal.addLabelDomPointer(labels.get(0));
 			} else {
 
 				fillOutNonLabeledFieldLabelDomPointer(retVal,
@@ -560,9 +578,9 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 
 				List<Node> tempList = new ArrayList<Node>();
 				tempList.add(maxInputParentNoOtherInput);
-				retVal.setMachineLearningDomHtmlPointer(tempList);
+				retVal.setMachineLearningDomHtmlPointers(tempList);
 
-				retVal.setLabelDomPointer(labels.get(0));
+				retVal.addLabelDomPointer(labels.get(0));
 				if (leftLabeled && leastNonInputSiblingsParent!=null)
 					fillOutAddtionalInfoNode(retVal,
 							maxInputParentNoOtherChild,
@@ -591,9 +609,9 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 						tempList.add(maxInputParentNoOtherInput
 								.getNextSibling());
 					}
-					retVal.setMachineLearningDomHtmlPointer(tempList);
+					retVal.setMachineLearningDomHtmlPointers(tempList);
 
-					retVal.setLabelDomPointer(labels2.get(0));
+					retVal.addLabelDomPointer(labels2.get(0));
 
 					if (leftLabeled
 							&& leftRightDirectedSiblingHasNoInput(
@@ -614,7 +632,7 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 					// maxInputParentNoOtherInput
 					List<Node> tempList = new ArrayList<Node>();
 					tempList.add(maxInputParentNoOtherInput);
-					retVal.setMachineLearningDomHtmlPointer(tempList);
+					retVal.setMachineLearningDomHtmlPointers(tempList);
 
 					fillOutNonLabeledFieldLabelDomPointer(retVal,
 							maxInputParentNoOtherChild,
@@ -645,13 +663,13 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 						tempList.add(maxInputParentNoOtherInput
 								.getNextSibling());
 					}
-					retVal.setMachineLearningDomHtmlPointer(tempList);
+					retVal.setMachineLearningDomHtmlPointers(tempList);
 
 					if (leftLabeled)
-						retVal.setLabelDomPointer(maxInputParentNoOtherInput
+						retVal.addLabelDomPointer(maxInputParentNoOtherInput
 								.getPreviousSibling());
 					else
-						retVal.setLabelDomPointer(maxInputParentNoOtherInput
+						retVal.addLabelDomPointer(maxInputParentNoOtherInput
 								.getNextSibling());
 
 					if (leftLabeled
@@ -726,6 +744,26 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 			// }
 			// }
 			// }
+		}
+		
+		String jooxQuery = "label[for=\""+ ((Element)retVal.getDomNodePointer()).getAttribute("id")+"\"]";//NOPMD
+		List<Element> labels = $(domDoc).find(jooxQuery).get();
+		
+		jooxQuery = "label[for=\""+ ((Element)retVal.getDomNodePointer()).getAttribute("Id")+"\"]";
+		labels.addAll($(domDoc).find(jooxQuery).get());
+	
+	
+		jooxQuery = "label[for=\""+ ((Element)retVal.getDomNodePointer()).getAttribute("iD")+"\"]";
+		labels.addAll($(domDoc).find(jooxQuery).get());
+	
+	
+		jooxQuery = "label[for=\""+ ((Element)retVal.getDomNodePointer()).getAttribute("ID")+"\"]";
+		labels.addAll($(domDoc).find(jooxQuery).get());
+		
+		for (int index=0; index<labels.size(); index++) {
+			if (!retVal.getMachineLearningDomHtmlPointers().contains(labels.get(index))) {
+				retVal.getMachineLearningDomHtmlPointers().add(0, labels.get(index));
+			}
 		}
 		return retVal;
 	}

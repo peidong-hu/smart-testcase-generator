@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class Neo4jConfig extends Neo4jConfiguration {
 	
 	/** The Constant NEO4JSERVER. */
-	public static final String NEO4JSERVER_URL = "http://192.168.10.140:7474";
+	public static final String NEO4JSERVER_URL = "http://172.16.173.140:7474";
 
     
     /**

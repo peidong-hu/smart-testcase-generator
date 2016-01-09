@@ -35,8 +35,8 @@ import org.w3c.dom.Node;
 public class UserInputDom extends WebElementDom {
 	
 	/** The label dom pointer. */
-	@Nullable
-	private Node labelDomPointer;
+	
+	private List<Node> labelDomPointers = new ArrayList<Node>();
 	
 	/** The machine learning dom html pointers. */
 	private transient List<Node> machineLearningDomHtmlPointers = new ArrayList<Node>();
@@ -76,14 +76,18 @@ public class UserInputDom extends WebElementDom {
 	 * @return the labelDomPointer
 	 */
 	@Nullable
-	public final Node getLabelDomPointer() {
-		return labelDomPointer;
+	public final List<Node> getLabelDomPointers() {
+		return labelDomPointers;
 	}
 	/**
 	 * @param labelDomPointer the labelDomPointer to set
 	 */
-	public final void setLabelDomPointer(@Nullable Node labelDomPointer) {
-		this.labelDomPointer = labelDomPointer;
+	public final void setLabelDomPointers(List<Node> labelDomPointers) {
+		this.labelDomPointers = labelDomPointers;
+	}
+	
+	public final void addLabelDomPointer(@Nullable Node labelDomPointer) {
+		this.labelDomPointers.add(labelDomPointer);
 	}
 	/**
 	 * @return the machineLearningDomHtmlPointer
@@ -94,9 +98,14 @@ public class UserInputDom extends WebElementDom {
 	/**
 	 * @param machineLearningDomHtmlPointer the machineLearningDomHtmlPointer to set
 	 */
-	public final void setMachineLearningDomHtmlPointer(
-			List<Node> machineLearningDomHtmlPointer) {
-		this.machineLearningDomHtmlPointers = machineLearningDomHtmlPointer;
+	public final void setMachineLearningDomHtmlPointers(
+			List<Node> machineLearningDomHtmlPointers) {
+		this.machineLearningDomHtmlPointers = machineLearningDomHtmlPointers;
+	}
+	
+	public final void addMachineLearningDomHtmlPointers(
+			Node machineLearningDomHtmlPointer) {
+		this.machineLearningDomHtmlPointers.add(machineLearningDomHtmlPointer);
 	}
 	/**
 	 * @return the additionalInfoNodes
