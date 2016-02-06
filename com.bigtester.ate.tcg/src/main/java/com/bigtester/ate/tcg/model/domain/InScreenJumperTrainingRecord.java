@@ -96,6 +96,7 @@ public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 	public int getClickTimes() {
 		return clickTimes;
 	}
+
 	/**
 	 * @return the actionTrigger
 	 */
