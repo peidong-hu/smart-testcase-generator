@@ -45,6 +45,7 @@ public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 	@Nullable
 	private AbstractScreenNode stepOut;
 
+
 	/** The action trigger. */
 	private transient boolean actionTrigger;
 
@@ -96,6 +97,7 @@ public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 	public int getClickTimes() {
 		return clickTimes;
 	}
+
 	/**
 	 * @return the actionTrigger
 	 */
@@ -109,7 +111,7 @@ public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 	public void setActionTrigger(boolean actionTrigger) {
 		this.actionTrigger = actionTrigger;
 	}
-	/**
+/**
 	 * @param clickTimes the clickTimes to set
 	 */
 	public void setClickTimes(int clickTimes) {

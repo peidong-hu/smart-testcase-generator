@@ -177,6 +177,20 @@ public class TestSuiteNodeCrud {
 	//
 	// }
 
+	@Nullable
+	private ScreenJumperElementTrainingRecord findTriggerJumperElement(Set<ScreenJumperElementTrainingRecord> screenJumperUitrs) {
+		ScreenJumperElementTrainingRecord retVal = null;
+		int triggerRecordCount = 0;
+		for (ScreenJumperElementTrainingRecord record: screenJumperUitrs) {
+			if (record.isActionTrigger()) {
+				retVal = record;
+				triggerRecordCount = triggerRecordCount + 1;
+			}
+		}
+		if (triggerRecordCount > 1) //NOPMD 
+			throw new IllegalStateException("trigger element count should not be greater than 1."); 
+		return retVal;
+	}
 	/**
 	 * Stepped into.
 	 *
@@ -193,21 +207,21 @@ public class TestSuiteNodeCrud {
 		Set<ScreenJumperElementTrainingRecord> startActionUitrs = startNode
 				.getActionUitrs();
 
-		if (startActionUitrs.isEmpty() || startActionUitrs.size() > 1)
-			throw new IllegalStateException("start action uitrs");
+		ScreenJumperElementTrainingRecord triggerRecord = findTriggerJumperElement(startActionUitrs) ;
+		if (startActionUitrs.isEmpty() || triggerRecord== null)
+			throw new IllegalStateException("screen jumper uitr doesn't exist or not marked as trigger action element in previous screen.");
 		else {
-			for (java.util.Iterator<ScreenJumperElementTrainingRecord> itr = startActionUitrs
-					.iterator(); itr.hasNext();) {
-				ScreenJumperElementTrainingRecord first = itr.next();
+			
+				ScreenJumperElementTrainingRecord first = triggerRecord;
 				if (first.getStepOuts().isEmpty()
 						|| !first.getStepOuts().contains(endNode)) {
 					// create
 					first.getStepOuts().add(endNode);
 
 				}
-				break;// NOPMD
+		
 			}
-		}
+		
 	}
 
 	/**
