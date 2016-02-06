@@ -97,6 +97,7 @@ public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 		return clickTimes;
 	}
 
+
 	/**
 	 * @return the actionTrigger
 	 */
@@ -110,7 +111,7 @@ public class InScreenJumperTrainingRecord extends WebElementTrainingRecord{
 	public void setActionTrigger(boolean actionTrigger) {
 		this.actionTrigger = actionTrigger;
 	}
-	/**
+/**
 	 * @param clickTimes the clickTimes to set
 	 */
 	public void setClickTimes(int clickTimes) {
