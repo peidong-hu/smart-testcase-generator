@@ -256,7 +256,7 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 							previousIntermediateResult.getScreenUrl(),
 							previousIntermediateResult.getScreenName());
 			if (null == prevousScreenNode) {
-				throw new IllegalStateException("previousScree nNode");
+				throw new IllegalStateException("previousScreen Node");
 			}
 		}
 

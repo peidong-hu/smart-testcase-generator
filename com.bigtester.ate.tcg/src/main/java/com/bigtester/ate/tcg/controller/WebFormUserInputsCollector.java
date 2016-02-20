@@ -760,11 +760,20 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 		jooxQuery = "label[for=\""+ ((Element)retVal.getDomNodePointer()).getAttribute("ID")+"\"]";
 		labels.addAll($(domDoc).find(jooxQuery).get());
 		
+		boolean alreadyAddedLabel = false;
 		for (int index=0; index<labels.size(); index++) {
-			if (!retVal.getMachineLearningDomHtmlPointers().contains(labels.get(index))) {
-				retVal.getMachineLearningDomHtmlPointers().add(0, labels.get(index));
+			List<Node> mlDomNodes = retVal.getMachineLearningDomHtmlPointers();
+			for (Node mlNode : mlDomNodes) {
+				if (mlNode.getTextContent().contains(labels.get(index).getTextContent())) {
+					alreadyAddedLabel = true;
+					break;
+				} 
 			}
+			if (!alreadyAddedLabel)
+				retVal.getMachineLearningDomHtmlPointers().add(0, labels.get(index));
+			alreadyAddedLabel = false;
 		}
+		
 		return retVal;
 	}
 

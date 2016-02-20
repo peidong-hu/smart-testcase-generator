@@ -66,7 +66,7 @@ public class IntermediateResult {
 	/** The uitrs. */
 	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
 	
-	/** The click uitrs. */
+	/** The in screen jumper training record uitrs. */
 	private Set<InScreenJumperTrainingRecord> clickUitrs = new HashSet<InScreenJumperTrainingRecord>();
 	
 	/** The previous screen trigger uitrs. */
