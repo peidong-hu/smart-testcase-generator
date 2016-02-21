@@ -56,7 +56,7 @@ public abstract class AbstractScreenNode extends BaseAteNode{//NOPMD
 
 	/** The predicted user input results. */
 	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
-	private Set<UserInputTrainingRecord> uitrs = new HashSet<UserInputTrainingRecord>();
+	private Set<UserInputTrainingRecord> userInputUitrs = new HashSet<UserInputTrainingRecord>();
 	
 	/** The previous screen trigger uitrs. */
 	@Nullable
@@ -149,15 +149,15 @@ public abstract class AbstractScreenNode extends BaseAteNode{//NOPMD
 	/**
 	 * @return the uitrs
 	 */
-	public Set<UserInputTrainingRecord> getUitrs() {
-		return uitrs;
+	public Set<UserInputTrainingRecord> getUserInputUitrs() {
+		return userInputUitrs;
 	}
 
 	/**
-	 * @param uitrs the uitrs to set
+	 * @param userInputUitrs the uitrs to set
 	 */
-	public void setUitrs(Set<UserInputTrainingRecord> uitrs) {
-		this.uitrs = uitrs;
+	public void setUserInputUitrs(Set<UserInputTrainingRecord> userInputUitrs) {
+		this.userInputUitrs = userInputUitrs;
 	}
 
 	/**

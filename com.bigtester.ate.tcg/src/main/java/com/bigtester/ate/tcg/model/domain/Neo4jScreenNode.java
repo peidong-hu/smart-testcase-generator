@@ -90,8 +90,8 @@ public class Neo4jScreenNode extends AbstractScreenNode  implements ATENeo4jNode
 //		this.url = url;
 		super(name, url, "Neo4jScreenNode");
 		this.sourcingDoms = iResult.getDomStrings();
-		setUitrs(iResult.getUitrs());
-		this.clickUitrs = iResult.getClickUitrs();
+		setUserInputUitrs(iResult.getUserInputUitrs());
+		this.clickUitrs = iResult.getInScreenJumperUitrs();
 		this.actionUitrs = iResult.getActionUitrs();
 	}
 

@@ -326,8 +326,8 @@ public class ScreenNodeCrud {
 			currentNode.setName(intermediateResult.getScreenName());
 			//currentNode.setSourcingDoms(intermediateResult.getDomStrings());
 			currentNode.getSourcingDoms().addAll(intermediateResult.getDomStrings());
-			currentNode.setUitrs(intermediateResult.getUitrs());
-			currentNode.setClickUitrs(intermediateResult.getClickUitrs());
+			currentNode.setUserInputUitrs(intermediateResult.getUserInputUitrs());
+			currentNode.setClickUitrs(intermediateResult.getInScreenJumperUitrs());
 			currentNode.setActionUitrs(intermediateResult.getActionUitrs());
 			currentNode.setUrl(intermediateResult.getScreenUrl());
 		}
@@ -422,8 +422,8 @@ public class ScreenNodeCrud {
 		if (!screenNode.getTestcases().contains(testcaseNode))
 			screenNode.getTestcases().add(testcaseNode);
 		
-		Set<UserInputTrainingRecord> uitrs = screenNode.getUitrs();
-		for (java.util.Iterator<? extends UserInputTrainingRecord> itr = uitrs
+		Set<UserInputTrainingRecord> userInputUitrs = screenNode.getUserInputUitrs();
+		for (java.util.Iterator<? extends UserInputTrainingRecord> itr = userInputUitrs
 				.iterator(); itr.hasNext();) {
 			UserInputTrainingRecord uitr = itr.next();
 			if (!uitr.getTestcases().contains(testcaseNode)) {

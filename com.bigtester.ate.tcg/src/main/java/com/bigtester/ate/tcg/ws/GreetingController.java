@@ -319,7 +319,7 @@ public class GreetingController extends BaseWsController{
 			throws IOException, ClassNotFoundException, ExecutionException,
 			InterruptedException {
 		
-		for (WebElementTrainingRecord uitr : intermediateResult.getUitrs()) {
+		for (WebElementTrainingRecord uitr : intermediateResult.getUserInputUitrs()) {
 			// uitr.setPioPredictConfidence(1.0);
 			if (StringUtils.isEmpty(uitr.getTrainedResult())) {
 				trainInputPIO(uitr);
@@ -334,7 +334,7 @@ public class GreetingController extends BaseWsController{
 			}
 			
 		}
-		for (WebElementTrainingRecord uitr : intermediateResult.getClickUitrs()) {
+		for (WebElementTrainingRecord uitr : intermediateResult.getInScreenJumperUitrs()) {
 			// uitr.setPioPredictConfidence(1.0);
 			if (StringUtils.isEmpty(uitr.getTrainedResult())) {
 				trainInputPIO(uitr);

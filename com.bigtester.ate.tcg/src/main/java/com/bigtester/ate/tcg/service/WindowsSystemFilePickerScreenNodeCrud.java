@@ -261,7 +261,7 @@ public class WindowsSystemFilePickerScreenNodeCrud {
 		}
 
 		
-		InScreenJumperTrainingRecord previousScreenTriggerClickUitr = intermediateResult.getPreviousScreenTriggerClickUitr();
+		InScreenJumperTrainingRecord previousScreenTriggerClickUitr = intermediateResult.getPreviousScreenTriggerInScreenJumperUitr();
 		String filePathName = "";
 		if (null != previousScreenTriggerClickUitr && previousScreenTriggerClickUitr.getUserValues().iterator().hasNext()) {
 			filePathName = previousScreenTriggerClickUitr.getUserValues().iterator().next().getValue();
