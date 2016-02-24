@@ -45,8 +45,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class Neo4jConfig extends Neo4jConfiguration {
 	
-	/** The Constant NEO4JSERVER. */
-	public static final String NEO4JSERVER_URL = "http://localhost:7474";
+	/** The Constant NEO4JSERVER. use the docker host exposed virtual docker net adapter ip */
+	public static final String NEO4JSERVER_URL = "http://172.17.0.1:7474";
 
     
     /**

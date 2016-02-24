@@ -53,11 +53,11 @@ final public class PredictionIOTrainer {
 	  
 	/** The Constant EVENTSERVERURL. */
 	//public static final String EVENTSERVERURL = "http://172.16.173.50:7070";
-	public static final String EVENTSERVERURL = "http://localhost:7070";
+	public static final String EVENTSERVERURL = "http://172.17.0.1:7070";
 	
 	/** The Constant ENGINESERVERURL. */
 	//public static final String ENGINESERVERURL = "http://172.16.173.50:8000";
-	public static final String ENGINESERVERURL = "http://localhost:8000";
+	public static final String ENGINESERVERURL = "http://172.17.0.1:8000";
 	
 	/** The categories. */
 	public static List<String> categories = new ArrayList<String>();
