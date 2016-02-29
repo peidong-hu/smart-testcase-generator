@@ -51,7 +51,7 @@ final public class PredictionIOTrainer {
 	//public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "bPkjUBBUYM7yrGHDzuBLvw6F7go2vPqbqferF6MzGx7PHygsQn1elM8hRIhF3DUY";
 	public static final String SAMPLETEXTCLASSIFIERACCESSKEY = "JPEaFI2xyLqpz0TGmMc156wqDl2tJ21PK6yHtMvCyev4aI5ATVnUoKTqmg3kCUBs";
 	  
-	/** The Constant EVENTSERVERURL. */
+	/** The Constant EVENTSERVERURL, use the docker0 virtual ip */
 	//public static final String EVENTSERVERURL = "http://172.16.173.50:7070";
 	public static final String EVENTSERVERURL = "http://172.17.0.1:7070";
 	

@@ -126,6 +126,15 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 				Node coreNode = htmlInputs.item(i);
 				List<Element> parentsUntilForm = $(coreNode).parentsUntil(
 						"form").get();// NOPMD
+				List<Element> parentsInvisible = $(coreNode).parents().get();
+				boolean invisibleParent = false;
+				for (Element parent : parentsInvisible) {
+					
+					if (parent.getAttribute("ate-invisible").equalsIgnoreCase("yes")) {
+						invisibleParent = true;
+						break;
+					}
+				}
 				if (null != coreNode
 						&& (parentsUntilForm.isEmpty() || !Iterables
 								.get(parentsUntilForm,
@@ -133,7 +142,7 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 								.getNodeName().equalsIgnoreCase("html"))
 						&& isUserChangableInputType(coreNode)
 						&& !((Element) coreNode).getAttribute("ate-invisible")
-								.equalsIgnoreCase("yes")) {
+								.equalsIgnoreCase("yes") && !invisibleParent) {
 
 					if (parentsUntilForm.isEmpty()) {
 						Node coreNodeParent = coreNode.getParentNode();

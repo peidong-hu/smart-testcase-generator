@@ -509,6 +509,7 @@ public class GreetingController extends BaseWsController{
 			Html2DomException {
 		List<String> csvStrings = new ArrayList<String>();
 		for (int i = 0; i < dom.size(); i++) {
+			if (!dom.get(i).isVisible()) continue;
 			Document doc = GlobalUtils.html2Dom(dom.get(i).getDomDoc());
 
 			com.bigtester.ate.tcg.controller.WebFormUserInputsCollector col;
