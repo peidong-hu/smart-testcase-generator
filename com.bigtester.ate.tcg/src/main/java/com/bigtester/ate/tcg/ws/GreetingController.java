@@ -569,7 +569,7 @@ public class GreetingController extends BaseWsController{
 				uitr.setInputMLHtmlCode("");
 			else
 				uitr.setInputMLHtmlCode(temp2);
-
+			uitr.setBelongToCurrentTestCase(true);
 			retVal.add(uitr);
 
 		}

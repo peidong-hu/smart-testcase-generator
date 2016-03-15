@@ -423,10 +423,10 @@ public class ScreenNodeCrud {
 			screenNode.getTestcases().add(testcaseNode);
 		
 		Set<UserInputTrainingRecord> userInputUitrs = screenNode.getUserInputUitrs();
-		for (java.util.Iterator<? extends UserInputTrainingRecord> itr = userInputUitrs
+		for (java.util.Iterator<UserInputTrainingRecord> itr = userInputUitrs
 				.iterator(); itr.hasNext();) {
 			UserInputTrainingRecord uitr = itr.next();
-			if (!uitr.getTestcases().contains(testcaseNode)) {
+			if (!uitr.getTestcases().contains(testcaseNode) && uitr.isBelongToCurrentTestCase()) {
 				uitr.getTestcases().add(testcaseNode);
 			}
 		}
@@ -435,7 +435,7 @@ public class ScreenNodeCrud {
 		for (java.util.Iterator<InScreenJumperTrainingRecord> itr = clickUitrs
 				.iterator(); itr.hasNext();) {
 			InScreenJumperTrainingRecord uitr = itr.next();
-			if (!uitr.getTestcases().contains(testcaseNode)) {
+			if (!uitr.getTestcases().contains(testcaseNode) && uitr.isBelongToCurrentTestCase()) {
 				uitr.getTestcases().add(testcaseNode);
 			}
 		}
@@ -445,7 +445,7 @@ public class ScreenNodeCrud {
 		for (java.util.Iterator<ScreenJumperElementTrainingRecord> itr = actionUitrs
 				.iterator(); itr.hasNext();) {
 			ScreenJumperElementTrainingRecord uitr = itr.next();
-			if (!uitr.getTestcases().contains(testcaseNode)) {
+			if (!uitr.getTestcases().contains(testcaseNode) && uitr.isBelongToCurrentTestCase()) {
 				uitr.getTestcases().add(testcaseNode);
 			}
 		}

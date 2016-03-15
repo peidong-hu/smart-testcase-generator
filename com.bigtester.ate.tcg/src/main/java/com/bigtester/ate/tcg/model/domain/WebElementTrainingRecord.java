@@ -69,6 +69,10 @@ public class WebElementTrainingRecord extends BaseAteNode{
 	/** The action trigger. */
 	private transient boolean actionTrigger;
 	
+	
+	/** The belong to current test case. */
+	private transient boolean belongToCurrentTestCase=true;
+	
 	/** The input label name. */
 	@Property
 	private String inputLabelName; // htmlLabelContent
@@ -331,5 +335,19 @@ public class WebElementTrainingRecord extends BaseAteNode{
 	 */
 	public void setActionTrigger(boolean actionTrigger) {
 		this.actionTrigger = actionTrigger;
+	}
+
+	/**
+	 * @return the belongToCurrentTestCase
+	 */
+	public boolean isBelongToCurrentTestCase() {
+		return belongToCurrentTestCase;
+	}
+
+	/**
+	 * @param belongToCurrentTestCase the belongToCurrentTestCase to set
+	 */
+	public void setBelongToCurrentTestCase(boolean belongToCurrentTestCase) {
+		this.belongToCurrentTestCase = belongToCurrentTestCase;
 	}
 }

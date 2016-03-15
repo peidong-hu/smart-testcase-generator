@@ -54,11 +54,11 @@ public class Neo4jScreenNode extends AbstractScreenNode  implements ATENeo4jNode
 	@Relationship(type = Relations.SOURCING_DOMS)
 	private Set<HTMLSource> sourcingDoms = new HashSet<HTMLSource>();
 
-	/** The click uitrs. */
+	/** The inscreen jumper click uitrs. */
 	@Relationship(type = Relations.PREDICTED_USER_INPUT_RESULTS)
 	private Set<InScreenJumperTrainingRecord> clickUitrs = new HashSet<InScreenJumperTrainingRecord>();
 	
-	/** The action uitrs. */
+	/** The screen jumper action uitrs. */
 	@Relationship(type = Relations.PREDICTED_USER_ACTIONELEMENT_RESULTS)
 	private Set<ScreenJumperElementTrainingRecord> actionUitrs = new HashSet<ScreenJumperElementTrainingRecord>();
 
