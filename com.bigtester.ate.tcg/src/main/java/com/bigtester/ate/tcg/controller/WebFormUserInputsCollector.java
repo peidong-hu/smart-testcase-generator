@@ -49,7 +49,10 @@ import static org.joox.JOOX.*;
 public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 
 	/** The Constant USER_NOT_CHANGABLE_INPUT_TYPES. */
-	final static public String[] USER_NOT_CHANGABLE_INPUT_TYPES = { "hidden", "submit" };
+	final static public String[] USER_NOT_CHANGABLE_INPUT_TYPES = { "hidden"};
+	
+	/** The Constant USER_FORM_SUBMIT_INPUT_TYPES. */
+	final static public String[] USER_FORM_SUBMIT_INPUT_TYPES = { "submit" };
 
 	/** The Constant LEFT_LABELED_INPUT_TYPES. */
 	final static public String[] LEFT_LABELED_INPUT_TYPES = { "text", "date",
@@ -63,7 +66,7 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 
 	/** The Constant USER_CHANGABLE_INPUT_TAGS. */
 	final static public String[] USER_CHANGABLE_INPUT_TAGS = { "select",
-			"input", "textarea" };
+			"input", "textarea", "submit" };
 
 	/** The user inputs. */
 	final private List<UserInputDom> userInputs = new ArrayList<UserInputDom>();
@@ -107,6 +110,28 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 		}
 		return retVal;
 	}
+	
+	private boolean isUserFormSubmitInputType(Node node) {
+		boolean retVal = true; // NOPMD
+		String nodeTag = node.getNodeName();
+
+		if ("input".equalsIgnoreCase(nodeTag)) {
+			if (null == $(node).attr("type")) {
+				retVal = true;
+			} else {
+				for (int i = 0; i < USER_FORM_SUBMIT_INPUT_TYPES.length; i++) {
+					if ($(node).attr("type").equalsIgnoreCase(
+							USER_FORM_SUBMIT_INPUT_TYPES[i])) {
+						retVal = false;// NOPMD
+						break;
+					}
+				}
+			}
+		} else {
+			retVal = true;
+		}
+		return retVal;
+	}
 
 	/**
 	 * Collect user inputs.
@@ -140,7 +165,7 @@ public class WebFormUserInputsCollector extends BaseWebFormElementsCollector {
 								.get(parentsUntilForm,
 										parentsUntilForm.size() - 1)
 								.getNodeName().equalsIgnoreCase("html"))
-						&& isUserChangableInputType(coreNode)
+						&& (isUserChangableInputType(coreNode) || isUserFormSubmitInputType(coreNode))
 						&& !((Element) coreNode).getAttribute("ate-invisible")
 								.equalsIgnoreCase("yes") && !invisibleParent) {
 
